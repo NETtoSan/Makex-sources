@@ -99,13 +99,119 @@ class Auto_Program:
         time.sleep(2)
 
     def GrabBall(lea, side):
-        pass
+        time.sleep(0.5)
+        cyberpi.mbot2.servo_set(60, "S1")  # Left arm
+        cyberpi.mbot2.servo_set(120, "S2")  # Right arm
+
+        time.sleep(1)
+
+        #Lift arms up to 0
+        cyberpi.mbot2.servo_set(180, "S3")  # UD servo
+
+        #Release arms and release arms back to 135
+        time.sleep(0.7)
+        cyberpi.mbot2.servo_set(110, "S1")
+        cyberpi.mbot2.servo_set(70, "S2")
+        time.sleep(1)
+
+        if lea == "shoot":
+            if side == "right":
+                cyberpi.mbot2.drive_speed(50, 50)
+            elif side == "left":
+                cyberpi.mbot2.drive_speed(-50, -50)
+            time.sleep(1)
+            cyberpi.mbot2.drive_speed(0, 0)
+            cyberpi.mbot2.drive_speed(-50, 50)
+            time.sleep(1.5)
+            cyberpi.mbot2.drive_speed(0, 0)
+
+            time.sleep(2)
+            Auto_Program.Shoot(side)
+
+            time.sleep(0.5)
+            cyberpi.mbot2.drive_speed(50, -50)
+            time.sleep(1.5)
+            if side == "right":
+                cyberpi.mbot2.drive_speed(-50, -50)
+            elif side == "left":
+                cyberpi.mbot2.drive_speed(50, 50)
+            time.sleep(1)
+            cyberpi.mbot2.drive_speed(0, 0)
+
+        else:
+            pass
 
     def GrabCube(lea, side):
-        pass
+        #Grab cube
+        cyberpi.mbot2.servo_set(60, "S1")
+        cyberpi.mbot2.servo_set(120, "S2")
+
+        time.sleep(1)
+
+        #Lift cube
+        cyberpi.mbot2.servo_set(90, "S3")  # UD servo
+
+        # 90 CW
+        if side == "right":
+            cyberpi.mbot2.drive_speed(-50, -50)
+        elif side == "left":
+            cyberpi.mbot2.drive_speed(50, 50)
+        time.sleep(1)
+
+        # Move
+        cyberpi.mbot2.drive_speed(50, -50)
+
+        # CHECK HOW MANY SECONDS TO REACH THE LEAKAGE DEVICE AREA! THIS IS A TIMED SEQUENCE
+        time.sleep(2)
+        cyberpi.mbot2.drive_speed(0, 0)
+
+        # Release cube
+        cyberpi.mbot2.servo_set(0, "S3")
+        time.sleep(1)
+        cyberpi.mbot2.servo_set(110, "S1")
+        cyberpi.mbot2.servo_set(70, "S2")
+
+        # BW for a bit
+        time.sleep(0.5)
+        cyberpi.mbot2.drive_speed(-50, 50)
+        time.sleep(0.5)
+
+        # U turn
+        cyberpi.mbot2.drive_speed(-50, -50)
+        time.sleep(2)
+
+        # Return to line
+        cyberpi.mbot2.drive_speed(50, -50)
+        time.sleep(1.5)
+
+        # 90 CW ; DLT CBC 03
+        if side == "right":
+            cyberpi.mbot2.drive_speed(-50, -50)
+        elif side == "left":
+            cyberpi.mbot2.drive_speed(50, 50)
+        time.sleep(1)
 
     def Shoot():
-        pass
+        #release.
+        cyberpi.mbot2.motor_drive(50, 0)
+        time.sleep(0.5)
+
+        #reset speed
+        cyberpi.mbot2.motor_drive(0, 0)
+        #set caliper to load
+        cyberpi.mbot2.servo_set(0, "S4")
+
+        #lock caliper
+        time.sleep(1)
+        cyberpi.mbot2.motor_drive(-40, 0)
+        time.sleep(0.25)
+        cyberpi.mbot2.motor_drive(0, 0)
+        time.sleep(0.5)
+
+        # return servo to original state
+        cyberpi.mbot2.servo_set(170, "S4")
+
+        time.sleep(1)
 
 
 class Manual_Program:
