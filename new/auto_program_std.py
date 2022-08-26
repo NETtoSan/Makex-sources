@@ -23,7 +23,7 @@ second_msfactor = 1000
 automatic_stage = 1
 reaction_preferences = [0, 6]  # Quad RGB, Ultrasonic sensor
 programs = ["How", "Auto start left", "Auto start left\nNo cube",
-            "Auto start right", "Auto start right\nNo cube"]
+            "Auto start right", "Auto start right\nNo cube", "Manual program (Debugging!)"]
 
 # Manual mode
 
@@ -210,6 +210,11 @@ def select_menu():
                 auto_mode("right", False)
                 time.sleep(1)
                 cyberpi.led.on(0, 0, 0, "all")
+            if select_program == 5:
+                cyberpi.led.on(255, 0, 255, "all")
+                manual_program()
+                time.sleep(1)
+                cyberpi.led.on(0, 0, 0, "all")
 
             if auto_start == 1:
                 select_mode = 0
@@ -224,7 +229,7 @@ def get_inverse(sides):
     pass
 
 
-def Manual():
+def manual_program():
     global select_mission, TotalMission, RunningMission, motor_left, motor_right, TurningTheta, MODE, LCSPEED, arm_y
     while True:
         mbot2.drive_power(0.8 * ((gamepad.get_joystick('Ly') + gamepad.get_joystick('Lx'))
@@ -332,7 +337,7 @@ def auto_mode(sides, cube):
             cyberpi.console.clear()
             cyberpi.display.show_label('Manual mode', 16, 'center', index=0)
             cyberpi.led.on(255, 255, 0, "all")
-            Manual()
+            manual_program()
 
         left_motor = (
             speed - (0.5 * cyberpi.quad_rgb_sensor.get_offset_track(1)))
