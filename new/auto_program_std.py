@@ -400,6 +400,9 @@ def grab_sphere(lea, side):
 
     time.sleep(1)
 
+    cyberpi.mbot2.drive_speed(-50, 50)
+    time.sleep(0.125)
+    cyberpi.mbot2.drive_speed(0, 0)
     #Lift arms up to 0
     cyberpi.mbot2.servo_set(180, "S3")  # UD servo
 
