@@ -33,7 +33,70 @@ class Auto_Program:
         pass
 
     def RunCode(sides, cube):
-        pass
+        cyberpi.display.show_label("Auto mode", 16, "center", index=0)
+        time.sleep(1)
+        speed = 50
+        isCube = cube
+
+        # Run straight to the white lines for 1 second
+        cyberpi.mbot2.drive_speed(50, -50)
+        time.sleep(1)
+
+        # Standby arm
+        cyberpi.mbot2.drive_speed(0, 0)
+        cyberpi.mbot2.servo_set(120, "S1")
+        cyberpi.mbot2.servo_set(60, "S2")
+        cyberpi.mbot2.servo_set(0, "S3")
+
+        # Load shooting mechanism
+        cyberpi.mbot2.servo_set(0, "S4")
+        time.sleep(1)
+        cyberpi.mbot2.motor_drive(-40, 0)
+        time.sleep(0.25)
+        cyberpi.mbot2.motor_drive(0, 0)
+        time.sleep(0.5)
+
+        cyberpi.mbot2.servo_set(170, "S4")
+        while not cyberpi.controller.is_press("a"):
+            if gamepad.is_key_pressed("R2"):
+                while not not gamepad.is_key_pressed("R2"):
+                    cyberpi.console.clear()
+                    cyberpi.display.show_label(
+                        "Manual mode", 16, "center", index=0)
+                    cyberpi.led.on(255, 255, 0, "all")
+                    Manual_Program.ControlMode()
+            left_motor = (speed - (0.5 * quad_rgb_sensor.get_offset_track(1)))
+            right_motor = -1 * \
+                (speed + (0.5 * quad_rgb_sensor.get_offset_track(1)))
+            distance = ultrasonic2.get(1)
+
+            # Make an identification logic for distance. Whether it's a cube or a ball. Look at full test program for references
+            if distance < 6 and distance != 0:
+
+                cyberpi.mbot2.drive_speed(30, -30)  # slow mbot2 motion
+                time.sleep(0.3)
+                cyberpi.mbot2.drive_speed(0, 0)  # stop mbot2
+
+                if isCube == True:
+                    isCube = False
+                    Auto_Program.GrabCube("lea", sides)
+                else:
+                    Auto_Program.GrabBall("shoot", sides)
+            else:
+                cyberpi.mbot2.servo_set(120, "S1")  # Left arm
+                cyberpi.mbot2.servo_set(60, "S2")  # Right arm
+                cyberpi.mbot2.servo_set(0, "S3")  # UD servo
+            # Drives motor
+
+            cyberpi.mbot2.drive_speed(left_motor, right_motor)
+
+        cyberpi.mbot2.servo_release("S1")
+        cyberpi.mbot2.servo_release("S2")
+        cyberpi.mbot2.servo_release("S3")
+
+        cyberpi.led.on(0, 0, 0, "all")
+        cyberpi.display.show_label('Quit auto mode', 16, 'center', index=0)
+        time.sleep(2)
 
     def GrabBall(lea, side):
         pass
