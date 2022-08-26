@@ -14,6 +14,7 @@ TurningTheta = 0
 MODE = 0
 LCSPEED = 0
 arm_y = 0
+PICKING = 0 #variable requested by middle school team
 
 default_speed = 50
 default_runtime = "null"
@@ -264,16 +265,22 @@ def manual_program():
         if gamepad.is_key_pressed('N1'):
             pass
 
-        if gamepad.is_key_pressed('N4'):
+        if gamepad.is_key_pressed('N4'): # detect that the ball is on the hand or not (For Middle school team)
+            #if PICKING == 1: 
+            #    cyberpi.display.show_label("ON")
+            #    cyberpi.led.on(255,0,0,all)
+            #else :
+            #    cyberpi.display.show_label("OFF")
+            #    cyberpi.led.on(0,0,0,all)
             pass
 
-        if gamepad.is_key_pressed('N2'):
+        if gamepad.is_key_pressed('N2'): # get the ball on the rail
             mbot2.servo_set(180, "S3")
             time.sleep(0.4)
-            mbot2.servo_set(50, "S2")
+            mbot2.servo_set(50, "S2") 
             mbot2.servo_set(120, "S1")
 
-        if gamepad.is_key_pressed('N3'):
+        if gamepad.is_key_pressed('N3'): 
             mbot2.servo_set(arm_y + 15, "S3")
             time.sleep(1)
             mbot2.drive_power(50, -50)
@@ -302,6 +309,35 @@ def manual_program():
 
         if gamepad.is_key_pressed('R2'):
             mbot2.servo_set(100, "S3")
+            
+        #In case we have time (For Middle school team)
+        #Don't forget to avoid indentation error! Make the code look clean.
+            
+                    #global PICKING
+        #PICKING = 0 #set picking to false
+        #if gamepad.get_joystick('Ry') < 0 and mbot2.servo_get("S3") > 0: #check the RY
+        #    mbot2.servo_set((mbot2.servo_get("S3") - -0.25 * gamepad.get_joystick('Ry')),"S3") #Move Down
+        #
+        #if gamepad.get_joystick('Ry') > 0 and mbot2.servo_get("S3") < 180: #check the RY
+        #    mbot2.servo_set((mbot2.servo_get("S3") - 0.25 * gamepad.get_joystick('Ry')),"S3") #Move Up
+        #
+        #if gamepad.is_key_pressed('N1'):
+        #    if PICKING == 0: #If it not picking let move the servo to pick then set picking to true
+        #        mbot2.servo_set(110,"S2")
+        #        mbot2.servo_set(60,"S1")
+        #        while not not gamepad.is_key_pressed('N1'):
+        #            pass
+        #
+        #        PICKING = 1
+        #
+        #    else:
+        #        if PICKING == 1: #If it picking let move the servo to release it then set picking to false
+        #            mbot2.servo_set(50,"S2")
+        #            mbot2.servo_set(120,"S1")
+        #            while not not gamepad.is_key_pressed('N1'):
+        #                pass
+        #
+        #            PICKING = 0
 
 
 def auto_mode(sides, cube):
