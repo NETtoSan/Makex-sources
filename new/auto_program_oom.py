@@ -25,7 +25,7 @@ second_msfactor = 1000
 automatic_stage = 1
 reaction_preferences = [0, 6]  # Quad RGB, Ultrasonic sensor
 programs = ["How", "Auto start left", "Auto start left\nNo cube",
-            "Auto start right", "Auto start right\nNo cube"]
+            "Auto start right", "Auto start right\nNo cube", "Manual program (Debugging!)"]
 
 
 class Auto_Program:
@@ -215,7 +215,7 @@ class Auto_Program:
 
 
 class Manual_Program:
-    def __init__ (self):
+    def __init__(self):
         pass
 
     def ControlMode():
@@ -396,14 +396,14 @@ mbot2.drive_speed = Manual_Program.drive_speed
 
 
 class Start:
-    def __init__ (self):
+    def __init__(self):
         pass
 
     def Boot():
         base_bat = cyberpi.get_battery()
         external_bat = cyberpi.get_extra_battery()
         cyberpi.console.clear()
-        cyberpi.console.print("ST BUU\n------")
+        cyberpi.console.print("OOM PY\n------")
         if external_bat == 0:
             cyberpi.console.println("No external battery!")
         if base_bat < 10:
@@ -464,7 +464,12 @@ class Start:
                     cyberpi.led.on(0, 0, 0, "all")
                 if select_program == 4:
                     cyberpi.led.on(255, 255, 255, "all")
-                    Auto_Program.RunCode("right", False)
+                    auto_mode("right", False)
+                    time.sleep(1)
+                    cyberpi.led.on(0, 0, 0, "all")
+                if select_program == 5:
+                    cyberpi.led.on(255, 0, 255, "all")
+                    manual_program()
                     time.sleep(1)
                     cyberpi.led.on(0, 0, 0, "all")
 
@@ -476,7 +481,7 @@ class Start:
 
 
 class Math:
-    def __init__ (self):
+    def __init__(self):
         pass
 
     def GetAngles(sides):
