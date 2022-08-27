@@ -225,6 +225,7 @@ class Manual_Program:
                                      ), -0.8 * ((gamepad.get_joystick('Ly') - gamepad.get_joystick('Lx'))))
             arm_y = gamepad.get_joystick('Ry')
             distance = cyberpi.ultrasonic2.get(1)
+            cyberpi.mbot2.motor_drive(0, 0)
             if distance < 10:
                 cyberpi.led.on(255, 0, 0, "all")
             else:
@@ -251,10 +252,10 @@ class Manual_Program:
                     pass
 
             if gamepad.is_key_pressed('N1'):
-                pass
+                cyberpi.mbot2.motor_drive(0, -100)
 
             if gamepad.is_key_pressed('N4'):
-                pass
+                cyberpi.mbot2.motor_drive(0, 100)
 
             if gamepad.is_key_pressed('N2'):
                 mbot2.servo_set(180, "S3")
@@ -464,12 +465,12 @@ class Start:
                     cyberpi.led.on(0, 0, 0, "all")
                 if select_program == 4:
                     cyberpi.led.on(255, 255, 255, "all")
-                    auto_mode("right", False)
+                    Auto_Program.RunCode("right", False)
                     time.sleep(1)
                     cyberpi.led.on(0, 0, 0, "all")
                 if select_program == 5:
                     cyberpi.led.on(255, 0, 255, "all")
-                    manual_program()
+                    Manual_Program.ControlMode()
                     time.sleep(1)
                     cyberpi.led.on(0, 0, 0, "all")
 
