@@ -18,7 +18,7 @@ MODE = 0
 LCSPEED = 0
 arm_y = 0
 arm_l = 0
-arm_2 = 0
+arm_r = 0
 
 default_speed = 50
 default_runtime = "null"
@@ -221,9 +221,9 @@ class Manual_Program:
         pass
 
     def ControlMode():
-        cyberpi.mbot2.servo_set(120, "S1")
-        cyberpi.mbot2.servo_set(60, "S2")
-        
+        mbot2.servo_set(120, "S1")
+        mbot2.servo_set(60, "S2")
+
         global select_mission, TotalMission, RunningMission, motor_left, motor_right, TurningTheta, MODE, LCSPEED, arm_y, arm_l, arm_r
         while True:
             mbot2.drive_power(0.8 * ((gamepad.get_joystick('Ly') + gamepad.get_joystick('Lx'))
@@ -231,8 +231,8 @@ class Manual_Program:
             arm_y = gamepad.get_joystick('Ry')
             distance = cyberpi.ultrasonic2.get(1)
             # Set servo ARM
-            cyberpi.mbot2.servo_set(arm_l, "S1")
-            cyberpi.mbot2.servo_set(arm_r, "S2")
+            mbot2.servo_set(arm_l, "S1")
+            mbot2.servo_set(arm_r, "S2")
 
             cyberpi.mbot2.motor_drive(0, 0)
             if distance < 10:
