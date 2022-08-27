@@ -236,13 +236,13 @@ class Manual_Program:
             if not gamepad.is_key_pressed('N2'):
                 mbot2.servo_set(arm_l, "S1")
                 mbot2.servo_set(arm_r, "S2")
+                mbot2.servo_set(arm_y, "S3")
 
             cyberpi.mbot2.motor_drive(0, 0)
             if distance < 10:
                 cyberpi.led.on(255, 0, 0, "all")
             else:
                 cyberpi.led.on(255, 255, 255, "all")
-            mbot2.servo_set(arm_y, "S3")
             if gamepad.is_key_pressed('Up'):
                 mbot2.forward(20)
                 while not not gamepad.is_key_pressed('Up'):
