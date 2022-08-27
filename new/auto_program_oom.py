@@ -215,6 +215,9 @@ class Auto_Program:
 
 
 class Manual_Program:
+    def __init__ (self):
+        pass
+
     def ControlMode():
         global select_mission, TotalMission, RunningMission, motor_left, motor_right, TurningTheta, MODE, LCSPEED, arm_y
         while True:
@@ -393,6 +396,9 @@ mbot2.drive_speed = Manual_Program.drive_speed
 
 
 class Start:
+    def __init__ (self):
+        pass
+
     def Boot():
         base_bat = cyberpi.get_battery()
         external_bat = cyberpi.get_extra_battery()
@@ -417,7 +423,7 @@ class Start:
 
         while select_mode == 1:
             if cyberpi.controller.is_press('up') or gamepad.is_key_pressed('Up'):
-                while not not cyberpi.controller.is_press('up') or gamepad.is_key_pressed('up'):
+                while not not cyberpi.controller.is_press('up') or gamepad.is_key_pressed('Up'):
                     pass
                 select_program = select_program + 1
                 if select_program > total_program:
@@ -470,6 +476,9 @@ class Start:
 
 
 class Math:
+    def __init__ (self):
+        pass
+
     def GetAngles(sides):
         pass
 
