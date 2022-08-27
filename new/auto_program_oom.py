@@ -17,6 +17,8 @@ TurningTheta = 0
 MODE = 0
 LCSPEED = 0
 arm_y = 0
+arm_l = 0
+arm_2 = 0
 
 default_speed = 50
 default_runtime = "null"
@@ -51,7 +53,7 @@ class Auto_Program:
         # Load shooting mechanism
         cyberpi.mbot2.servo_set(0, "S4")
         time.sleep(1)
-        cyberpi.mbot2.motor_drive(-40, 0)
+        cyberpi.mbot2.motor_drive(-30, 0)
         time.sleep(0.25)
         cyberpi.mbot2.motor_drive(0, 0)
         time.sleep(0.5)
@@ -191,7 +193,7 @@ class Auto_Program:
             cyberpi.mbot2.drive_speed(50, 50)
         time.sleep(1)
 
-    def Shoot():
+    def Shoot(side):
         #release.
         cyberpi.mbot2.motor_drive(50, 0)
         time.sleep(0.5)
@@ -219,12 +221,16 @@ class Manual_Program:
         pass
 
     def ControlMode():
-        global select_mission, TotalMission, RunningMission, motor_left, motor_right, TurningTheta, MODE, LCSPEED, arm_y
+        global select_mission, TotalMission, RunningMission, motor_left, motor_right, TurningTheta, MODE, LCSPEED, arm_y, arm_l, arm_r
         while True:
             mbot2.drive_power(0.8 * ((gamepad.get_joystick('Ly') + gamepad.get_joystick('Lx'))
                                      ), -0.8 * ((gamepad.get_joystick('Ly') - gamepad.get_joystick('Lx'))))
             arm_y = gamepad.get_joystick('Ry')
             distance = cyberpi.ultrasonic2.get(1)
+            # Set servo ARM
+            cyberpi.mbot2.servo_set(arm_l, "S1")
+            cyberpi.mbot2.servo_set(arm_r, "S2")
+
             cyberpi.mbot2.motor_drive(0, 0)
             if distance < 10:
                 cyberpi.led.on(255, 0, 0, "all")
@@ -252,10 +258,26 @@ class Manual_Program:
                     pass
 
             if gamepad.is_key_pressed('N1'):
-                cyberpi.mbot2.motor_drive(0, -100)
+                arm_l = arm_l + 2
+                arm_r = arm_r - 2
+
+                # Prevents numbers from being negative
+
+                if arm_l > 180:
+                    arm_l = 180
+                if arm_r < 0:
+                    arm_r = 0
 
             if gamepad.is_key_pressed('N4'):
-                cyberpi.mbot2.motor_drive(0, 100)
+                arm_l = arm_l - 2
+                arm_r = arm_r + 2
+
+                # Prevents numbers from being negative
+
+                if arm_l < 0:
+                    arm_l = 0
+                if arm_r > 180:
+                    arm_r = 180
 
             if gamepad.is_key_pressed('N2'):
                 mbot2.servo_set(180, "S3")
@@ -278,7 +300,7 @@ class Manual_Program:
                 mbot2.servo_set(0, "S4")
                 time.sleep(0.5)
                 mbot2.motor_set(-30, "M1")
-                time.sleep(0.5)
+                time.sleep(0.25)
                 mbot2.motor_set(0, "M1")
                 time.sleep(0.25)
                 mbot2.servo_set(180, "S4")
