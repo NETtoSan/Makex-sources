@@ -225,6 +225,8 @@ class Manual_Program:
         mbot2.servo_set(60, "S2")
 
         global select_mission, TotalMission, RunningMission, motor_left, motor_right, TurningTheta, MODE, LCSPEED, arm_y, arm_l, arm_r
+        arm_l = 120
+        arm_r = 60
         while True:
             mbot2.drive_power(0.8 * ((gamepad.get_joystick('Ly') + gamepad.get_joystick('Lx'))
                                      ), -0.8 * ((gamepad.get_joystick('Ly') - gamepad.get_joystick('Lx'))))
