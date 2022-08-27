@@ -291,8 +291,6 @@ class Manual_Program:
 
                 mbot2.servo_set(120, "S1")
                 mbot2.servo_set(50, "S2")
-                time.sleep(0.4)
-                mbot2.servo_set(0, "S3")
 
             if gamepad.is_key_pressed('N3'):
                 mbot2.servo_set(arm_y + 15, "S3")
