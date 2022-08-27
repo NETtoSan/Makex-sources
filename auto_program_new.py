@@ -26,6 +26,8 @@ programs = ["How", "Auto start left", "Auto start left\nNo cube",
             "Auto start right", "Auto start right\nNo cube"]
 
 # Manual mode
+
+
 def forward(speed=default_speed, run_time=default_runtime, accel_time=1, decel_time=1):
     if speed == 0:
         mbot2.EM_stop("all")
