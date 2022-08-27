@@ -115,8 +115,8 @@ class Auto_Program:
         cyberpi.mbot2.servo_set(110, "S1")
         cyberpi.mbot2.servo_set(70, "S2")
         time.sleep(0.7)
-        cyberpi.mbot2.drive_speed(-50,50)
-        time.sleep(0.2)
+        cyberpi.mbot2.drive_speed(-50, 50)
+        time.sleep(0.2) #test
         if lea == "shoot":
             if side == "right":
                 cyberpi.mbot2.drive_speed(50, 50)
