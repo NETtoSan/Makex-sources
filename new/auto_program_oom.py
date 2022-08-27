@@ -263,7 +263,7 @@ class Manual_Program:
                 while not not gamepad.is_key_pressed('Right'):
                     pass
 
-            if gamepad.is_key_pressed('N1'):
+            if gamepad.is_key_pressed('N4'):
                 arm_l = arm_l + 2
                 arm_r = arm_r - 2
 
@@ -274,7 +274,7 @@ class Manual_Program:
                 if arm_r < 0:
                     arm_r = 0
 
-            if gamepad.is_key_pressed('N4'):
+            if gamepad.is_key_pressed('N1'):
                 arm_l = arm_l - 2
                 arm_r = arm_r + 2
 
