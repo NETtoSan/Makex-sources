@@ -233,8 +233,9 @@ class Manual_Program:
             arm_y = gamepad.get_joystick('Ry')
             distance = cyberpi.ultrasonic2.get(1)
             # Set servo ARM
-            mbot2.servo_set(arm_l, "S1")
-            mbot2.servo_set(arm_r, "S2")
+            if not gamepad.is_key_pressed('N2'):
+                mbot2.servo_set(arm_l, "S1")
+                mbot2.servo_set(arm_r, "S2")
 
             cyberpi.mbot2.motor_drive(0, 0)
             if distance < 10:
@@ -287,8 +288,9 @@ class Manual_Program:
             if gamepad.is_key_pressed('N2'):
                 mbot2.servo_set(180, "S3")
                 time.sleep(0.4)
-                mbot2.servo_set(50, "S2")
+
                 mbot2.servo_set(120, "S1")
+                mbot2.servo_set(50, "S2")
 
             if gamepad.is_key_pressed('N3'):
                 mbot2.servo_set(arm_y + 15, "S3")
