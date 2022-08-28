@@ -116,7 +116,7 @@ class Auto_Program:
         cyberpi.mbot2.servo_set(70, "S2")
         time.sleep(0.7)
         cyberpi.mbot2.drive_speed(-50, 50)
-        time.sleep(0.2) #test
+        time.sleep(0.2)  # test
         if lea == "shoot":
             if side == "right":
                 cyberpi.mbot2.drive_speed(50, 50)
@@ -296,9 +296,9 @@ class Manual_Program:
             if gamepad.is_key_pressed('N3'):
                 mbot2.servo_set(arm_y + 15, "S3")
                 time.sleep(1)
-                mbot2.drive_power(50, -50)
-                mbot2.servo_set(110, "S2")
-                mbot2.servo_set(60, "S1")
+                #mbot2.drive_power(50, -50)
+                mbot2.servo_set(60, "S2")
+                mbot2.servo_set(120, "S1")
 
             if gamepad.is_key_pressed('R1'):
                 mbot2.motor_set(30, "M1")
