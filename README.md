@@ -17,5 +17,8 @@ This source code is for testing components from Makeblock for makex competition.
 ## Tech
 Makex-sources solely runs on Makeblock's cyberpi programming CPU. A lightweight, powerful programming CPU that can run small to relatively big projects. With a few optimized codes, this source codes runs like a breeze
 
+## Requirements
+Working with Makeblock's parts will require you to have [mblock program](https://mblock.makeblock.com/en-us/) and [python](https://www.python.org) installed on your computer. Otherwise it wont work, really
+
 ## Improvements
 There are tons of improvements to be made, but right now we just wanted to sit back and enjoy the current source codes we can distribute to anyone who found this repository helpful and helped you achieve competition's victory. Good luck!
