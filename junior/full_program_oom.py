@@ -58,5 +58,6 @@ class Preferences:
 
     def on_screen(p):
         pass
+
     def get_values(v):
         pass
