@@ -18,15 +18,46 @@ class Start:
 
 class Auto:
     def __init__(self):
+        self.cube = False
+        self.sides = "Left"  # Default sides to left
+
+    def FollowLine(r, s):
         pass
+
+    def grabCube(s):
+        pass
+
+    def grabBall(s):
+        pass
+
+
+class Math:
+    def __init__(self):
+        self.seconds = 3  # Default operation to 3 seconds
+        self.speed = 50  # Set default speed to 50%
+
+    def calcspeed(s):
+        return 0
 
 
 class Manual:
     def __init__(self):
         pass
 
+    def shoot():
+        pass
+
+    def reload(s):
+        pass
+
 
 # Preferences program, Use to edit or set component's ports
 class Preferences:
     def __init__(self):
+        pass
+
+    def on_screen(p):
+        pass
+
+    def get_values(v):
         pass
