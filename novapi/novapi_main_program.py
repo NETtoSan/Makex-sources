@@ -22,13 +22,13 @@ def LoadMe():
 
 def Moving():
     encoder_motor_M1.set_power(
-        0.8 * ((gamepad.get_joystick("Ry") + gamepad.get_joystick("Lx"))))
+        0.8 * ((gamepad.get_joystick("Ly") + gamepad.get_joystick("Lx"))))
     encoder_motor_M2.set_power(-0.8
-                               * ((gamepad.get_joystick("Ry") - gamepad.get_joystick("Lx"))))
+                               * ((gamepad.get_joystick("Ly") - gamepad.get_joystick("Lx"))))
     encoder_motor_M3.set_power(
-        0.8 * ((gamepad.get_joystick("Ry") + gamepad.get_joystick("Lx"))))
+        0.8 * ((gamepad.get_joystick("Ly") + gamepad.get_joystick("Lx"))))
     encoder_motor_M4.set_power(-0.8
-                               * ((gamepad.get_joystick("Ry") - gamepad.get_joystick("Lx"))))
+                               * ((gamepad.get_joystick("Ly") - gamepad.get_joystick("Lx"))))
 
 
 def MoveForward():
@@ -104,6 +104,12 @@ while True:
         else:
             shootstat = False
         while not not gamepad.is_key_pressed("R1"):
+            pass
+
+    elif gamepad.is_key_pressed("R2"):
+        power_expand_board.set_power("DC1", 50)
+        while not not gamepad.is_key_pressed("R2"):
+            power_expand_board.stop("DC1")
             pass
     else:
         pass
