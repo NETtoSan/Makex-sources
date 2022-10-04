@@ -14,7 +14,7 @@ encoder_motor_M4 = encoder_motor_class("M4", "INDEX1")
 shootstat = False
 
 # motors config
-# M1, M3 = LEFT FRONT, BACK ; M2, M4 = RIGHT FRONT, BACK
+# M1, M3 = MOTOR FACING FORWARD , M2, M4 = MOTOR FACING SIDEWAYS
 
 
 def LoadMe():
@@ -22,14 +22,20 @@ def LoadMe():
 
 
 def Moving():
-    encoder_motor_M1.set_power(
-        0.8 * ((gamepad.get_joystick("Ly") + gamepad.get_joystick("Lx"))))
-    encoder_motor_M2.set_power(-0.8
-                               * ((gamepad.get_joystick("Ly") - gamepad.get_joystick("Lx"))))
-    encoder_motor_M3.set_power(
-        0.8 * ((gamepad.get_joystick("Ly") + gamepad.get_joystick("Lx"))))
-    encoder_motor_M4.set_power(-0.8
-                               * ((gamepad.get_joystick("Ly") - gamepad.get_joystick("Lx"))))
+
+
+    encoder_motor_M1.set_power(0.8 * gamepad.get_joystick("Lx"))
+    encoder_motor_M2.set_power(0.8 * gamepad.get_joystick("Ly"))
+    encoder_motor_M3.set_power(-0.8 * gamepad.get_joystick("Lx"))
+    encoder_motor_M4.set_power(-0.8 * gamepad.get_joystick("Ly"))
+    #encoder_motor_M1.set_power(
+    #    0.8 * ((gamepad.get_joystick("Ly") + gamepad.get_joystick("Lx"))))
+    #encoder_motor_M2.set_power(-0.8
+    #                           * ((gamepad.get_joystick("Ly") - gamepad.get_joystick("Lx"))))
+    #encoder_motor_M3.set_power(
+    #    0.8 * ((gamepad.get_joystick("Ly") + gamepad.get_joystick("Lx"))))
+    #encoder_motor_M4.set_power(-0.8
+    #                           * ((gamepad.get_joystick("Ly") - gamepad.get_joystick("Lx"))))
 
 
 def MoveForward():
@@ -101,11 +107,11 @@ while True:
 
     #Suppose L1 controls the arm servo
     elif gamepad.is_key_pressed("L1"):
-        smartservo_1.move_to(110,0)
-        smartservo_2.move_to(60,0)
+        smartservo_1.move_to(110, 0)
+        smartservo_2.move_to(60, 0)
         while not not gamepad.is_key_pressed("L1"):
-            smartservo_1.move_to(110,0)
-            smartservo_2.move_to(60,0)
+            smartservo_1.move_to(110, 0)
+            smartservo_2.move_to(60, 0)
             pass
 
     elif gamepad.is_key_pressed("R1"):
