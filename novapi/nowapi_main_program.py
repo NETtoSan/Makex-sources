@@ -15,43 +15,56 @@ shootstat = False
 # motors config
 # M1, M3 = LEFT FRONT, BACK ; M2, M4 = RIGHT FRONT, BACK
 
-def LoadMe ():
+
+def LoadMe():
     pass
-def Moving ():
-    encoder_motor_M1.set_power(0.8 * ((gamepad.get_joystick("Ry") + gamepad.get_joystick("Lx"))))
-    encoder_motor_M2.set_power(-0.8 * ((gamepad.get_joystick("Ry") - gamepad.get_joystick("Lx"))))
-    encoder_motor_M3.set_power(0.8 * ((gamepad.get_joystick("Ry") + gamepad.get_joystick("Lx"))))
-    encoder_motor_M4.set_power(-0.8 * ((gamepad.get_joystick("Ry") - gamepad.get_joystick("Lx"))))
 
-def MoveForward ():
+
+def Moving():
+    encoder_motor_M1.set_power(
+        0.8 * ((gamepad.get_joystick("Ry") + gamepad.get_joystick("Lx"))))
+    encoder_motor_M2.set_power(-0.8
+                               * ((gamepad.get_joystick("Ry") - gamepad.get_joystick("Lx"))))
+    encoder_motor_M3.set_power(
+        0.8 * ((gamepad.get_joystick("Ry") + gamepad.get_joystick("Lx"))))
+    encoder_motor_M4.set_power(-0.8
+                               * ((gamepad.get_joystick("Ry") - gamepad.get_joystick("Lx"))))
+
+
+def MoveForward():
     encoder_motor_M1.set_power(50)
     encoder_motor_M2.set_power(-50)
     encoder_motor_M3.set_power(50)
     encoder_motor_M4.set_power(-50)
 
-def MoveBackward ():
+
+def MoveBackward():
     encoder_motor_M1.set_power(-50)
     encoder_motor_M2.set_power(50)
     encoder_motor_M3.set_power(-50)
     encoder_motor_M4.set_power(50)
 
-def MoveRight ():
+
+def MoveRight():
     encoder_motor_M1.set_power(50)
     encoder_motor_M2.set_power(50)
     encoder_motor_M3.set_power(50)
     encoder_motor_M4.set_power(50)
 
-def MoveLeft ():
+
+def MoveLeft():
     encoder_motor_M1.set_power(-50)
     encoder_motor_M2.set_power(-50)
     encoder_motor_M3.set_power(-50)
     encoder_motor_M4.set_power(-50)
 
-def StopMoving ():
+
+def StopMoving():
     encoder_motor_M1.set_power(0)
     encoder_motor_M2.set_power(0)
     encoder_motor_M3.set_power(0)
     encoder_motor_M4.set_power(0)
+
 
 LoadMe()
 while True:
