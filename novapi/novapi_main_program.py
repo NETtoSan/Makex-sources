@@ -24,10 +24,14 @@ def LoadMe():
 def Moving():
     # Code for bot rotation. Suppose Rx is turning your joystick left to right
 
-    motor_front_1 = 0.8 * (gamepad.get_joystick("Lx") + gamepad.get_joystick("Rx"))
-    motor_front_2 = -0.8 * (gamepad.get_joystick("Ly") - gamepad.get_joystick("Rx"))
-    motor_sides_1 = 0.8 * (gamepad.get_joystick("Lx") + gamepad.get_joystick("Rx"))
-    motor_sides_2 = -0.8 * (gamepad.get_joystick("Ly") - gamepad.get_joystick("Rx") )
+    motor_front_1 = 0.8 * (gamepad.get_joystick("Lx")
+                           + gamepad.get_joystick("Rx"))
+    motor_front_2 = -0.8 * (gamepad.get_joystick("Ly")
+                            - gamepad.get_joystick("Rx"))
+    motor_sides_1 = 0.8 * (gamepad.get_joystick("Lx")
+                           + gamepad.get_joystick("Rx"))
+    motor_sides_2 = -0.8 * (gamepad.get_joystick("Ly")
+                            - gamepad.get_joystick("Rx"))
 
     encoder_motor_M1.set_power(motor_front_1)
     encoder_motor_M2.set_power(motor_sides_1)
