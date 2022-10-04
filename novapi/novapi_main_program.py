@@ -6,6 +6,7 @@ from mbuild.encoder_motor import encoder_motor_class
 
 # new class
 smartservo_1 = smartservo_class("M1", "INDEX1")
+smartservo_2 = smartservo_class("M2", "INDEX1")
 encoder_motor_M1 = encoder_motor_class("M1", "INDEX1")
 encoder_motor_M2 = encoder_motor_class("M2", "INDEX1")
 encoder_motor_M3 = encoder_motor_class("M3", "INDEX1")
@@ -98,6 +99,15 @@ while True:
         while not not gamepad.is_key_pressed("Left"):
             pass
 
+    #Suppose L1 controls the arm servo
+    elif gamepad.is_key_pressed("L1"):
+        smartservo_1.move_to(110,0)
+        smartservo_2.move_to(60,0)
+        while not not gamepad.is_key_pressed("L1"):
+            smartservo_1.move_to(110,0)
+            smartservo_2.move_to(60,0)
+            pass
+
     elif gamepad.is_key_pressed("R1"):
         if shootstat == False:
             shootstat = True
@@ -113,6 +123,9 @@ while True:
             pass
     else:
         pass
+        #smartservo_1.move(90, 10)
+        #smartservo_1.move_to(90, 10)
+        #smartservo_1.set_power(50)
         #power_expand_board.set_power("BL1", 50)
         #power_expand_board.set_power("DC1", 50)
         #power_expand_board.stop("BL1")
