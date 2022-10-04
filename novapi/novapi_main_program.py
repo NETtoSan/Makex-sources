@@ -23,7 +23,6 @@ def LoadMe():
 
 def Moving():
 
-
     encoder_motor_M1.set_power(0.8 * gamepad.get_joystick("Lx"))
     encoder_motor_M2.set_power(0.8 * gamepad.get_joystick("Ly"))
     encoder_motor_M3.set_power(-0.8 * gamepad.get_joystick("Lx"))
@@ -40,30 +39,30 @@ def Moving():
 
 def MoveForward():
     encoder_motor_M1.set_power(50)
-    encoder_motor_M2.set_power(-50)
-    encoder_motor_M3.set_power(50)
-    encoder_motor_M4.set_power(-50)
+    encoder_motor_M2.set_power(0)
+    encoder_motor_M3.set_power(-50)
+    encoder_motor_M4.set_power(0)
 
 
 def MoveBackward():
     encoder_motor_M1.set_power(-50)
-    encoder_motor_M2.set_power(50)
-    encoder_motor_M3.set_power(-50)
-    encoder_motor_M4.set_power(50)
+    encoder_motor_M2.set_power(0)
+    encoder_motor_M3.set_power(50)
+    encoder_motor_M4.set_power(0)
 
 
 def MoveRight():
-    encoder_motor_M1.set_power(50)
+    encoder_motor_M1.set_power(0)
     encoder_motor_M2.set_power(50)
-    encoder_motor_M3.set_power(50)
-    encoder_motor_M4.set_power(50)
+    encoder_motor_M3.set_power(0)
+    encoder_motor_M4.set_power(-50)
 
 
 def MoveLeft():
-    encoder_motor_M1.set_power(-50)
+    encoder_motor_M1.set_power(0)
     encoder_motor_M2.set_power(-50)
-    encoder_motor_M3.set_power(-50)
-    encoder_motor_M4.set_power(-50)
+    encoder_motor_M3.set_power(0)
+    encoder_motor_M4.set_power(50)
 
 
 def StopMoving():
@@ -110,6 +109,7 @@ while True:
         smartservo_1.move_to(110, 0)
         smartservo_2.move_to(60, 0)
         while not not gamepad.is_key_pressed("L1"):
+            # Move this underneath while() if it doesnt work
             smartservo_1.move_to(110, 0)
             smartservo_2.move_to(60, 0)
             pass
@@ -125,10 +125,11 @@ while True:
     elif gamepad.is_key_pressed("R2"):
         power_expand_board.set_power("DC1", 50)
         while not not gamepad.is_key_pressed("R2"):
+            # Move this underneath while() if it doesnt work
             power_expand_board.stop("DC1")
             pass
     else:
-        pass
+        StopMoving()
         #smartservo_1.move(90, 10)
         #smartservo_1.move_to(90, 10)
         #smartservo_1.set_power(50)
