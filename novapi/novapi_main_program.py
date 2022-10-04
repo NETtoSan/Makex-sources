@@ -14,7 +14,7 @@ encoder_motor_M4 = encoder_motor_class("M4", "INDEX1")
 shootstat = False
 
 # motors config
-# M1, M3 = MOTOR FACING FORWARD , M2, M4 = MOTOR FACING SIDEWAYS
+# M1, M3 = MOTOR FACING FORWARD ( FRONT , BACK ) , M2, M4 = MOTOR FACING SIDEWAYS ( LEFT , RIGHT ) 
 
 
 def LoadMe():
@@ -115,7 +115,7 @@ while True:
         while not not gamepad.is_key_pressed("Left"):
             pass
 
-    #Suppose L1 controls the arm servo
+    # Suppose L1 controls the arm servo
     elif gamepad.is_key_pressed("L1"):
         smartservo_1.move_to(110, 0)
         smartservo_2.move_to(60, 0)
@@ -124,7 +124,8 @@ while True:
             smartservo_1.move_to(110, 0)
             smartservo_2.move_to(60, 0)
             pass
-
+        
+    # Suppose R1 controls the shooting cylinder
     elif gamepad.is_key_pressed("R1"):
         if shootstat == False:
             shootstat = True
@@ -133,6 +134,7 @@ while True:
         while not not gamepad.is_key_pressed("R1"):
             pass
 
+    # Supose R2 controls the ball loading motor
     elif gamepad.is_key_pressed("R2"):
         power_expand_board.set_power("DC1", 50)
         while not not gamepad.is_key_pressed("R2"):
@@ -141,6 +143,8 @@ while True:
             pass
     else:
         StopMoving()
+        
+        # - Parameters for future coding potentials - 
         #smartservo_1.move(90, 10)
         #smartservo_1.move_to(90, 10)
         #smartservo_1.set_power(50)
