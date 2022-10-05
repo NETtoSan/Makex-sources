@@ -14,7 +14,7 @@ encoder_motor_M4 = encoder_motor_class("M4", "INDEX1")
 shootstat = False
 
 # motors config
-# M1, M3 = MOTOR FACING FORWARD ( FRONT , BACK ) , M2, M4 = MOTOR FACING SIDEWAYS ( LEFT , RIGHT ) 
+# M1, M3 = MOTOR FACING FORWARD ( FRONT , BACK ) , M2, M4 = MOTOR FACING SIDEWAYS ( LEFT , RIGHT )
 
 
 def LoadMe():
@@ -37,6 +37,7 @@ def Moving():
     encoder_motor_M2.set_power(motor_sides_1)
     encoder_motor_M3.set_power(motor_front_2)
     encoder_motor_M4.set_power(motor_sides_2)
+
 
     #encoder_motor_M1.set_power(
     #    0.8 * ((gamepad.get_joystick("Ly") + gamepad.get_joystick("Lx"))))
@@ -124,7 +125,7 @@ while True:
             smartservo_1.move_to(110, 0)
             smartservo_2.move_to(60, 0)
             pass
-        
+
     # Suppose R1 controls the shooting cylinder
     elif gamepad.is_key_pressed("R1"):
         if shootstat == False:
@@ -143,8 +144,8 @@ while True:
             pass
     else:
         StopMoving()
-        
-        # - Parameters for future coding potentials - 
+
+        # - Parameters for future coding potentials -
         #smartservo_1.move(90, 10)
         #smartservo_1.move_to(90, 10)
         #smartservo_1.set_power(50)

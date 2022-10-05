@@ -229,8 +229,7 @@ class Manual_Program:
         arm_l = 120
         arm_r = 60
         while True:
-            mbot2.drive_power(0.8 * ((gamepad.get_joystick('Ly') + gamepad.get_joystick('Lx'))
-                                     ), -0.8 * ((gamepad.get_joystick('Ly') - gamepad.get_joystick('Lx'))))
+            mbot2.drive_power(0.8 * ((gamepad.get_joystick('Ly') + gamepad.get_joystick('Lx'))), -0.8 * ((gamepad.get_joystick('Ly') - gamepad.get_joystick('Lx'))))
             arm_y = gamepad.get_joystick('Ry')
             distance = cyberpi.ultrasonic2.get(1)
             # Set servo ARM
