@@ -29,7 +29,7 @@ def LoadMe():
 
 def Moving():
     # Code for bot rotation. Suppose Rx is turning your joystick left to right
-
+    # Swap Rx with Ry on ServoArm(a) if controls inverted
     motor_front_1 = 0.8 * (gamepad.get_joystick("Lx")
                            + gamepad.get_joystick("Rx"))
     motor_front_2 = -0.8 * (gamepad.get_joystick("Ly")
@@ -108,7 +108,7 @@ while True:
     # Fix this if Ry goes from left to right
     servo_a = servo_a + (0.05 * gamepad.get_joystick("Ry"))
     # Ball bldc
-    if shootstat == True:
+    if shootstat is True:
         power_expand_board.set_power("BL1", 10)
         power_expand_board.set_power("Bl2", 10)
     else:
@@ -158,7 +158,7 @@ while True:
 
     # Suppose R1 controls the shooting cylinder
     elif gamepad.is_key_pressed("R1"):
-        if shootstat == False:
+        if shootstat is False:
             shootstat = True
         else:
             shootstat = False
