@@ -19,6 +19,7 @@ encoder_motor_M4 = encoder_motor_class("M4", "INDEX1")
 def AutoStart ():
     global auto_stage
     pass
+
 def Manual ():
     global auto_stage
     LoadMe()
@@ -83,10 +84,11 @@ def MovingJoystick ():
     if not gamepad.get_joystick("Lx") == 0:
         pass
 
-    encoder_motor_M1.set_power(0.5 * ((gamepad.get_joystick("Ly") + ((0 - gamepad.get_joystick("Rx"))))))
-    encoder_motor_M2.set_power(-0.5 * ((gamepad.get_joystick("Ly") - ((0 - gamepad.get_joystick("Rx"))))))
-    encoder_motor_M3.set_power(0.5 * ((gamepad.get_joystick("Ly") + ((0 - gamepad.get_joystick("Rx"))))))
-    encoder_motor_M4.set_power(-0.5 * ((gamepad.get_joystick("Ly") - ((0 - gamepad.get_joystick("Rx"))))))
+    # Suppose LX will make the bot move from left to right. Swap - , + accordingly if it does not behavior as expected
+    encoder_motor_M1.set_power(0.5 * ((gamepad.get_joystick("Ly") + ((0 - gamepad.get_joystick("Rx")) - gamepad.get_joystick("Lx"))))
+    encoder_motor_M2.set_power(-0.5 * ((gamepad.get_joystick("Ly") - ((0 - gamepad.get_joystick("Rx")) - gamepad.get_joystick("Lx"))))))
+    encoder_motor_M3.set_power(0.5 * ((gamepad.get_joystick("Ly") + ((0 - gamepad.get_joystick("Rx")) + gamepad.get_joystick("Lx"))))))
+    encoder_motor_M4.set_power(-0.5 * ((gamepad.get_joystick("Ly") - ((0 - gamepad.get_joystick("Rx")) + gamepad.get_joystick("Lx"))))))
 
 def MoveBackward ():
     global auto_stage
