@@ -12,6 +12,8 @@ encoder_motor_M2 = encoder_motor_class("M2", "INDEX1")
 encoder_motor_M3 = encoder_motor_class("M3", "INDEX1")
 encoder_motor_M4 = encoder_motor_class("M4", "INDEX1")
 shootstat = False
+servo_l = 110
+servo_r = 60
 
 # motors config
 # M1, M3 = MOTOR FACING FORWARD ( FRONT , BACK ) , M2, M4 = MOTOR FACING SIDEWAYS ( LEFT , RIGHT )
@@ -38,7 +40,6 @@ def Moving():
     encoder_motor_M3.set_power(motor_front_2)
     encoder_motor_M4.set_power(motor_sides_2)
 
-
     #encoder_motor_M1.set_power(
     #    0.8 * ((gamepad.get_joystick("Ly") + gamepad.get_joystick("Lx"))))
     #encoder_motor_M2.set_power(-0.8
@@ -47,6 +48,11 @@ def Moving():
     #    0.8 * ((gamepad.get_joystick("Ly") + gamepad.get_joystick("Lx"))))
     #encoder_motor_M4.set_power(-0.8
     #                           * ((gamepad.get_joystick("Ly") - gamepad.get_joystick("Lx"))))
+
+
+def ArmServo(l, r):
+    smartservo_1.move_to(l, 0)
+    smartservo_2.move_to(r, 0)
 
 
 def MoveForward():
@@ -88,6 +94,7 @@ LoadMe()
 while True:
     time.sleep(0.001)
     Moving()
+    ArmServo(servo_l, servo_r)
 
     # Ball bldc
     if shootstat == True:
@@ -125,6 +132,15 @@ while True:
             smartservo_1.move_to(110, 0)
             smartservo_2.move_to(60, 0)
             pass
+            
+    # N1 N3 controls arm servo angles (Reconfig this once we have gamepad on hand)
+    elif gamepad.is_key_pressed("N1"):
+        servo_l = servo_l + 2
+        servo_r = servo_r - 2
+    elif gamepad.is_key_pressed("N3"):
+        servo_l = servo_l - 2
+        servo_r = servo_r + 2
+
 
     # Suppose R1 controls the shooting cylinder
     elif gamepad.is_key_pressed("R1"):
