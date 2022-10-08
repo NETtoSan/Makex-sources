@@ -35,9 +35,9 @@ def Moving():
     motor_front_r = -0.8 * (gamepad.get_joystick("Ly") - gamepad.get_joystick("Lx")
                             - gamepad.get_joystick("Rx"))
     motor_back_l = -0.8 * (gamepad.get_joystick("Ly") - gamepad.get_joystick("Lx")
-                          - gamepad.get_joystick("Rx"))
+                           - gamepad.get_joystick("Rx"))
     motor_back_r = 0.8 * (gamepad.get_joystick("Ly") + gamepad.get_joystick("Lx")
-                           + gamepad.get_joystick("Rx"))
+                          + gamepad.get_joystick("Rx"))
 
     encoder_motor_M1.set_power(motor_front_l)
     encoder_motor_M2.set_power(motor_back_l)
@@ -141,12 +141,12 @@ while True:
         smartservo_1.move_to(servo_l, 0)
         smartservo_2.move_to(servo_r, 0)
         while not not gamepad.is_key_pressed("L1"):
-            # Move this underneath while() if it doesnt work
-            servo_l = 60
-            servo_r = 110
-            smartservo_1.move_to(servo_l, 0)
-            smartservo_2.move_to(servo_r, 0)
             pass
+        # Move this underneath while() if it doesnt work
+        servo_l = 60
+        servo_r = 110
+        smartservo_1.move_to(servo_l, 0)
+        smartservo_2.move_to(servo_r, 0)
 
     # N1 N3 controls arm servo angles (Reconfig this once we have gamepad on hand)
     elif gamepad.is_key_pressed("N1"):
@@ -170,8 +170,8 @@ while True:
         power_expand_board.set_power("DC1", 50)
         while not not gamepad.is_key_pressed("R2"):
             # Move this underneath while() if it doesnt work
-            power_expand_board.stop("DC1")
             pass
+        power_expand_board.stop("DC1")
     else:
         StopMoving()
 
