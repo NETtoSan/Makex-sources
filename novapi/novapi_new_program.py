@@ -9,8 +9,8 @@ from mbuild.encoder_motor import encoder_motor_class
 auto_stage = 0
 shoot = 0
 # new class
-smartservo_1 = smartservo_class("M1", "INDEX1")
-smartservo_2 = smartservo_class("M2", "INDEX1")
+smartservo_arm = smartservo_class("M5", "INDEX2")
+smartservo_updown = smartservo_class("M5", "INDEX1")
 encoder_motor_M1 = encoder_motor_class("M1", "INDEX1")
 encoder_motor_M2 = encoder_motor_class("M2", "INDEX1")
 encoder_motor_M3 = encoder_motor_class("M3", "INDEX1")
@@ -27,28 +27,26 @@ def Manual():
     LoadMe()
     while True:
         time.sleep(0.001)
-        MovingJoystick()
+        JoyRes.MovingJoystick()
+        JoyRes.FeedControl()
+        JoyRes.ArmControl()
         if gamepad.is_key_pressed("Up"):
-            MoveForward()
-
+            ManualRes.MoveForward()
 
         if gamepad.is_key_pressed("Down"):
-            MoveBackward()
-
+            ManualRes.MoveBackward()
 
         if gamepad.is_key_pressed("Left"):
-            MoveLeft()
+            ManualRes.MoveLeft()
 
         if gamepad.is_key_pressed("Right"):
-            MoveRight()
+            ManualRes.MoveRight()
 
         if gamepad.is_key_pressed("N1"):
-            power_expand_board.set_power("DC1", 100)
-        elif gamepad.is_key_pressed("N4"):
-            power_expand_board.set_power("DC1", -100)
-        else:
-            power_expand_board.stop("DC1")
-
+            if smartservo_arm.get_valie("angle") > 60:
+                pass
+            else:
+                smartservo_arm.move(10, 10)
 
         if gamepad.is_key_pressed("N2"):
             pass
@@ -56,82 +54,121 @@ def Manual():
         if gamepad.is_key_pressed("N3"):
             pass
 
+        if gamepad.is_key_pressed("N4"):
+            # Fix this
+            if smartservo_arm.get_value("angle") < 120:
+                pass
+            else:
+                smartservo_arm.move(-10, 10)
 
         if gamepad.is_key_pressed("R1"):
-            power_expand_board.set_power("BL1", 15)
-            power_expand_board.set_power("BL2", 15)
-
-        else:
             power_expand_board.stop("BL1")
             power_expand_board.stop("BL2")
 
-        power_expand_board.set_power("DC2", 100)
+        else:
+            power_expand_board.set_power("BL1", 15)
+            power_expand_board.set_power("BL2", 15)
+
+        power_expand_board.set_power("DC2", 200)
+
+
 def LoadMe():
     global auto_stage
 
-    smartservo_1.move(90, 10)
-    smartservo_1.move_to(90, 10)
-    smartservo_1.set_power(50)
+    smartservo_arm.set_power(50)
+    smartservo_arm.move_to(90, 10)
     power_expand_board.set_power("BL1", 50)
     power_expand_board.set_power("DC1", 50)
     power_expand_board.stop("BL1")
     power_expand_board.stop("DC1")
 
 
-def MovingJoystick():
-    global auto_stage
+class JoyRes:
+    def __init__(self):
+        pass
 
-    # Code for bot rotation. Suppose Rx is turning your joystick left to right
-    # Swap Rx with Ry on ServoArm(a) if controls inverted
+    def ArmControl():
+        global auto_stage
+        smartservo_updown.move(gamepad.get_joystick("Ry"), 10)
 
-    encoder_motor_M1.set_power(0.8 * (gamepad.get_joystick("Ly") - gamepad.get_joystick("Lx")
-                          - gamepad.get_joystick("Rx")))
-    encoder_motor_M2.set_power(-0.8 * (gamepad.get_joystick("Ly") + gamepad.get_joystick("Lx")
-                           + gamepad.get_joystick("Rx")))
-    encoder_motor_M3.set_power(0.8 * (gamepad.get_joystick("Ly") + gamepad.get_joystick("Lx")
-                          - gamepad.get_joystick("Rx")))
-    encoder_motor_M4.set_power(-0.8 * (gamepad.get_joystick("Ly") - gamepad.get_joystick("Lx")
-                           + gamepad.get_joystick("Rx")))
+    def MovingJoystick():
+        global auto_stage
+
+        # Code for bot rotation. Suppose Rx is turning your joystick left to right
+        # Swap Rx with Ry on ServoArm(a) if controls inverted
+        Lx = gamepad.get_joystick("Lx")
+        Fl = 0
+        Fr = 0
+        Rl = 0
+        Rr = 0
+
+        # Adjust LR slide tuning here
+        if gamepad.get_joystick("Lx") != 0:
+
+            if gamepad.get_joystick("Lx") < 0:
+                Fl = Lx + 10
+            if gamepad.get_joystick("Lx") > 10:
+                Fl = Lx - 10
+
+            Fr = Lx
+            Rl = Lx
+            Rr = Lx
+        encoder_motor_M1.set_power(0.7 * (gamepad.get_joystick("Ly") - Fl
+                                          - gamepad.get_joystick("Rx")))
+        encoder_motor_M2.set_power(-0.7 * (gamepad.get_joystick("Ly") + Fr
+                                           + gamepad.get_joystick("Rx")))
+        encoder_motor_M3.set_power(0.7 * (gamepad.get_joystick("Ly") + Rl
+                                          - gamepad.get_joystick("Rx")))
+        encoder_motor_M4.set_power(-0.7 * (gamepad.get_joystick("Ly") - Rr
+                                           + gamepad.get_joystick("Rx")))
+
+    def FeedControl():
+        if gamepad.is_key_pressed("L1"):
+            power_expand_board.set_power("DC1", -100)
+        elif gamepad.is_key_pressed("L2"):
+            power_expand_board.set_power("DC1", 100)
+        else:
+            power_expand_board.stop("DC1")
 
 
-def MoveBackward():
-    global auto_stage
-    encoder_motor_M1.set_power(-50)
-    encoder_motor_M2.set_power(50)
-    encoder_motor_M3.set_power(-50)
-    encoder_motor_M4.set_power(50)
+class ManualRes:
+    def __init__(self):
+        pass
 
+    def MoveBackward():
+        global auto_stage
+        encoder_motor_M1.set_power(-50)
+        encoder_motor_M2.set_power(50)
+        encoder_motor_M3.set_power(-50)
+        encoder_motor_M4.set_power(50)
 
-def MoveForward():
-    global auto_stage
-    encoder_motor_M1.set_power(50)
-    encoder_motor_M2.set_power(-50)
-    encoder_motor_M3.set_power(50)
-    encoder_motor_M4.set_power(-50)
+    def MoveForward():
+        global auto_stage
+        encoder_motor_M1.set_power(50)
+        encoder_motor_M2.set_power(-50)
+        encoder_motor_M3.set_power(50)
+        encoder_motor_M4.set_power(-50)
 
+    def MoveRight():
+        global auto_stage
+        encoder_motor_M1.set_power(50)
+        encoder_motor_M2.set_power(50)
+        encoder_motor_M3.set_power(-50)
+        encoder_motor_M4.set_power(-50)
 
-def MoveRight():
-    global auto_stage
-    encoder_motor_M1.set_power(50)
-    encoder_motor_M2.set_power(50)
-    encoder_motor_M3.set_power(-50)
-    encoder_motor_M4.set_power(-50)
+    def MoveLeft():
+        global auto_stage
+        encoder_motor_M1.set_power(-50)
+        encoder_motor_M2.set_power(-50)
+        encoder_motor_M3.set_power(50)
+        encoder_motor_M4.set_power(50)
 
-
-def MoveLeft():
-    global auto_stage
-    encoder_motor_M1.set_power(-50)
-    encoder_motor_M2.set_power(-50)
-    encoder_motor_M3.set_power(50)
-    encoder_motor_M4.set_power(50)
-
-
-def StopMoving():
-    global auto_stage
-    encoder_motor_M1.set_power(0)
-    encoder_motor_M2.set_power(0)
-    encoder_motor_M3.set_power(0)
-    encoder_motor_M4.set_power(0)
+    def StopMoving():
+        global auto_stage
+        encoder_motor_M1.set_power(0)
+        encoder_motor_M2.set_power(0)
+        encoder_motor_M3.set_power(0)
+        encoder_motor_M4.set_power(0)
 
 
 auto_stage = 1
@@ -142,4 +179,5 @@ while True:
         auto_stage = 0
 
     else:
+        smartservo_arm.move_to(0, 10)
         Manual()
