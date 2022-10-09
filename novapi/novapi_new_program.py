@@ -69,7 +69,7 @@ def Manual():
             power_expand_board.set_power("BL1", 15)
             power_expand_board.set_power("BL2", 15)
 
-        power_expand_board.set_power("DC2", 200)
+        power_expand_board.set_power("DC2", 100)
 
 
 def LoadMe():
