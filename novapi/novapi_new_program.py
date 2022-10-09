@@ -43,9 +43,9 @@ def Manual():
             MoveRight()
 
         if gamepad.is_key_pressed("N1"):
-            power_expand_board.set_power("DC1", 80)
+            power_expand_board.set_power("DC1", 100)
         elif gamepad.is_key_pressed("N4"):
-            power_expand_board.set_power("DC1", -80)
+            power_expand_board.set_power("DC1", -100)
         else:
             power_expand_board.stop("DC1")
 
@@ -65,6 +65,7 @@ def Manual():
             power_expand_board.stop("BL1")
             power_expand_board.stop("BL2")
 
+        power_expand_board.set_power("DC2", 100)
 def LoadMe():
     global auto_stage
 
