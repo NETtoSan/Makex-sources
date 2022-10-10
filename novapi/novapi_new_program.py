@@ -2,6 +2,7 @@
 import novapi
 from mbuild import gamepad
 from mbuild import power_expand_board
+from mbuild.dual_rgb_sensor import dual_rgb_sensor_class
 from mbuild.smartservo import smartservo_class
 from mbuild.encoder_motor import encoder_motor_class
 
@@ -10,6 +11,7 @@ auto_stage = 0
 shoot = 0
 invert = 0
 # new class
+dual_rgb_sensor_1 = dual_rgb_sensor_class("PORT2", "INDEX1")
 smartservo_arm = smartservo_class("M5", "INDEX2")
 smartservo_updown = smartservo_class("M5", "INDEX1")
 encoder_motor_M1 = encoder_motor_class("M1", "INDEX1")
@@ -32,7 +34,7 @@ def Manual():
         JoyRes.MovingJoystick()
         JoyRes.FeedControl()
         JoyRes.ArmControl()
-        ManualRes.InvertLED()
+        ManualRes.InvertLED(invert)
         if gamepad.is_key_pressed("Up"):
             ManualRes.MoveForward()
 
@@ -46,10 +48,7 @@ def Manual():
             ManualRes.MoveRight()
 
         if gamepad.is_key_pressed("N1"):
-            if smartservo_arm.get_valie("angle") > 60:
-                pass
-            else:
-                smartservo_arm.move(10, 10)
+            smartservo_arm.move(10, 10)
 
         if gamepad.is_key_pressed("N2"):
             pass
@@ -58,14 +57,10 @@ def Manual():
             pass
 
         if gamepad.is_key_pressed("N4"):
-            # Fix this
-            if smartservo_arm.get_value("angle") < 120:
-                pass
-            else:
-                smartservo_arm.move(-10, 10)
+            smartservo_arm.move(-10, 10)
 
         if gamepad.is_key_pressed("R2"):
-            if invert != 0:
+            if invert == 0:
                 invert = 1
             else:
                 invert = 0
@@ -124,14 +119,20 @@ class JoyRes:
             Fr = Lx
             Rl = Lx
             Rr = Lx
-        encoder_motor_M1.set_power(0.7 * (gamepad.get_joystick("Ly") - Fl
-                                          - gamepad.get_joystick("Rx")))
-        encoder_motor_M2.set_power(-0.7 * (gamepad.get_joystick("Ly") + Fr
-                                           + gamepad.get_joystick("Rx")))
-        encoder_motor_M3.set_power(0.7 * (gamepad.get_joystick("Ly") + Rl
-                                          - gamepad.get_joystick("Rx")))
-        encoder_motor_M4.set_power(-0.7 * (gamepad.get_joystick("Ly") - Rr
-                                           + gamepad.get_joystick("Rx")))
+        # Encoder values
+        EFl = 0.7 * (gamepad.get_joystick("Ly")
+                     - Fl - gamepad.get_joystick("Rx"))
+        EFr = -0.7 * (gamepad.get_joystick("Ly") + Fr
+                      + gamepad.get_joystick("Rx"))
+        ERl = 0.7 * (gamepad.get_joystick("Ly") + Rl
+                     - gamepad.get_joystick("Rx"))
+        ERr = -0.7 * (gamepad.get_joystick("Ly") - Rr
+                      + gamepad.get_joystick("Rx"))
+                      
+        encoder_motor_M1.set_power(EFl)
+        encoder_motor_M2.set_power(EFr)
+        encoder_motor_M3.set_power(ERl)
+        encoder_motor_M4.set_power(ERr)
 
     def FeedControl():
         if gamepad.is_key_pressed("L1"):
@@ -147,12 +148,11 @@ class ManualRes:
         pass
     # Miscellaneous
 
-    def InvertLED():
-        global invert
-        if invert != 0:
-            dual_rgb_sensor_1.set_led_color("green")
-        else:
+    def InvertLED(i):
+        if i != 0:
             dual_rgb_sensor_1.set_led_color("red")
+        else:
+            dual_rgb_sensor_1.set_led_color("green")
     # Joystick Controls
 
     def MoveBackward():
