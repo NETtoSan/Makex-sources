@@ -121,24 +121,23 @@ class JoyRes:
             Rr = Lx
         # Encoder values
         EFl = 0.7 * (gamepad.get_joystick("Ly")
-                     + Fl - gamepad.get_joystick("Rx"))
-        EFr = -0.7 * (gamepad.get_joystick("Ly") - Fr
+                     - Fl - gamepad.get_joystick("Rx"))
+        EFr = -0.7 * (gamepad.get_joystick("Ly") + Fr
                       + gamepad.get_joystick("Rx"))
-        ERl = 0.7 * (gamepad.get_joystick("Ly") - Rl
+        ERl = 0.7 * (gamepad.get_joystick("Ly") + Rl
                      - gamepad.get_joystick("Rx"))
-        ERr = -0.7 * (gamepad.get_joystick("Ly") + Rr
+        ERr = -0.7 * (gamepad.get_joystick("Ly") - Rr
                       + gamepad.get_joystick("Rx"))
 
         if invert == 1:
             ERr = 0.7 * (gamepad.get_joystick("Ly")
-                         - Fl - gamepad.get_joystick("Rx"))
-            ERl = -0.7 * (gamepad.get_joystick("Ly") + Fr
+                         + Fl - gamepad.get_joystick("Rx"))
+            ERl = -0.7 * (gamepad.get_joystick("Ly") - Fr
                           + gamepad.get_joystick("Rx"))
-            EFr = 0.7 * (gamepad.get_joystick("Ly") + Rl
+            EFr = 0.7 * (gamepad.get_joystick("Ly") - Rl
                          - gamepad.get_joystick("Rx"))
             EFl = -0.7 * (gamepad.get_joystick("Ly") + Rr
                           + gamepad.get_joystick("Rx"))
-                          
         encoder_motor_M1.set_power(EFl)
         encoder_motor_M2.set_power(EFr)
         encoder_motor_M3.set_power(ERl)
