@@ -31,7 +31,7 @@ def Manual():
     LoadMe()
     while True:
         time.sleep(0.001)
-        JoyRes.MovingJoystick()
+        JoyRes.MovingJoystick(invert)
         JoyRes.FeedControl()
         JoyRes.ArmControl()
         ManualRes.InvertLED(invert)
@@ -97,7 +97,7 @@ class JoyRes:
         global auto_stage
         smartservo_updown.move(gamepad.get_joystick("Ry"), 10)
 
-    def MovingJoystick():
+    def MovingJoystick(i):
         global auto_stage
 
         # Code for bot rotation. Suppose Rx is turning your joystick left to right
@@ -128,7 +128,16 @@ class JoyRes:
                      - gamepad.get_joystick("Rx"))
         ERr = -0.7 * (gamepad.get_joystick("Ly") - Rr
                       + gamepad.get_joystick("Rx"))
-                      
+
+        if i == 1:
+            ERr = 0.7 * (gamepad.get_joystick("Ly")
+                         + Fl - gamepad.get_joystick("Rx"))
+            ERl = -0.7 * (gamepad.get_joystick("Ly") - Fr
+                          + gamepad.get_joystick("Rx"))
+            EFr = 0.7 * (gamepad.get_joystick("Ly") - Rl
+                         - gamepad.get_joystick("Rx"))
+            EFl = -0.7 * (gamepad.get_joystick("Ly") + Rr
+                          + gamepad.get_joystick("Rx"))
         encoder_motor_M1.set_power(EFl)
         encoder_motor_M2.set_power(EFr)
         encoder_motor_M3.set_power(ERl)
