@@ -24,12 +24,8 @@ def AutoStart():
     global auto_stage
     pass
 
-<<<<<<< HEAD
-def Manual ():
-=======
 
 def Manual():
->>>>>>> b1732abafbdcd2c7960f54ba30ea76f1a4a5de16
     global auto_stage
     global invert
     LoadMe()
@@ -92,19 +88,6 @@ def LoadMe():
     power_expand_board.stop("BL1")
     power_expand_board.stop("DC1")
 
-<<<<<<< HEAD
-def MovingJoystick ():
-    global auto_stage
-    if not gamepad.get_joystick("Lx") == 0:
-        pass
-
-    # Suppose LX will make the bot move from left to right. Swap - , + accordingly if it does not behavior as expected
-    encoder_motor_M1.set_power(0.5 * ((gamepad.get_joystick("Ly") + ((0 - gamepad.get_joystick("Rx")) - gamepad.get_joystick("Lx"))))
-    encoder_motor_M2.set_power(-0.5 * ((gamepad.get_joystick("Ly") - ((0 - gamepad.get_joystick("Rx")) - gamepad.get_joystick("Lx"))))))
-    encoder_motor_M3.set_power(0.5 * ((gamepad.get_joystick("Ly") + ((0 - gamepad.get_joystick("Rx")) + gamepad.get_joystick("Lx"))))))
-    encoder_motor_M4.set_power(-0.5 * ((gamepad.get_joystick("Ly") - ((0 - gamepad.get_joystick("Rx")) + gamepad.get_joystick("Lx"))))))
-=======
->>>>>>> b1732abafbdcd2c7960f54ba30ea76f1a4a5de16
 
 class JoyRes:
     def __init__(self):
