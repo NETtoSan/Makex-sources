@@ -8,6 +8,7 @@ from mbuild.encoder_motor import encoder_motor_class
 # initialize variables
 auto_stage = 0
 shoot = 0
+invert = 0
 # new class
 smartservo_arm = smartservo_class("M5", "INDEX2")
 smartservo_updown = smartservo_class("M5", "INDEX1")
@@ -24,12 +25,14 @@ def AutoStart():
 
 def Manual():
     global auto_stage
+    global invert
     LoadMe()
     while True:
         time.sleep(0.001)
         JoyRes.MovingJoystick()
         JoyRes.FeedControl()
         JoyRes.ArmControl()
+        ManualRes.InvertLED()
         if gamepad.is_key_pressed("Up"):
             ManualRes.MoveForward()
 
@@ -60,6 +63,14 @@ def Manual():
                 pass
             else:
                 smartservo_arm.move(-10, 10)
+
+        if gamepad.is_key_pressed("R2"):
+            if invert != 0:
+                invert = 1
+            else:
+                invert = 0
+            while not not gamepad.is_key_pressed("R2"):
+                pass
 
         if gamepad.is_key_pressed("R1"):
             power_expand_board.stop("BL1")
@@ -134,6 +145,15 @@ class JoyRes:
 class ManualRes:
     def __init__(self):
         pass
+    # Miscellaneous
+
+    def InvertLED():
+        global invert
+        if invert != 0:
+            dual_rgb_sensor_1.set_led_color("green")
+        else:
+            dual_rgb_sensor_1.set_led_color("red")
+    # Joystick Controls
 
     def MoveBackward():
         global auto_stage
