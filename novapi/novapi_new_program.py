@@ -100,8 +100,8 @@ class JoyRes:
     def MovingJoystick(invert):
         global auto_stage
 
-        # Code for bot rotation. Suppose Rx is turning your joystick left to right
-        # Swap Rx with Ry on ServoArm(a) if controls inverted
+        # Code for bot movement from left to right.
+        # If the bot starts slipping to unwanted direction. Tune variables here
         Lx = gamepad.get_joystick("Lx")  # literally Lx variable
         Fl = 0   # Front left
         Fr = 0   # Front right
@@ -116,10 +116,10 @@ class JoyRes:
             if gamepad.get_joystick("Lx") > 10:
                 Fl = Lx - 10
 
-            Fr = Lx
-            Rl = Lx
-            Rr = Lx
-        # Encoder values
+            Fr = Lx + Fr
+            Rl = Lx + Rl
+            Rr = Lx + Rr
+        # Encoder values. If the encoder motors config are changed even the slightest. change this one first then the inverted controls
         EFl = 0.7 * (gamepad.get_joystick("Ly")
                      - Fl + gamepad.get_joystick("Rx"))
         EFr = -0.7 * (gamepad.get_joystick("Ly") + Fr
@@ -129,7 +129,7 @@ class JoyRes:
         ERr = -0.7 * (gamepad.get_joystick("Ly") - Rr
                       - gamepad.get_joystick("Rx"))
 
-        if invert == 1: # If the controls are inverted The arms are now the bot's front
+        if invert == 1:  # If the controls are inverted The arms are now the bot's front
             ERr = 0.7 * (gamepad.get_joystick("Ly")
                          - Fl + gamepad.get_joystick("Rx"))
             ERl = -0.7 * (gamepad.get_joystick("Ly") + Fr
