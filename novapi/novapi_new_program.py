@@ -102,11 +102,11 @@ class JoyRes:
 
         # Code for bot rotation. Suppose Rx is turning your joystick left to right
         # Swap Rx with Ry on ServoArm(a) if controls inverted
-        Lx = gamepad.get_joystick("Lx")
-        Fl = 0
-        Fr = 0
-        Rl = 0
-        Rr = 0
+        Lx = gamepad.get_joystick("Lx")  # literally Lx variable
+        Fl = 0   # Front left
+        Fr = 0   # Front right
+        Rl = 0   # Rear left
+        Rr = 0   # Rear right
 
         # Adjust LR slide tuning here
         if gamepad.get_joystick("Lx") != 0:
@@ -121,15 +121,15 @@ class JoyRes:
             Rr = Lx
         # Encoder values
         EFl = 0.7 * (gamepad.get_joystick("Ly")
-                      - Fl + gamepad.get_joystick("Rx"))
+                     - Fl + gamepad.get_joystick("Rx"))
         EFr = -0.7 * (gamepad.get_joystick("Ly") + Fr
-                     - gamepad.get_joystick("Rx"))
+                      - gamepad.get_joystick("Rx"))
         ERl = 0.7 * (gamepad.get_joystick("Ly") + Rl
-                      + gamepad.get_joystick("Rx"))
+                     + gamepad.get_joystick("Rx"))
         ERr = -0.7 * (gamepad.get_joystick("Ly") - Rr
-                     - gamepad.get_joystick("Rx"))
+                      - gamepad.get_joystick("Rx"))
 
-        if invert == 1:
+        if invert == 1: # If the controls are inverted The arms are now the bot's front
             ERr = 0.7 * (gamepad.get_joystick("Ly")
                          - Fl + gamepad.get_joystick("Rx"))
             ERl = -0.7 * (gamepad.get_joystick("Ly") + Fr
