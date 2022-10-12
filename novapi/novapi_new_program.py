@@ -68,10 +68,12 @@ def Manual():
                 pass
 
         if gamepad.is_key_pressed("R1"):
+            power_expand_board.set_power("DC3", 100)
             power_expand_board.stop("BL1")
             power_expand_board.stop("BL2")
 
         else:
+            power_expand_board.stop("DC3")
             power_expand_board.set_power("BL1", 15)
             power_expand_board.set_power("BL2", 15)
 
