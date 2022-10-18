@@ -10,10 +10,13 @@ from mbuild.encoder_motor import encoder_motor_class
 auto_stage = 0
 shoot = 0
 invert = 0
+
+#lrmode is a variable to distinguish between shooting and hand control mode
+lrmode = 0
 # new class
 dual_rgb_sensor_1 = dual_rgb_sensor_class("PORT2", "INDEX1")
-smartservo_arm = smartservo_class("M5", "INDEX2")
-smartservo_updown = smartservo_class("M5", "INDEX1")
+smartservo_arm = smartservo_class("M5", "INDEX1")
+smartservo_updown = smartservo_class("M6", "INDEX1")
 encoder_motor_M1 = encoder_motor_class("M1", "INDEX1")
 encoder_motor_M2 = encoder_motor_class("M2", "INDEX1")
 encoder_motor_M3 = encoder_motor_class("M3", "INDEX1")
@@ -28,13 +31,17 @@ def AutoStart():
 def Manual():
     global auto_stage
     global invert
+    global lrmode
     LoadMe()
     while True:
         time.sleep(0.001)
+        JoyRes.TurretControl()
         JoyRes.MovingJoystick(invert)
-        JoyRes.FeedControl()
-        JoyRes.ArmControl()
+
         ManualRes.InvertLED(invert)
+        ManualRes.ControlLED(lrmode)
+        #Put FeedControl to JoyRes.MultiControl
+        JoyRes.MultiControl(lrmode)
         if gamepad.is_key_pressed("Up"):
             ManualRes.MoveForward()
 
@@ -60,6 +67,14 @@ def Manual():
             smartservo_arm.move(-10, 10)
 
         if gamepad.is_key_pressed("R2"):
+            if lrmode == 0:
+                lrmode = 1
+            else:
+                lrmode = 0
+            while not not gamepad.is_key_pressed("R2"):
+                pass
+        # Put this to JoyRes.MultiControl
+        if gamepad.is_key_pressed("L3"):
             if invert == 0:
                 invert = 1
             else:
@@ -69,13 +84,13 @@ def Manual():
 
         if gamepad.is_key_pressed("R1"):
             power_expand_board.set_power("DC3", 100)
-            power_expand_board.stop("BL1")
-            power_expand_board.stop("BL2")
+            #power_expand_board.stop("BL1")
+            #power_expand_board.stop("BL2")
 
         else:
             power_expand_board.stop("DC3")
-            power_expand_board.set_power("BL1", 15)
-            power_expand_board.set_power("BL2", 15)
+            power_expand_board.set_power("BL1", 18)
+            power_expand_board.set_power("BL2", 18)
 
         power_expand_board.set_power("DC2", 100)
 
@@ -95,9 +110,15 @@ class JoyRes:
     def __init__(self):
         pass
 
-    def ArmControl():
+    def TurretControl():
         global auto_stage
-        smartservo_updown.move(gamepad.get_joystick("Ry"), 10)
+        # > 40 < 60
+        if smartservo_updown.get_value("angle") > 60:
+            smartservo_updown.move(-1, 10)
+        if smartservo_updown.get_value("angle") < 43:
+            smartservo_updown.move(1, 10)
+        else:
+            smartservo_updown.move(gamepad.get_joystick("Ry"), 10)
 
     def MovingJoystick(invert):
         global auto_stage
@@ -148,10 +169,19 @@ class JoyRes:
     def FeedControl():
         if gamepad.is_key_pressed("L1"):
             power_expand_board.set_power("DC1", -100)
-        elif gamepad.is_key_pressed("L2"):
-            power_expand_board.set_power("DC1", 100)
+        #elif gamepad.is_key_pressed("L2"):
+            #power_expand_board.set_power("DC1", 100)
         else:
             power_expand_board.stop("DC1")
+
+    def HandControl():
+        pass
+
+    def MultiControl(lc):
+        if lc == 0:
+            JoyRes.FeedControl()
+        else:
+            JoyRes.HandControl()
 
 
 class ManualRes:
