@@ -15,7 +15,12 @@ invert = 0
 lrmode = 0
 # new class
 dual_rgb_sensor_1 = dual_rgb_sensor_class("PORT2", "INDEX1")
+dual_rgb_sensor_2 = dual_rgb_sensor_class("PORT2", "INDEX2")
+
+#Arm
 smartservo_arm = smartservo_class("M5", "INDEX1")
+
+#Turret
 smartservo_updown = smartservo_class("M6", "INDEX1")
 encoder_motor_M1 = encoder_motor_class("M1", "INDEX1")
 encoder_motor_M2 = encoder_motor_class("M2", "INDEX1")
@@ -41,6 +46,7 @@ def Manual():
         ManualRes.ControlLED(lrmode)
         #Put FeedControl to JoyRes.MultiControl
         JoyRes.MultiControl(lrmode)
+
         if gamepad.is_key_pressed("Up"):
             ManualRes.MoveForward()
 
@@ -173,7 +179,12 @@ class JoyRes:
         else:
             power_expand_board.stop("DC1")
 
+    def GrabControl():
+        pass
+
     def HandControl():
+
+        smartservo_arm.move(gamepad.get_joystick("Ry"), 10)
         pass
 
     def MultiControl(lc):
@@ -184,6 +195,7 @@ class JoyRes:
         else:
             # Hand control mode
             JoyRes.HandControl()
+            JoyRes.GrabControl()
 
 
 class ManualRes:
@@ -196,8 +208,12 @@ class ManualRes:
             dual_rgb_sensor_1.set_led_color("red")
         else:
             dual_rgb_sensor_1.set_led_color("green")
+    def ControlLED(i):
+        if i != 0:
+            dual_rgb_sensor_2.set_led_color("red")
+        else:
+            dual_rgb_sensor_2.set_led_color("green")
     # Joystick Controls
-
     def MoveBackward():
         global auto_stage
         encoder_motor_M1.set_power(-50)
