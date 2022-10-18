@@ -180,6 +180,12 @@ class JoyRes:
             power_expand_board.stop("DC1")
 
     def GrabControl():
+        # DC4 L1 release R1 grab
+        if gamepad.is_key_pressed("L1"):
+            power_expand_board.set_power("DC4", 50)
+
+        if gamepad.is_key_pressed("R1"):
+            power_expand_board.set_power("DC4", -50)
         pass
 
     def HandControl():
