@@ -35,7 +35,6 @@ def Manual():
     LoadMe()
     while True:
         time.sleep(0.001)
-        JoyRes.TurretControl()
         JoyRes.MovingJoystick(invert)
 
         ManualRes.InvertLED(invert)
@@ -179,8 +178,11 @@ class JoyRes:
 
     def MultiControl(lc):
         if lc == 0:
+            # Gun control mode
+            JoyRes.TurretControl()
             JoyRes.FeedControl()
         else:
+            # Hand control mode
             JoyRes.HandControl()
 
 
