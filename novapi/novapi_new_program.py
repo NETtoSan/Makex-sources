@@ -166,8 +166,8 @@ class JoyRes:
     def FeedControl():
         if gamepad.is_key_pressed("L1"):
             power_expand_board.set_power("DC1", -100)
-        #elif gamepad.is_key_pressed("L2"):
-            #power_expand_board.set_power("DC1", 100)
+        elif gamepad.is_key_pressed("L2"):
+            power_expand_board.set_power("DC1", 100)
         else:
             power_expand_board.stop("DC1")
 
