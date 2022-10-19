@@ -87,16 +87,8 @@ def Manual():
             while not not gamepad.is_key_pressed("R2"):
                 pass
 
-        if gamepad.is_key_pressed("R1"):
-            power_expand_board.set_power("DC3", 100)
-            #power_expand_board.stop("BL1")
-            #power_expand_board.stop("BL2")
-
-        else:
-            power_expand_board.stop("DC3")
-            power_expand_board.set_power("BL1", 18)
-            power_expand_board.set_power("BL2", 18)
-
+        power_expand_board.set_power("BL1", 18)
+        power_expand_board.set_power("BL2", 18)
         power_expand_board.set_power("DC2", 100)
 
 
@@ -179,6 +171,12 @@ class JoyRes:
         else:
             power_expand_board.stop("DC1")
 
+    def ShootControl():
+        if gamepad.is_key_pressed("R1"):
+            power_expand_board.set_power("DC3", 100)
+        else:
+            power_expand_board.stop("DC3")
+
     def GrabControl():
         # DC4 L1 release R1 grab
         if gamepad.is_key_pressed("L1"):
@@ -197,6 +195,7 @@ class JoyRes:
         if lc == 0:
             # Gun control mode
             JoyRes.TurretControl()
+            JoyRes.ShootControl()
             JoyRes.FeedControl()
         else:
             # Hand control mode
