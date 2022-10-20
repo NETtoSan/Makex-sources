@@ -10,7 +10,7 @@ from mbuild.encoder_motor import encoder_motor_class
 auto_stage = 0
 shoot = 0
 invert = 0
-
+feeddc = 1
 #lrmode is a variable to distinguish between shooting and hand control mode
 lrmode = 0
 # new class
@@ -37,6 +37,7 @@ def Manual():
     global auto_stage
     global invert
     global lrmode
+    global feeddc
     LoadMe()
     while True:
         time.sleep(0.001)
@@ -66,6 +67,12 @@ def Manual():
             pass
 
         if gamepad.is_key_pressed("N3"):
+            if feeddc == 0:
+                feeddc = 1
+            else:
+                feeddc = 0
+            while not not gamepad.is_key_pressed("N3"):
+                pass
             pass
 
         if gamepad.is_key_pressed("N4"):
@@ -89,14 +96,18 @@ def Manual():
             while not not gamepad.is_key_pressed("R_Thumb"):
                 pass
 
-        power_expand_board.set_power("DC2", -100)
+        # Dc feed
+        if feeddc == 1:
+            power_expand_board.set_power("DC2", -100)
+        else:
+            power_expand_board.stop("DC2")
 
 
 def LoadMe():
     global auto_stage
 
     smartservo_arm.set_power(50)
-    smartservo_arm.move_to(90, 10)
+    smartservo_arm.move(30, 10)
     power_expand_board.set_power("BL1", 50)
     power_expand_board.set_power("DC1", 50)
     power_expand_board.stop("BL1")
@@ -156,13 +167,13 @@ class JoyRes:
     def TurretControl():
         global auto_stage
         # > 40 < 60
-        if smartservo_updown.get_value("angle") > -43:
-            smartservo_updown.move(-1, 10)
+        #if smartservo_updown.get_value("angle") > -43:
+        #    smartservo_updown.move(-1, 10)
 
-        if smartservo_updown.get_value("angle") < -60:
-            smartservo_updown.move(1, 10)
-        else:
-            smartservo_updown.move(-gamepad.get_joystick("Ry"), 10)
+        #f smartservo_updown.get_value("angle") < -60:
+        #    smartservo_updown.move(1, 10)
+        #else:
+        smartservo_updown.move(-gamepad.get_joystick("Ry"), 10)
 
     def FeedControl():
         if gamepad.is_key_pressed("L1"):
