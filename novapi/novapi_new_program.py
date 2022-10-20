@@ -131,23 +131,23 @@ class JoyRes:
             Rr = Lx + Rr
         # Encoder values. If the encoder motors config are changed even the slightest. change this one first then the inverted controls
         EFl = 0.7 * (gamepad.get_joystick("Ly")
-                     - Fl + gamepad.get_joystick("Rx"))
+                     - Fl - gamepad.get_joystick("Rx"))
         EFr = -0.7 * (gamepad.get_joystick("Ly") + Fr
-                      - gamepad.get_joystick("Rx"))
+                      + gamepad.get_joystick("Rx"))
         ERl = 0.7 * (gamepad.get_joystick("Ly") + Rl
-                     + gamepad.get_joystick("Rx"))
+                     - gamepad.get_joystick("Rx"))
         ERr = -0.7 * (gamepad.get_joystick("Ly") - Rr
-                      - gamepad.get_joystick("Rx"))
+                      + gamepad.get_joystick("Rx"))
 
         if invert == 1:  # If the controls are inverted The arms are now the bot's front
             ERr = 0.7 * (gamepad.get_joystick("Ly")
-                         - Fl + gamepad.get_joystick("Rx"))
+                         - Fl - gamepad.get_joystick("Rx"))
             ERl = -0.7 * (gamepad.get_joystick("Ly") + Fr
-                          - gamepad.get_joystick("Rx"))
+                          + gamepad.get_joystick("Rx"))
             EFr = 0.7 * (gamepad.get_joystick("Ly") + Rl
-                         + gamepad.get_joystick("Rx"))
+                         - gamepad.get_joystick("Rx"))
             EFl = -0.7 * (gamepad.get_joystick("Ly") - Rr
-                          - gamepad.get_joystick("Rx"))
+                          + gamepad.get_joystick("Rx"))
         encoder_motor_M1.set_power(EFl)
         encoder_motor_M2.set_power(EFr)
         encoder_motor_M3.set_power(ERl)
