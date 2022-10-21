@@ -78,7 +78,6 @@ def Manual():
         if gamepad.is_key_pressed("N4"):
             smartservo_arm.move(-10, 10)
 
-
         # Switch shooting to arm control
         if gamepad.is_key_pressed("R2"):
             if lrmode == 0:
@@ -183,6 +182,7 @@ class JoyRes:
         else:
             power_expand_board.stop("DC1")
             0
+
     def ShootControl():
         if gamepad.is_key_pressed("R1"):
             power_expand_board.set_power("DC3", -100)
@@ -229,12 +229,14 @@ class ManualRes:
             dual_rgb_sensor_1.set_led_color("red")
         else:
             dual_rgb_sensor_1.set_led_color("green")
+
     def ControlLED(k):
         if k != 0:
             dual_rgb_sensor_2.set_led_color("red")
         else:
             dual_rgb_sensor_2.set_led_color("green")
     # Joystick Controls
+
     def MoveBackward():
         global auto_stage
         encoder_motor_M1.set_power(-50)
