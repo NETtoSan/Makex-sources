@@ -169,9 +169,15 @@ class JoyRes:
         #if smartservo_updown.get_value("angle") > -43:
         #    smartservo_updown.move(-1, 10)
 
-        #f smartservo_updown.get_value("angle") < -60:
+        #if smartservo_updown.get_value("angle") < -60:
         #    smartservo_updown.move(1, 10)
         #else:
+        if smartservo_updown.get_value("angle") < -56:
+            servo_value = smartservo_updown.get_value("angle")
+            while servo_value < -56:
+                smartservo_updown.move(3, 10)
+                servo_value = smartservo_updown.get_value("angle")
+
         smartservo_updown.move(-gamepad.get_joystick("Ry"), 10)
 
     def FeedControl():
@@ -194,9 +200,12 @@ class JoyRes:
         if gamepad.is_key_pressed("L1"):
             power_expand_board.set_power("DC4", 50)
 
-        if gamepad.is_key_pressed("R1"):
+        elif gamepad.is_key_pressed("R1"):
             power_expand_board.set_power("DC4", -50)
+        else:
+            power_expand_board.stop("DC4")
         pass
+
 
     def HandControl():
 
