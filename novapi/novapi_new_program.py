@@ -218,8 +218,8 @@ class JoyRes:
             JoyRes.TurretControl()
             JoyRes.ShootControl()
             JoyRes.FeedControl()
-            power_expand_board.set_power("BL1", 18)
-            power_expand_board.set_power("BL2", 18)
+            power_expand_board.set_power("BL1", 30)
+            power_expand_board.set_power("BL2", 30)
         else:
             # Hand control mode
             JoyRes.HandControl()
