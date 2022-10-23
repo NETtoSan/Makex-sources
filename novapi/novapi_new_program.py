@@ -140,23 +140,23 @@ class JoyRes:
             Rl = Lx + Rl
             Rr = Lx + Rr
         # Encoder values. If the encoder motors config are changed even the slightest. change this one first then the inverted controls
-        EFl = 0.7 * (gamepad.get_joystick("Ly")
-                     - Fl - gamepad.get_joystick("Rx"))
-        EFr = -0.7 * (gamepad.get_joystick("Ly") + Fr
+        EFl = 1 * (gamepad.get_joystick("Ly")
+                     + Fl - gamepad.get_joystick("Rx"))
+        EFr = -1 * (gamepad.get_joystick("Ly") - Fr
                       + gamepad.get_joystick("Rx"))
-        ERl = 0.7 * (gamepad.get_joystick("Ly") + Rl
+        ERl = 1 * (gamepad.get_joystick("Ly") - Rl
                      - gamepad.get_joystick("Rx"))
-        ERr = -0.7 * (gamepad.get_joystick("Ly") - Rr
+        ERr = -1 * (gamepad.get_joystick("Ly") + Rr
                       + gamepad.get_joystick("Rx"))
 
         if invert == 1:  # If the controls are inverted The arms are now the bot's front
-            ERr = 0.7 * (gamepad.get_joystick("Ly")
+            ERr = 1 * (gamepad.get_joystick("Ly")
                          - Fl - gamepad.get_joystick("Rx"))
-            ERl = -0.7 * (gamepad.get_joystick("Ly") + Fr
+            ERl = -1 * (gamepad.get_joystick("Ly") + Fr
                           + gamepad.get_joystick("Rx"))
-            EFr = 0.7 * (gamepad.get_joystick("Ly") + Rl
+            EFr = 1 * (gamepad.get_joystick("Ly") + Rl
                          - gamepad.get_joystick("Rx"))
-            EFl = -0.7 * (gamepad.get_joystick("Ly") - Rr
+            EFl = -1 * (gamepad.get_joystick("Ly") - Rr
                           + gamepad.get_joystick("Rx"))
         encoder_motor_M1.set_power(EFl)
         encoder_motor_M2.set_power(EFr)
@@ -218,8 +218,8 @@ class JoyRes:
             JoyRes.TurretControl()
             JoyRes.ShootControl()
             JoyRes.FeedControl()
-            power_expand_board.set_power("BL1", 30)
-            power_expand_board.set_power("BL2", 30)
+            power_expand_board.set_power("BL1", 20)
+            power_expand_board.set_power("BL2", 20)
         else:
             # Hand control mode
             JoyRes.HandControl()
