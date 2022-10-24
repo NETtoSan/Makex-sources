@@ -1,4 +1,3 @@
-# codes make you happy
 import novapi
 from mbuild import gamepad
 from mbuild import power_expand_board
@@ -6,22 +5,24 @@ from mbuild.dual_rgb_sensor import dual_rgb_sensor_class
 from mbuild.smartservo import smartservo_class
 from mbuild.encoder_motor import encoder_motor_class
 
-# initialize variables
+# initialize the variables
 auto_stage = 0
 shoot = 0
 invert = 0
 feeddc = 1
-#lrmode is a variable to distinguish between shooting and hand control mode
-lrmode = 0
-# new class
+lrmode = 0 # Differentiate between shoot and arm control mode
+
+# Sensors
 dual_rgb_sensor_1 = dual_rgb_sensor_class("PORT2", "INDEX1")
 dual_rgb_sensor_2 = dual_rgb_sensor_class("PORT2", "INDEX2")
 
-#Arm
+# Arm
 smartservo_arm = smartservo_class("M6", "INDEX1")
 
-#Turret
+# Turret
 smartservo_updown = smartservo_class("M5", "INDEX1")
+
+# Bot motors
 encoder_motor_M1 = encoder_motor_class("M1", "INDEX1")
 encoder_motor_M2 = encoder_motor_class("M2", "INDEX1")
 encoder_motor_M3 = encoder_motor_class("M3", "INDEX1")
@@ -42,10 +43,8 @@ def Manual():
     while True:
         time.sleep(0.001)
         JoyRes.MovingJoystick(invert)
-
         ManualRes.InvertLED(invert)
         ManualRes.ControlLED(lrmode)
-        #Put FeedControl to JoyRes.MultiControl
         JoyRes.MultiControl(lrmode)
 
         if gamepad.is_key_pressed("Up"):
