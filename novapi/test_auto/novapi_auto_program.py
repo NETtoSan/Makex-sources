@@ -23,23 +23,44 @@ motor3 = encoder_motor_class("M3", "INDEX1")
 motor4 = encoder_motor_class("M4", "INDEX1")
 
 
+class MovementAsset:
+    def __init__(self):
+        pass
+
+    def move(v1, v2, v3, v4):
+        motor1.set_power(v1)
+        motor2.set_power(v2)
+        motor3.set_power(v3)
+        motor4.set_power(v4)
+
+
 class AutoAssets:
     def __init__(self):
         pass
 
     def MoveForward():
+        MovementAsset.move(50, -50, 50, -50)
         pass
 
     def MoveBackward():
+        MovementAsset.move(-50, 50, -50, 50)
         pass
 
     def RotateLeft():
+        MovementAsset.move(-50, -50, -50, -50)
         pass
 
     def RotateRight():
+        MovementAsset.move(50, 50, 50, 50)
         pass
 
     def Shoot():
+        #Rotate bot 90 (suppose the moves 45'/sec)
+        AutoAssets.MoveForward()
+        time.sleep(1)
+        AutoAssets.RotateLeft()
+        time.sleep(2)
+        AutoAsset.shoot()
         pass
 
     def GetDistance():
