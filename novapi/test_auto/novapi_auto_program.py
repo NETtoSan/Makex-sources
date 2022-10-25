@@ -54,19 +54,57 @@ class AutoAssets:
         MovementAsset.move(50, 50, 50, 50)
         pass
 
-    def ShootRoutine():
-        # Rotate bot 90 (suppose the moves 45'/sec)
-        AutoAssets.MoveForward()
-        time.sleep(1)
-        AutoAssets.RotateLeft()
-        time.sleep(2)
-        AutoAssets.shoot()
-        pass
-
     def Shoot():
         pass
 
+    def ShootRoutine():
+        # Suppose the bot moves forward with a timed sequence
+        AutoAssets.MoveForward()
+        time.sleep(1)
+
+        # or according to distance between itself and a ball
+        distance = AutoAssets.GetDistance()
+        if distance > 5:
+            while distance > 1:
+                AutoAssets.MoveForward()
+                distance = AutoAssets.GetDistance()
+
+        # Rotate bot 90 (suppose the moves 45'/sec)
+        AutoAssets.RotateLeft()
+        time.sleep(2)
+
+        orientation = AutoAssets.GetSelfAngle()[2]
+
+        while orientation != 0:
+            while orientation < 45:
+                AutoAssets.RotateRight()
+                time.sleep(0.5)
+                AutoAssets.shoot()
+                time.sleep(1)
+                orientation = AutoAssets.getSelfAngle()[2]
+
+        AutoAssets.shoot()
+
+        pass
+
+    def getSelfAngle():
+        # GetSelfAngle utilizes its own accelerometer
+        # What it does is obtain its own XYZ orientation
+        # And returns an orientation value as array
+
+        angle = [0, 0, 0]
+
+        return angle
+        pass
+
     def GetDistance():
+        # GetDistance utilizes a ranging sensor Module
+        # What it does is detects an object in front of it
+        # And returns a distance value as number
+
+        range = 0  # Replace 0 with an appropriate ranging sensor code
+
+        return range
         pass
 
 
