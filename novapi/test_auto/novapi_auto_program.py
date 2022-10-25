@@ -72,9 +72,9 @@ class AutoAssets:
         # Rotate bot 90 (suppose the moves 45'/sec)
         AutoAssets.RotateLeft()
         time.sleep(2)
-
+        
+        # The actual shooting mode. once the ball is loaded into the compartment
         orientation = AutoAssets.GetSelfAngle()[2]
-
         while orientation != 0:
             while orientation < 45:
                 AutoAssets.RotateRight()
