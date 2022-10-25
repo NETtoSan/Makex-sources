@@ -111,9 +111,14 @@ class AutoAssets:
 def AutoStart():
     global auto_stage
     # Move bot 10 secs
-    # Measure distance between bot and ball
-    # If near collect ball, rotate 90' and shoot
-    # When done, quit
+    # Measure distance between bot and ball       
+    # If near collect ball, rotate 90' and shoot ^ Above code are now inside AutoAssets.ShootRoutine()
+    # When done, quit'
+
+    AutoAssets.MoveForward()
+    time.sleep(2)
+
+    AutoAssets.ShootRoutine()
     pass
 
 
