@@ -12,11 +12,11 @@ modes = ["index0 pls fix", "shoot", "cube"]
 colors = ['0x33FFEC', '0xFF3333', '0xFF333']
 
 
-#Switch to INDEX1 and INDEX3 if we only have short wires
+# Switch to INDEX1 and INDEX3 if we only have short wires
 smartservo_arm = smartservo_class("M6", "INDEX1")
 smartservo_turret = smartservo_class("M5", "INDEX1")
 
-#Motors
+# Motors
 motor1 = encoder_motor_class("M1", "INDEX1")
 motor2 = encoder_motor_class("M2", "INDEX1")
 motor3 = encoder_motor_class("M3", "INDEX1")
@@ -54,13 +54,16 @@ class AutoAssets:
         MovementAsset.move(50, 50, 50, 50)
         pass
 
-    def Shoot():
-        #Rotate bot 90 (suppose the moves 45'/sec)
+    def ShootRoutine():
+        # Rotate bot 90 (suppose the moves 45'/sec)
         AutoAssets.MoveForward()
         time.sleep(1)
         AutoAssets.RotateLeft()
         time.sleep(2)
-        AutoAsset.shoot()
+        AutoAssets.shoot()
+        pass
+
+    def Shoot():
         pass
 
     def GetDistance():
@@ -69,10 +72,10 @@ class AutoAssets:
 
 def AutoStart():
     global auto_stage
-    #Move bot 10 secs
-    #Measure distance between bot and ball
-    #If near collect ball, rotate 90' and shoot
-    #When done, quit
+    # Move bot 10 secs
+    # Measure distance between bot and ball
+    # If near collect ball, rotate 90' and shoot
+    # When done, quit
     pass
 
 
