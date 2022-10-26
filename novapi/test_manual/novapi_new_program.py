@@ -10,7 +10,7 @@ auto_stage = 0
 shoot = 0
 invert = 0
 feeddc = 1
-lrmode = 0 # Differentiate between shoot and arm control mode
+lrmode = 0  # Differentiate between shoot and arm control mode
 
 # Sensors
 dual_rgb_sensor_1 = dual_rgb_sensor_class("PORT2", "INDEX1")
@@ -166,12 +166,12 @@ class JoyRes:
     def TurretControl():
         global auto_stage
         # > 40 < 60
-        #if smartservo_updown.get_value("angle") > -43:
+        # if smartservo_updown.get_value("angle") > -43:
         #    smartservo_updown.move(-1, 10)
 
-        #if smartservo_updown.get_value("angle") < -60:
+        # if smartservo_updown.get_value("angle") < -60:
         #    smartservo_updown.move(1, 10)
-        #else:
+        # else:
         if smartservo_updown.get_value("angle") < -56:
             servo_value = smartservo_updown.get_value("angle")
             while servo_value < -56:
