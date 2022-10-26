@@ -16,6 +16,10 @@ colors = ['0x33FFEC', '0xFF3333', '0xFF333']
 smartservo_arm = smartservo_class("M6", "INDEX1")
 smartservo_turret = smartservo_class("M5", "INDEX1")
 
+# LED Lights. For testing
+dual_rgb_sensor_1 = dual_rgb_sensor_class("PORT2", "INDEX1")
+dual_rgb_sensor_2 = dual_rgb_sensor_class("PORT2", "INDEX2")
+
 # Motors
 motor1 = encoder_motor_class("M1", "INDEX1")
 motor2 = encoder_motor_class("M2", "INDEX1")
@@ -114,6 +118,8 @@ def AutoStart():
     # Measure distance between bot and ball       
     # If near collect ball, rotate 90' and shoot ^ Above code are now inside AutoAssets.ShootRoutine()
     # When done, quit'
+    dual_rgb_sensor_1.set_led_color("red")
+    dual_rgb_sensor_2.set_led_color("red")
 
     AutoAssets.MoveForward()
     time.sleep(2)
@@ -123,6 +129,10 @@ def AutoStart():
     time.sleep(2)
     AutoAssets.RotateLeft()
     time.sleep(2)
+
+    dual_rgb_sensor_1.set_led_color("green")
+    dual_rgb_sensor_2.set_led_color("green")
+    time.sleep(5)
     #AutoAssets.ShootRoutine()
     pass
 
@@ -134,4 +144,6 @@ while True:
         AutoStart()
         auto_stage = 0
     else:
+        dual_rgb_sensor_1.set_led_color("blue")
+        dual_rgb_sensor_2.set_led_color("blue")
         pass
