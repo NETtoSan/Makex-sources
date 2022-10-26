@@ -19,6 +19,7 @@ smartservo_turret = smartservo_class("M5", "INDEX1")
 
 # Ranging sensor
 distance_sensor_1 = ranging_sensor_class("PORT3", "INDEX1")
+distance_sensor_arm = ranging_sensor_class("PORT3", "INDEX2")
 
 # LED Lights. For testing
 dual_rgb_sensor_1 = dual_rgb_sensor_class("PORT2", "INDEX1")
@@ -40,6 +41,12 @@ class MovementAsset:
         motor2.set_power(v2)
         motor3.set_power(v3)
         motor4.set_power(v4)
+
+    def stop():
+        motor1.set_power(0)
+        motor2.set_power(0)
+        motor3.set_power(0)
+        motor4.set_power(0)
 
 
 class AutoAssets:
@@ -65,6 +72,30 @@ class AutoAssets:
     def Shoot():
         power_expand_board.set_power("DC3", 100)
         pass
+
+    # Return value functions
+
+    def getSelfAngle():
+        # GetSelfAngle utilizes its own accelerometer
+        # What it does is obtain its own XYZ orientation
+        # And returns an orientation value as array
+
+        angle = [0, 0, 0]
+
+        return angle
+        pass
+
+    def GetDistance():
+        # GetDistance utilizes a ranging sensor Module
+        # What it does is detects an object in front of it
+        # And returns a distance value as number
+
+        range = distance_sensor_1.get_distance()
+
+        return range
+        pass
+
+    # Presets
 
     def ShootRoutine():
         # LED STATUS
@@ -101,7 +132,7 @@ class AutoAssets:
         orientation = AutoAssets.GetSelfAngle()[2]
         while orientation != 0:
             while orientation < 45:
-                
+
                 dual_rgb_sensor_1.set_led_color("green")
                 AutoAssets.RotateRight()
                 time.sleep(0.5)
@@ -119,24 +150,55 @@ class AutoAssets:
         AutoAssets.shoot()
         pass
 
-    def getSelfAngle():
-        # GetSelfAngle utilizes its own accelerometer
-        # What it does is obtain its own XYZ orientation
-        # And returns an orientation value as array
+    def EmbraceBallRoutine():
 
-        angle = [0, 0, 0]
+        original_angle = AutoAssets.getSelfAngle()
+        relative_angle = AutoAssets.getSelfAngle()
 
-        return angle
+        relative_distance = distance_sensor_1.get_distance()
+
+        while relative_distance > 10:
+            AutoAssets.MoveForward()
+            # Constantly updating relative distance
+            relative_distance = distance_sensor_1.get_distance()
+        
         pass
 
-    def GetDistance():
-        # GetDistance utilizes a ranging sensor Module
-        # What it does is detects an object in front of it
-        # And returns a distance value as number
+    def GrabCubeRoutine():
+        # Constantly avoiding the ball location
+        # If found the ball. Rotate 90 <- find radiant/sec the bot gives
+        # <- If rotated for 1 sec
 
-        range = distance_sensor_1.get_distance()
+        original_angle = AutoAssets.getSelfAngle()
+        relative_angle = AutoAssets.getSelfAngle()
 
-        return range
+        relative_distance = distance_sensor_1.get_distance()
+
+        while relative_distance > 10:
+            AutoAssets.MoveForward()
+            # Constantly updating relative distance
+            relative_distance = distance_sensor_1.get_distance()
+
+        # Pretend its 45'/sec
+        # 30cm/sec
+        AutoAssets.RotateRight()
+        time.sleep(2)
+        AutoAssets.MoveForward()
+        time.sleep(1)
+        AutoAssets.RotateLeft()
+        time.sleep(1)
+        AutoAssets.MoveForward()
+        time.sleep(2)
+
+        # Pretend the servo arm is at its upmost angle. And it's at 0'
+        smartservo_arm.move(-90)
+        time.sleep(1)
+        cube_distance = distance_sensor_arm.get_distance()
+
+        while cube_distance > 10:
+            pass
+        # Finish the code later, ran out of ideas
+
         pass
 
 
@@ -174,4 +236,5 @@ while True:
     else:
         dual_rgb_sensor_1.set_led_color("blue")
         dual_rgb_sensor_2.set_led_color("blue")
+        pass
         pass
