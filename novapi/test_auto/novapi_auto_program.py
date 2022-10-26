@@ -117,8 +117,13 @@ def AutoStart():
 
     AutoAssets.MoveForward()
     time.sleep(2)
-
-    AutoAssets.ShootRoutine()
+    AutoAssets.MoveBackward()
+    time.sleep(2)
+    AutoAssets.RotateRight()
+    time.sleep(2)
+    AutoAssets.RotateLeft()
+    time.sleep(2)
+    #AutoAssets.ShootRoutine()
     pass
 
 
