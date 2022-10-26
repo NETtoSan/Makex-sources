@@ -5,6 +5,7 @@ from mbuild import power_expand_board
 from mbuild.dual_rgb_sensor import dual_rgb_sensor_class
 from mbuild.smartservo import smartservo_class
 from mbuild.encoder_motor import encoder_motor_class
+from mbuild.ranging_sensor import ranging_sensor_class
 
 
 auto_stage = 0
@@ -15,6 +16,9 @@ colors = ['0x33FFEC', '0xFF3333', '0xFF333']
 # Switch to INDEX1 and INDEX3 if we only have short wires
 smartservo_arm = smartservo_class("M6", "INDEX1")
 smartservo_turret = smartservo_class("M5", "INDEX1")
+
+# Ranging sensor
+distance_sensor_1 = ranging_sensor_class("PORT3", "INDEX1")
 
 # LED Lights. For testing
 dual_rgb_sensor_1 = dual_rgb_sensor_class("PORT2", "INDEX1")
@@ -59,36 +63,60 @@ class AutoAssets:
         pass
 
     def Shoot():
+        power_expand_board.set_power("DC3", 100)
         pass
 
     def ShootRoutine():
+        # LED STATUS
+        # red = done
+        # green = doing
+
+        # Enable ball feed fx
+        power_expand_board.set_power("DC2", 100)
+        power_expand_board.set_power("DC1", -100)
+
         # Suppose the bot moves forward with a timed sequence
         AutoAssets.MoveForward()
+        dual_rgb_sensor_1.set_led_color("green")
         time.sleep(1)
 
         # or according to distance between itself and a ball
-        distance = AutoAssets.GetDistance()
-        if distance > 5:
-            while distance > 1:
-                AutoAssets.MoveForward()
-                distance = AutoAssets.GetDistance()
+        # distance = AutoAssets.GetDistance()
+        # if distance > 5:
+        #    while distance > 1:
+        #        AutoAssets.MoveForward()
+        #        distance = AutoAssets.GetDistance()
+
+        power_expand_board.stop("DC2")
+        power_expand_board.stop("DC1")
+        dual_rgb_sensor_1.set_led_color("red")
 
         # Rotate bot 90 (suppose the moves 45'/sec)
+        dual_rgb_sensor_1.set_led_color("green")
         AutoAssets.RotateLeft()
         time.sleep(2)
-        
+        dual_rgb_sensor_1.set_led_color("red")
+
         # The actual shooting mode. once the ball is loaded into the compartment
         orientation = AutoAssets.GetSelfAngle()[2]
         while orientation != 0:
             while orientation < 45:
+                
+                dual_rgb_sensor_1.set_led_color("green")
                 AutoAssets.RotateRight()
                 time.sleep(0.5)
+
+                dual_rgb_sensor_1.set_led_color("red")
+                dual_rgb_sensor_1.set_led_color("green")
                 AutoAssets.shoot()
                 time.sleep(1)
+
+                power_expand_board.stop("DC3")
+                dual_rgb_sensor_1.set_led_color("red")
+
                 orientation = AutoAssets.getSelfAngle()[2]
 
         AutoAssets.shoot()
-
         pass
 
     def getSelfAngle():
@@ -106,7 +134,7 @@ class AutoAssets:
         # What it does is detects an object in front of it
         # And returns a distance value as number
 
-        range = 0  # Replace 0 with an appropriate ranging sensor code
+        range = distance_sensor_1.get_distance()
 
         return range
         pass
@@ -115,7 +143,7 @@ class AutoAssets:
 def AutoStart():
     global auto_stage
     # Move bot 10 secs
-    # Measure distance between bot and ball       
+    # Measure distance between bot and ball
     # If near collect ball, rotate 90' and shoot ^ Above code are now inside AutoAssets.ShootRoutine()
     # When done, quit'
     dual_rgb_sensor_1.set_led_color("red")
