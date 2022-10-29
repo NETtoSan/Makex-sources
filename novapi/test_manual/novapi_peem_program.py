@@ -22,11 +22,11 @@ dc4_variable = "DC4"
 dc5_variable = "DC5"
 
 # Arm
-smartservo_arm = smartservo_class("M5", "INDEX1")
+smartservo_arm = smartservo_class("M6", "INDEX1")
 
 # Hand
-smartservo_hand_left = smartservo_class("M5", "INDEX2")
-smartservo_hand_left = smartservo_class("M5", "INDEX3")
+smartservo_hand_left = smartservo_class("M6", "INDEX2")
+smartservo_hand_left = smartservo_class("M6", "INDEX3")
 
 # Bot motors
 encoder_motor_M1 = encoder_motor_class("M1", "INDEX1")
@@ -50,6 +50,7 @@ def Manual():
     while True:
         time.sleep(0.001)
         JoyRes.MovingJoystick(invert)
+        JoyRes.ArmControl()
 
 
 def LoadMe():
@@ -129,7 +130,15 @@ class JoyRes:
         encoder_motor_M2.set_power(EFr)
         encoder_motor_M3.set_power(ERl)
         encoder_motor_M4.set_power(ERr)
-
+    
+    def ArmControl():
+        smartservo_arm.move(gamepad.get_joystick("Ry") / 2, 20)
+        if gamepad.is_key_pressed("L1"):
+            smartservo_hand_left.move(2,10)
+            smartservo_hand_right.move(2,10)
+        else:
+            smartservo_hand_left.move(-2,10)
+            smartservo_hand_right.move(-2,10)          
 
 class ManualRes:
     def __init__(self):
