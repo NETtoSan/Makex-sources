@@ -4,6 +4,7 @@ from mbuild.dual_rgb_sensor import dual_rgb_sensor_class
 from mbuild import power_expand_board
 from mbuild import gamepad
 import novapi
+import time
 
 # initialize the variables
 auto_stage = 0
@@ -115,10 +116,10 @@ def LoadMe():
 
     smartservo_arm.set_power(50)
     smartservo_arm.move(30, 10)
-    #power_expand_board.set_power("BL1", 50)
-    #power_expand_board.set_power(dc1_variable, 50)
-    #power_expand_board.stop("BL1")
-    #power_expand_board.stop(dc1_variable)
+    # power_expand_board.set_power("BL1", 50)
+    # power_expand_board.set_power(dc1_variable, 50)
+    # power_expand_board.stop("BL1")
+    # power_expand_board.stop(dc1_variable)
 
 
 class JoyRes:
@@ -139,19 +140,19 @@ class JoyRes:
         # Adjust LR slide tuning here
         if gamepad.get_joystick("Lx") != 0:
 
-            #if gamepad.get_joystick("Lx") < 0:
+            # if gamepad.get_joystick("Lx") < 0:
             #    Rl = Lx
             #    Rr = Lx
 
-            #if gamepad.get_joystick("Lx") > 10:
+            # if gamepad.get_joystick("Lx") > 10:
             #    Rl = Lx + Lx
             #    Rr = Lx - Lx
             Fl = Lx + 20
             Fr = Lx + 20
-            #Bring this back in case things wont go well
-            #Fr = Lx + Fr
-        #Fl = Lx
-        #Fr = Lx
+            # Bring this back in case things wont go well
+            # Fr = Lx + Fr
+        # Fl = Lx
+        # Fr = Lx
         Rl = Lx
         Rr = Lx
         # Encoder values. If the encoder motors config are changed even the slightest. change this one first then the inverted controls
@@ -226,8 +227,9 @@ class JoyRes:
         pass
 
     def HandControl():
+        power_expand_board.set_power("DC5", gamepad.get_joystick("Ry"))
 
-        smartservo_arm.move(gamepad.get_joystick("Ry"), 10)
+        # smartservo_arm.move(gamepad.get_joystick("Ry"), 10)
         pass
 
     def MultiControl(lc):
