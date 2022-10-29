@@ -12,7 +12,7 @@ shoot = 0
 invert = 0
 feeddc = 1
 lrmode = 0  # Differentiate between shoot and arm control mode
-
+bp = 50
 
 # DC motors
 dc1_variable = "DC1"
@@ -48,13 +48,14 @@ def Manual():
     global invert
     global lrmode
     global feeddc
+    global bp
     LoadMe()
     while True:
         time.sleep(0.001)
         JoyRes.MovingJoystick(invert)
         ManualRes.InvertLED(invert)
         ManualRes.ControlLED(lrmode)
-        JoyRes.MultiControl(lrmode)
+        JoyRes.MultiControl(lrmode, bp)
 
         if gamepad.is_key_pressed("Up"):
             ManualRes.MoveForward()
@@ -76,6 +77,12 @@ def Manual():
             power_expand_board.stop("DC5")
 
         if gamepad.is_key_pressed("N2"):
+            if bp == 50:
+                bp = 100
+            elif bp == 100:
+                bp = 0
+            else:
+                bp = 50
             pass
 
         if gamepad.is_key_pressed("N3"):
@@ -155,7 +162,8 @@ class JoyRes:
         # Fr = Lx
         Rl = Lx
         Rr = Lx
-        # Encoder values. If the encoder motors config are changed even the slightest. change this one first then the inverted controls
+        # Encoder values. If the encoder motors config are changed even the
+        # slightest. change this one first then the inverted controls
 
         vl = 0.8
 
@@ -168,7 +176,8 @@ class JoyRes:
         ERr = -vl * (gamepad.get_joystick("Ly") - Fr
                      + gamepad.get_joystick("Rx"))
 
-        if invert == 1:  # If the controls are inverted The arms are now the bot's front
+        if invert == 1:
+            # If the controls are inverted The arms are now the bot's front
             EFr = vl * (gamepad.get_joystick("Ly")
                         - Fl - gamepad.get_joystick("Rx"))
             EFl = -vl * (gamepad.get_joystick("Ly") + Fr
@@ -232,7 +241,7 @@ class JoyRes:
         # smartservo_arm.move(gamepad.get_joystick("Ry"), 10)
         pass
 
-    def MultiControl(lc):
+    def MultiControl(lc, bp):
         if lc == 0:
             # Gun control mode
             JoyRes.TurretControl()
@@ -240,9 +249,8 @@ class JoyRes:
             JoyRes.FeedControl()
 
             # < 15 -- 23 > : 25 max
-            brushless_power = 50
-            power_expand_board.set_power("BL1", brushless_power)
-            power_expand_board.set_power("BL2", brushless_power)
+            power_expand_board.set_power("BL1", bp)
+            power_expand_board.set_power("BL2", bp)
         else:
             # Hand control mode
             JoyRes.HandControl()
