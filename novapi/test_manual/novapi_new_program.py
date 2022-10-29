@@ -83,6 +83,8 @@ def Manual():
                 bp = 0
             else:
                 bp = 50
+            while not not gamepad.is_key_pressed("N2"):
+                pass
             pass
 
         if gamepad.is_key_pressed("N3"):
