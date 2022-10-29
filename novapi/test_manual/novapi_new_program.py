@@ -230,8 +230,8 @@ class JoyRes:
             JoyRes.FeedControl()
 
             # < 15 -- 23 > : 25 max
-            power_expand_board.set_power("BL1", 23)
-            power_expand_board.set_power("BL2", 23)
+            power_expand_board.set_power("BL1", 17)
+            power_expand_board.set_power("BL2", 17)
         else:
             # Hand control mode
             JoyRes.HandControl()
