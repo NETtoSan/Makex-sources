@@ -3,7 +3,7 @@ from mbuild.smartservo import smartservo_class
 from mbuild.dual_rgb_sensor import dual_rgb_sensor_class
 from mbuild import power_expand_board
 from mbuild import gamepad
-dc1_variableimport novapi
+import novapi
 
 # initialize the variables
 auto_stage = 0
@@ -16,7 +16,7 @@ lrmode = 0  # Differentiate between shoot and arm control mode
 # DC motors
 dc1_variable = "DC1"
 dc2_variable = "DC2"
-dc3_variable = dc3_variable
+dc3_variable = "DC3"
 dc4_variable = "DC4"
 dc5_variable = "DC5"
 
