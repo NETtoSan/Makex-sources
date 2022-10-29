@@ -1,9 +1,9 @@
-import novapi
-from mbuild import gamepad
-from mbuild import power_expand_board
-from mbuild.dual_rgb_sensor import dual_rgb_sensor_class
-from mbuild.smartservo import smartservo_class
 from mbuild.encoder_motor import encoder_motor_class
+from mbuild.smartservo import smartservo_class
+from mbuild.dual_rgb_sensor import dual_rgb_sensor_class
+from mbuild import power_expand_board
+from mbuild import gamepad
+dc1_variableimport novapi
 
 # initialize the variables
 auto_stage = 0
@@ -11,6 +11,14 @@ shoot = 0
 invert = 0
 feeddc = 1
 lrmode = 0  # Differentiate between shoot and arm control mode
+
+
+# DC motors
+dc1_variable = "DC1"
+dc2_variable = "DC2"
+dc3_variable = dc3_variable
+dc4_variable = "DC4"
+dc5_variable = "DC5"
 
 # Sensors
 dual_rgb_sensor_1 = dual_rgb_sensor_class("PORT2", "INDEX1")
@@ -97,9 +105,9 @@ def Manual():
 
         # Dc feed
         if feeddc == 1:
-            power_expand_board.set_power("DC2", -100)
+            power_expand_board.set_power(dc2_variable, -100)
         else:
-            power_expand_board.stop("DC2")
+            power_expand_board.stop(dc2_variable)
 
 
 def LoadMe():
@@ -108,9 +116,9 @@ def LoadMe():
     smartservo_arm.set_power(50)
     smartservo_arm.move(30, 10)
     #power_expand_board.set_power("BL1", 50)
-    #power_expand_board.set_power("DC1", 50)
+    #power_expand_board.set_power(dc1_variable, 50)
     #power_expand_board.stop("BL1")
-    #power_expand_board.stop("DC1")
+    #power_expand_board.stop(dc1_variable)
 
 
 class JoyRes:
@@ -151,23 +159,23 @@ class JoyRes:
         vl = 0.8
 
         EFl = vl * (gamepad.get_joystick("Ly") - Rl
-                   - gamepad.get_joystick("Rx"))
+                    - gamepad.get_joystick("Rx"))
         EFr = -vl * (gamepad.get_joystick("Ly") + Rr
-                    + gamepad.get_joystick("Rx"))
+                     + gamepad.get_joystick("Rx"))
         ERl = vl * (gamepad.get_joystick("Ly")
-                   + Fl - gamepad.get_joystick("Rx"))
+                    + Fl - gamepad.get_joystick("Rx"))
         ERr = -vl * (gamepad.get_joystick("Ly") - Fr
-                    + gamepad.get_joystick("Rx"))
+                     + gamepad.get_joystick("Rx"))
 
         if invert == 1:  # If the controls are inverted The arms are now the bot's front
             EFr = vl * (gamepad.get_joystick("Ly")
-                       - Fl - gamepad.get_joystick("Rx"))
+                        - Fl - gamepad.get_joystick("Rx"))
             EFl = -vl * (gamepad.get_joystick("Ly") + Fr
-                        + gamepad.get_joystick("Rx"))
+                         + gamepad.get_joystick("Rx"))
             ERr = vl * (gamepad.get_joystick("Ly") + Rl
-                       - gamepad.get_joystick("Rx"))
+                        - gamepad.get_joystick("Rx"))
             ERl = -vl * (gamepad.get_joystick("Ly") - Rr
-                        + gamepad.get_joystick("Rx"))
+                         + gamepad.get_joystick("Rx"))
         encoder_motor_M1.set_power(EFl)
         encoder_motor_M2.set_power(EFr)
         encoder_motor_M3.set_power(ERl)
@@ -194,17 +202,17 @@ class JoyRes:
 
     def FeedControl():
         if gamepad.is_key_pressed("L1"):
-            power_expand_board.set_power("DC1", -100)
+            power_expand_board.set_power(dc1_variable, -100)
         elif gamepad.is_key_pressed("L2"):
-            power_expand_board.set_power("DC1", 100)
+            power_expand_board.set_power(dc1_variable, 100)
         else:
             power_expand_board.stop("DC1")
 
     def ShootControl():
         if gamepad.is_key_pressed("R1"):
-            power_expand_board.set_power("DC3", -100)
+            power_expand_board.set_power(dc3_variable, -100)
         else:
-            power_expand_board.stop("DC3")
+            power_expand_board.stop(dc3_variable)
 
     def GrabControl():
         # DC4 L1 release R1 grab
@@ -230,8 +238,9 @@ class JoyRes:
             JoyRes.FeedControl()
 
             # < 15 -- 23 > : 25 max
-            power_expand_board.set_power("BL1", 17)
-            power_expand_board.set_power("BL2", 17)
+            brushless_power = 50
+            power_expand_board.set_power("BL1", brushless_power)
+            power_expand_board.set_power("BL2", brushless_power)
         else:
             # Hand control mode
             JoyRes.HandControl()
