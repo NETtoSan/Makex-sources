@@ -60,7 +60,11 @@ def Manual():
             ManualRes.MoveRight()
 
         if gamepad.is_key_pressed("N1"):
-            smartservo_arm.move(10, 10)
+            power_expand_board.set_power("DC5", -20)
+        elif gamepad.is_key_pressed("N4"):
+            power_expand_board.set_power("DC5", 20)
+        else:
+            power_expand_board.stop("DC5")
 
         if gamepad.is_key_pressed("N2"):
             pass
@@ -73,9 +77,6 @@ def Manual():
             while not not gamepad.is_key_pressed("N3"):
                 pass
             pass
-
-        if gamepad.is_key_pressed("N4"):
-            smartservo_arm.move(-10, 10)
 
         # Switch shooting to arm control
         if gamepad.is_key_pressed("R2"):
@@ -106,10 +107,10 @@ def LoadMe():
 
     smartservo_arm.set_power(50)
     smartservo_arm.move(30, 10)
-    power_expand_board.set_power("BL1", 50)
-    power_expand_board.set_power("DC1", 50)
-    power_expand_board.stop("BL1")
-    power_expand_board.stop("DC1")
+    #power_expand_board.set_power("BL1", 50)
+    #power_expand_board.set_power("DC1", 50)
+    #power_expand_board.stop("BL1")
+    #power_expand_board.stop("DC1")
 
 
 class JoyRes:
@@ -130,33 +131,42 @@ class JoyRes:
         # Adjust LR slide tuning here
         if gamepad.get_joystick("Lx") != 0:
 
-            if gamepad.get_joystick("Lx") < 0:
-                Fl = Lx + 10
-            if gamepad.get_joystick("Lx") > 10:
-                Fl = Lx - 10
+            #if gamepad.get_joystick("Lx") < 0:
+            #    Rl = Lx
+            #    Rr = Lx
 
-            Fr = Lx + Fr
-            Rl = Lx + Rl
-            Rr = Lx + Rr
+            #if gamepad.get_joystick("Lx") > 10:
+            #    Rl = Lx + Lx
+            #    Rr = Lx - Lx
+            Fl = Lx + 20
+            Fr = Lx + 20
+            #Bring this back in case things wont go well
+            #Fr = Lx + Fr
+        #Fl = Lx
+        #Fr = Lx
+        Rl = Lx
+        Rr = Lx 
         # Encoder values. If the encoder motors config are changed even the slightest. change this one first then the inverted controls
 
-        EFl = 1 * (gamepad.get_joystick("Ly") - Rl
+        vl = 0.8
+        
+        EFl = vl * (gamepad.get_joystick("Ly") - Rl
                    - gamepad.get_joystick("Rx"))
-        EFr = -1 * (gamepad.get_joystick("Ly") + Rr
+        EFr = -vl * (gamepad.get_joystick("Ly") + Rr
                     + gamepad.get_joystick("Rx"))
-        ERl = 1 * (gamepad.get_joystick("Ly")
+        ERl = vl * (gamepad.get_joystick("Ly")
                    + Fl - gamepad.get_joystick("Rx"))
-        ERr = -1 * (gamepad.get_joystick("Ly") - Fr
+        ERr = -vl * (gamepad.get_joystick("Ly") - Fr
                     + gamepad.get_joystick("Rx"))
 
         if invert == 1:  # If the controls are inverted The arms are now the bot's front
-            EFr = 1 * (gamepad.get_joystick("Ly")
+            EFr = vl * (gamepad.get_joystick("Ly")
                        - Fl - gamepad.get_joystick("Rx"))
-            EFl = -1 * (gamepad.get_joystick("Ly") + Fr
+            EFl = -vl * (gamepad.get_joystick("Ly") + Fr
                         + gamepad.get_joystick("Rx"))
-            ERr = 1 * (gamepad.get_joystick("Ly") + Rl
+            ERr = vl * (gamepad.get_joystick("Ly") + Rl
                        - gamepad.get_joystick("Rx"))
-            ERl = -1 * (gamepad.get_joystick("Ly") - Rr
+            ERl = -vl * (gamepad.get_joystick("Ly") - Rr
                         + gamepad.get_joystick("Rx"))
         encoder_motor_M1.set_power(EFl)
         encoder_motor_M2.set_power(EFr)
@@ -178,7 +188,9 @@ class JoyRes:
                 smartservo_updown.move(3, 10)
                 servo_value = smartservo_updown.get_value("angle")
 
-        smartservo_updown.move(-gamepad.get_joystick("Ry"), 10)
+        relative_angle = gamepad.get_joystick("Ry") / 2
+
+        smartservo_updown.move(relative_angle, 10)
 
     def FeedControl():
         if gamepad.is_key_pressed("L1"):
@@ -187,7 +199,6 @@ class JoyRes:
             power_expand_board.set_power("DC1", 100)
         else:
             power_expand_board.stop("DC1")
-            0
 
     def ShootControl():
         if gamepad.is_key_pressed("R1"):
@@ -217,8 +228,10 @@ class JoyRes:
             JoyRes.TurretControl()
             JoyRes.ShootControl()
             JoyRes.FeedControl()
-            power_expand_board.set_power("BL1", 20)
-            power_expand_board.set_power("BL2", 20)
+
+            # < 15 -- 23 > : 25 max
+            power_expand_board.set_power("BL1", 23)
+            power_expand_board.set_power("BL2", 23)
         else:
             # Hand control mode
             JoyRes.HandControl()
