@@ -188,7 +188,7 @@ class JoyRes:
                 smartservo_updown.move(3, 10)
                 servo_value = smartservo_updown.get_value("angle")
 
-        relative_angle = -gamepad.get_joystick("Ry") / 2
+        relative_angle = gamepad.get_joystick("Ry") / 3
 
         smartservo_updown.move(relative_angle, 10)
 
