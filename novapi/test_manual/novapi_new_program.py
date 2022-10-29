@@ -239,7 +239,7 @@ class JoyRes:
 
     def HandControl():
         power_expand_board.set_power("DC6", gamepad.get_joystick("Ry"))
-        power_expand_board.set_power("DC7", gamepad.get_joystick("Ry"))
+        # power_expand_board.set_power("DC7", gamepad.get_joystick("Ry"))
         # smartservo_arm.move(gamepad.get_joystick("Ry"), 10)
         pass
 
