@@ -98,8 +98,8 @@ class JoyRes:
             Fr = Lx + 20
             # Bring this back in case things wont go well
             # Fr = Lx + Fr
-        # Fl = Lx
-        # Fr = Lx
+        Fl = Lx + Fl
+        Fr = Lx + Fr
         Rl = Lx
         Rr = Lx
         # Encoder values. If the encoder motors config are changed even the
@@ -130,16 +130,17 @@ class JoyRes:
         encoder_motor_M2.set_power(EFr)
         encoder_motor_M3.set_power(ERl)
         encoder_motor_M4.set_power(ERr)
-
+    
     def ArmControl():
         smartservo_arm.move(gamepad.get_joystick("Ry") / 2, 20)
         if gamepad.is_key_pressed("L1"):
-            smartservo_hand_left.move(5, 10)
-            smartservo_hand_right.move(5, 10)
+            smartservo_hand_left.move(5,10)
+            smartservo_hand_right.move(5,10)
+        elif gamepad.is_key_press("R1"):
+            smartservo_hand_left.move(-5,10)
+            smartservo_hand_right.move(-5,10)       
         else:
-            smartservo_hand_left.move(-5, 10)
-            smartservo_hand_right.move(-5, 10)
-
+            pass
 
 class ManualRes:
     def __init__(self):
