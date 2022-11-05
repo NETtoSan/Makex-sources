@@ -9,8 +9,12 @@ from mbuild.ranging_sensor import ranging_sensor_class
 
 
 auto_stage = 0
-modes = ["index0 pls fix", "shoot", "cube"]
-colors = ['0x33FFEC', '0xFF3333', '0xFF333']
+movement_prefix = {
+    "fw": [ 50, -50, 50, -50],
+    "bw": [ -50, 50, -50, 50],
+    "rl": [ -50, -50, -50, -50],
+    "rr": [ 50, 50, 50, 50]
+}
 
 
 # Switch to INDEX1 and INDEX3 if we only have short wires
@@ -43,7 +47,7 @@ class MovementAsset:
         motor4.set_power(v4)
 
     # This def controls and linears bot motor power graph
-    def TranscodeMotorValue(v1, v2, v3, v4):
+    def TranscodeMotorValues(v1, v2, v3, v4):
         # Set everything to default. Move bot forward
         if not v1:
             v1 = 50
@@ -55,8 +59,15 @@ class MovementAsset:
             v4 = -50
         MovementAsset.move(v1, v2, v3, v4)
 
+    # This def controls and linears bot motor power using provided movement prefixes
+    def TranscodeMotorModes(mode):
+        v1 = 0 ; v2 = 0 ; v3 = 0 ; v4 = 0
+
+        if movement_prefix[mode]:
+            pass
+
     def stop():
-        MovementAsset.TranscodeMotorValue(0, 0, 0, 0)
+        MovementAsset.TranscodeMotorValues(0, 0, 0, 0)
 
 
 class AutoAssets:
@@ -73,7 +84,7 @@ class AutoAssets:
         if not v4:
             v4 = -50
 
-        MovementAsset.TranscodeMotorValue(v1, v2, v3, v4)
+        MovementAsset.TranscodeMotorValues(v1, v2, v3, v4)
 
     def MoveBackward(v1, v2, v3, v4):
         if not v1:
@@ -85,7 +96,7 @@ class AutoAssets:
         if not v4:
             v4 = 50
 
-        MovementAsset.TranscodeMotorValue(v1, v2, v3, v4)
+        MovementAsset.TranscodeMotorValues(v1, v2, v3, v4)
 
     def RotateLeft(v1, v2, v3, v4):
         if not v1:
@@ -97,7 +108,7 @@ class AutoAssets:
         if not v4:
             v4 = -50
 
-        MovementAsset.TranscodeMotorValue(v1, v2, v3, v4)
+        MovementAsset.TranscodeMotorValues(v1, v2, v3, v4)
 
     def RotateRight(v1, v2, v3, v4):
         if not v1:
@@ -109,10 +120,10 @@ class AutoAssets:
         if not v4:
             v4 = 50
 
-        MovementAsset.TranscodeMotorValue(v1, v2, v3, v4)
+        MovementAsset.TranscodeMotorValues(v1, v2, v3, v4)
 
     def StopMoving():
-        MovementAsset.TranscodeMotorValue(0, 0, 0, 0)
+        MovementAsset.TranscodeMotorValues(0, 0, 0, 0)
 
     def Shoot():
         power_expand_board.set_power("DC3", 100)
