@@ -42,32 +42,77 @@ class MovementAsset:
         motor3.set_power(v3)
         motor4.set_power(v4)
 
+    # This def controls and linears bot motor power graph
+    def TranscodeMotorValue(v1, v2, v3, v4):
+        # Set everything to default. Move bot forward
+        if not v1:
+            v1 = 50
+        if not v2:
+            v2 = -50
+        if not v3:
+            v3 = 50
+        if not v4:
+            v4 = -50
+        MovementAsset.move(v1, v2, v3, v4)
+
     def stop():
-        motor1.set_power(0)
-        motor2.set_power(0)
-        motor3.set_power(0)
-        motor4.set_power(0)
+        MovementAsset.TranscodeMotorValue(0, 0, 0, 0)
 
 
 class AutoAssets:
     def __init__(self):
         pass
 
-    def MoveForward():
-        MovementAsset.move(50, -50, 50, -50)
-        pass
+    def MoveForward(v1, v2, v3, v4):
+        if not v1:
+            v1 = 50
+        if not v2:
+            v2 = -50
+        if not v3:
+            v3 = 50
+        if not v4:
+            v4 = -50
 
-    def MoveBackward():
-        MovementAsset.move(-50, 50, -50, 50)
-        pass
+        MovementAsset.TranscodeMotorValue(v1, v2, v3, v4)
 
-    def RotateLeft():
-        MovementAsset.move(-50, -50, -50, -50)
-        pass
+    def MoveBackward(v1, v2, v3, v4):
+        if not v1:
+            v1 = -50
+        if not v2:
+            v2 = 50
+        if not v3:
+            v3 = -50
+        if not v4:
+            v4 = 50
 
-    def RotateRight():
-        MovementAsset.move(50, 50, 50, 50)
-        pass
+        MovementAsset.TranscodeMotorValue(v1, v2, v3, v4)
+
+    def RotateLeft(v1, v2, v3, v4):
+        if not v1:
+            v1 = -50
+        if not v2:
+            v2 = -50
+        if not v3:
+            v3 = -50
+        if not v4:
+            v4 = -50
+
+        MovementAsset.TranscodeMotorValue(v1, v2, v3, v4)
+
+    def RotateRight(v1, v2, v3, v4):
+        if not v1:
+            v1 = 50
+        if not v2:
+            v2 = 50
+        if not v3:
+            v3 = 50
+        if not v4:
+            v4 = 50
+
+        MovementAsset.TranscodeMotorValue(v1, v2, v3, v4)
+
+    def StopMoving():
+        MovementAsset.TranscodeMotorValue(0, 0, 0, 0)
 
     def Shoot():
         power_expand_board.set_power("DC3", 100)
@@ -93,7 +138,6 @@ class AutoAssets:
         range = distance_sensor_1.get_distance()
 
         return range
-        pass
 
     # Presets
 
@@ -105,11 +149,13 @@ class AutoAssets:
         # Enable ball feed fx
         power_expand_board.set_power("DC2", 100)
         power_expand_board.set_power("DC1", -100)
+        time.sleep(2)
 
         # Suppose the bot moves forward with a timed sequence
-        AutoAssets.MoveForward()
+        AutoAssets.MoveForward(10, 10, 10, 10)
         dual_rgb_sensor_1.set_led_color("green")
         time.sleep(1)
+        AutoAssets.StopMoving()
 
         # or according to distance between itself and a ball
         # distance = AutoAssets.GetDistance()
@@ -125,29 +171,30 @@ class AutoAssets:
         # Rotate bot 90 (suppose the moves 45'/sec)
         dual_rgb_sensor_1.set_led_color("green")
         AutoAssets.RotateLeft()
-        time.sleep(2)
+        time.sleep(1)
+        AutoAssets.StopMoving()
         dual_rgb_sensor_1.set_led_color("red")
 
         # The actual shooting mode. once the ball is loaded into the compartment
-        orientation = AutoAssets.GetSelfAngle()[2]
-        while orientation != 0:
-            while orientation < 45:
+        orientation = 0
+        while orientation < 45:
 
-                dual_rgb_sensor_1.set_led_color("green")
-                AutoAssets.RotateRight()
-                time.sleep(0.5)
+            dual_rgb_sensor_1.set_led_color("green")
+            AutoAssets.RotateRight()
+            time.sleep(0.5)
+            AutoAssets.StopMoving()
 
-                dual_rgb_sensor_1.set_led_color("red")
-                dual_rgb_sensor_1.set_led_color("green")
-                AutoAssets.shoot()
-                time.sleep(1)
+            dual_rgb_sensor_1.set_led_color("red")
+            time.sleep(0.5)
+            dual_rgb_sensor_1.set_led_color("green")
+            AutoAssets.shoot()
+            time.sleep(0.5)
 
-                power_expand_board.stop("DC3")
-                dual_rgb_sensor_1.set_led_color("red")
+            power_expand_board.stop("DC3")
+            dual_rgb_sensor_1.set_led_color("red")
 
-                orientation = AutoAssets.getSelfAngle()[2]
+            orientation = orientation + 10
 
-        AutoAssets.shoot()
         pass
 
     def EmbraceBallRoutine():
@@ -161,7 +208,7 @@ class AutoAssets:
             AutoAssets.MoveForward()
             # Constantly updating relative distance
             relative_distance = distance_sensor_1.get_distance()
-        
+
         pass
 
     def GrabCubeRoutine():
@@ -212,13 +259,14 @@ def AutoStart():
     dual_rgb_sensor_2.set_led_color("red")
 
     AutoAssets.MoveForward()
-    time.sleep(2)
+    time.sleep(1)
     AutoAssets.MoveBackward()
-    time.sleep(2)
+    time.sleep(1)
     AutoAssets.RotateRight()
-    time.sleep(2)
+    time.sleep(1)
     AutoAssets.RotateLeft()
-    time.sleep(2)
+    time.sleep(1)
+    AutoAssets.StopMoving()
 
     dual_rgb_sensor_1.set_led_color("green")
     dual_rgb_sensor_2.set_led_color("green")
@@ -227,7 +275,7 @@ def AutoStart():
     pass
 
 
-auto_stage = 0
+auto_stage = 1
 while True:
     time.sleep(0.001)
     if auto_stage == 1:
