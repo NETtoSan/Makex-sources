@@ -58,16 +58,16 @@ def Manual():
         JoyRes.MultiControl(lrmode, bp)
 
         if gamepad.is_key_pressed("Up"):
-            ManualRes.MoveForward()
+            pass
 
         if gamepad.is_key_pressed("Down"):
-            ManualRes.MoveBackward()
+            pass
 
         if gamepad.is_key_pressed("Left"):
-            ManualRes.MoveLeft()
+            pass
 
         if gamepad.is_key_pressed("Right"):
-            ManualRes.MoveRight()
+            pass
 
         if gamepad.is_key_pressed("N1"):
             power_expand_board.set_power("DC5", -20)
@@ -237,8 +237,9 @@ class JoyRes:
         pass
 
     def HandControl():
+        # Suppose we're doing dual drive setup
         power_expand_board.set_power("DC6", gamepad.get_joystick("Ry"))
-        # power_expand_board.set_power("DC7", gamepad.get_joystick("Ry"))
+        power_expand_board.set_power("DC7", gamepad.get_joystick("Ry"))
         # smartservo_arm.move(gamepad.get_joystick("Ry"), 10)
         pass
 
