@@ -12,6 +12,7 @@ shoot = 0
 invert = 0
 feeddc = 1
 lrmode = 0  # Differentiate between shoot and arm control mode
+vl_sample = [0.5, 0.8, 1.0]
 bp = 50
 
 # DC motors
