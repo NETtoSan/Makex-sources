@@ -58,16 +58,16 @@ def Manual():
         JoyRes.MultiControl(lrmode, bp)
 
         if gamepad.is_key_pressed("Up"):
-            pass
+            ManualRes.MoveForward()
 
         if gamepad.is_key_pressed("Down"):
-            pass
+            ManualRes.MoveBackward()
 
         if gamepad.is_key_pressed("Left"):
-            pass
+            ManualRes.MoveLeft()
 
         if gamepad.is_key_pressed("Right"):
-            pass
+            ManualRes.MoveRight()
 
         if gamepad.is_key_pressed("N1"):
             power_expand_board.set_power("DC5", -20)
@@ -148,7 +148,7 @@ class JoyRes:
 
         # Adjust LR slide tuning here
         if gamepad.get_joystick("Lx") != 0:
-            
+
             if gamepad.get_joystick("Lx") < 0:
                 Fl = Lx - 20
                 Fr = Lx - 20
@@ -156,7 +156,7 @@ class JoyRes:
             if gamepad.get_joystick("Lx") > 10:
                 Fl = Lx + 20
                 Fr = Lx + 20
-            
+
             # Bring this back in case things wont go well
             # Fr = Lx + Fr
         # Fl = Lx
@@ -237,7 +237,6 @@ class JoyRes:
         pass
 
     def HandControl():
-        # Suppose we're doing dual drive setup
         power_expand_board.set_power("DC6", gamepad.get_joystick("Ry"))
         power_expand_board.set_power("DC7", gamepad.get_joystick("Ry"))
         # smartservo_arm.move(gamepad.get_joystick("Ry"), 10)
