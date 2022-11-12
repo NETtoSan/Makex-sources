@@ -12,8 +12,8 @@ shoot = 0
 invert = 0
 feeddc = 1
 lrmode = 0  # Differentiate between shoot and arm control mode
-vl_sample = [0.5, 0.8, 1.0]
 bp = 50
+vl = 0.5
 
 # DC motors
 dc1_variable = "DC1"
@@ -105,6 +105,18 @@ def Manual():
                 lrmode = 0
             while not not gamepad.is_key_pressed("R2"):
                 pass
+        # Control speed
+
+        if gamepad.is_key_pressed("L_Thumb"):
+            if vl == 0.5:
+                vl = 0.8
+            elif vl == 0.8:
+                vl = 1
+            else:
+                vl = 0.5
+
+            while not not gamepad.is_key_pressed("L_Thumb"):
+                pass
         # Invert control direction
         if gamepad.is_key_pressed("R_Thumb"):
             if invert == 0:
@@ -141,6 +153,7 @@ class JoyRes:
 
         # Code for bot movement from left to right.
         # If the bot starts slipping to unwanted direction. Tune variables here
+        
         Lx = gamepad.get_joystick("Lx")  # literally Lx variable
         Fl = 0   # Front left
         Fr = 0   # Front right
@@ -164,10 +177,6 @@ class JoyRes:
         Fr = Lx
         Rl = Lx
         Rr = Lx
-        # Encoder values. If the encoder motors config are changed even the
-        # slightest. change this one first then the inverted controls
-
-        vl = 0.8
 
         EFl = vl * (gamepad.get_joystick("Ly") - Rl
                     - gamepad.get_joystick("Rx"))
