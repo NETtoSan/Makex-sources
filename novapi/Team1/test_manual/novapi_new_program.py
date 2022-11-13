@@ -56,76 +56,9 @@ def Manual():
         JoyRes.MovingJoystick(invert)
         ManualRes.InvertLED(invert)
         ManualRes.ControlLED(lrmode)
+        JoyRes.ButtonControl()
         JoyRes.MultiControl(lrmode, bp)
-
-        if gamepad.is_key_pressed("Up"):
-            ManualRes.MoveForward()
-
-        if gamepad.is_key_pressed("Down"):
-            ManualRes.MoveBackward()
-
-        if gamepad.is_key_pressed("Left"):
-            ManualRes.MoveLeft()
-
-        if gamepad.is_key_pressed("Right"):
-            ManualRes.MoveRight()
-
-        if gamepad.is_key_pressed("N1"):
-            power_expand_board.set_power("DC5", -20)
-        elif gamepad.is_key_pressed("N4"):
-            power_expand_board.set_power("DC5", 20)
-        else:
-            power_expand_board.stop("DC5")
-
-        if gamepad.is_key_pressed("N2"):
-            if bp == 50:
-                bp = 100
-            elif bp == 100:
-                bp = 0
-            else:
-                bp = 50
-            while not not gamepad.is_key_pressed("N2"):
-                pass
-            pass
-
-        if gamepad.is_key_pressed("N3"):
-            if feeddc == 0:
-                feeddc = 1
-            else:
-                feeddc = 0
-            while not not gamepad.is_key_pressed("N3"):
-                pass
-            pass
-
-        # Switch shooting to arm control
-        if gamepad.is_key_pressed("R2"):
-            if lrmode == 0:
-                lrmode = 1
-            else:
-                lrmode = 0
-            while not not gamepad.is_key_pressed("R2"):
-                pass
-        # Control speed
-
-        if gamepad.is_key_pressed("L_Thumb"):
-            if vl == 0.5:
-                vl = 0.8
-            elif vl == 0.8:
-                vl = 1
-            else:
-                vl = 0.5
-
-            while not not gamepad.is_key_pressed("L_Thumb"):
-                pass
-        # Invert control direction
-        if gamepad.is_key_pressed("R_Thumb"):
-            if invert == 0:
-                invert = 1
-            else:
-                invert = 0
-            while not not gamepad.is_key_pressed("R_Thumb"):
-                pass
-
+        
         # Dc feed
         if feeddc == 1:
             power_expand_board.set_power(dc2_variable, -100)
@@ -251,6 +184,76 @@ class JoyRes:
         power_expand_board.set_power("DC7", gamepad.get_joystick("Ry"))
         # smartservo_arm.move(gamepad.get_joystick("Ry"), 10)
         pass
+
+    def ButtonControl():
+        
+        if gamepad.is_key_pressed("Up"):
+            ManualRes.MoveForward()
+
+        if gamepad.is_key_pressed("Down"):
+            ManualRes.MoveBackward()
+
+        if gamepad.is_key_pressed("Left"):
+            ManualRes.MoveLeft()
+
+        if gamepad.is_key_pressed("Right"):
+            ManualRes.MoveRight()
+
+        if gamepad.is_key_pressed("N1"):
+            power_expand_board.set_power("DC5", -20)
+        elif gamepad.is_key_pressed("N4"):
+            power_expand_board.set_power("DC5", 20)
+        else:
+            power_expand_board.stop("DC5")
+
+        if gamepad.is_key_pressed("N2"):
+            if bp == 50:
+                bp = 100
+            elif bp == 100:
+                bp = 0
+            else:
+                bp = 50
+            while not not gamepad.is_key_pressed("N2"):
+                pass
+            pass
+
+        if gamepad.is_key_pressed("N3"):
+            if feeddc == 0:
+                feeddc = 1
+            else:
+                feeddc = 0
+            while not not gamepad.is_key_pressed("N3"):
+                pass
+            pass
+
+        # Switch shooting to arm control
+        if gamepad.is_key_pressed("R2"):
+            if lrmode == 0:
+                lrmode = 1
+            else:
+                lrmode = 0
+            while not not gamepad.is_key_pressed("R2"):
+                pass
+        # Control speed
+
+        if gamepad.is_key_pressed("L_Thumb"):
+            if vl == 0.5:
+                vl = 0.8
+            elif vl == 0.8:
+                vl = 1
+            else:
+                vl = 0.5
+
+            while not not gamepad.is_key_pressed("L_Thumb"):
+                pass
+        # Invert control direction
+        if gamepad.is_key_pressed("R_Thumb"):
+            if invert == 0:
+                invert = 1
+            else:
+                invert = 0
+            while not not gamepad.is_key_pressed("R_Thumb"):
+                pass
 
     def MultiControl(lc, bp):
         if lc == 0:
