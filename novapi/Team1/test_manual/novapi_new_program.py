@@ -213,7 +213,7 @@ class JoyRes:
         # else:
         if smartservo_updown.get_value("angle") < -56:
             servo_value = smartservo_updown.get_value("angle")
-            while servo_value < -56:
+            while servo_value < -55:
                 smartservo_updown.move(3, 10)
                 servo_value = smartservo_updown.get_value("angle")
 
