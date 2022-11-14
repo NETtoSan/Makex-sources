@@ -99,59 +99,7 @@ class AutoAssets:
     # Presets
 
     def ShootRoutine():
-        # LED STATUS
-        # red = done
-        # green = doing
-
-        # Enable ball feed fx
-        power_expand_board.set_power("DC2", 100)
-        power_expand_board.set_power("DC1", -100)
-
-        # Suppose the bot moves forward with a timed sequence
-        AutoAssets.MoveForward()
-        dual_rgb_sensor_1.set_led_color("green")
-        time.sleep(1)
-        AutoAssets.StopMoving()
-
-        # or according to distance between itself and a ball
-        # distance = AutoAssets.GetDistance()
-        # if distance > 5:
-        #    while distance > 1:
-        #        AutoAssets.MoveForward()
-        #        distance = AutoAssets.GetDistance()
-
-        power_expand_board.stop("DC2")
-        power_expand_board.stop("DC1")
-        dual_rgb_sensor_1.set_led_color("red")
-
-        # Rotate bot 90 (suppose the moves 45'/sec)
-        dual_rgb_sensor_1.set_led_color("green")
-        AutoAssets.RotateRight()
-        time.sleep(1)
-        AutoAssets.StopMoving()
-        dual_rgb_sensor_1.set_led_color("red")
-
-        # The actual shooting mode. once the ball is loaded into the compartment
-        orientation = 1
-        while orientation < 45:
-
-            dual_rgb_sensor_1.set_led_color("green")
-            AutoAssets.RotateRight()
-            time.sleep(0.2)
-            AutoAssets.StopMoving()
-
-            dual_rgb_sensor_1.set_led_color("red")
-            time.sleep(0.5)
-            dual_rgb_sensor_1.set_led_color("green")
-            AutoAssets.shoot()
-            time.sleep(0.5)
-
-            power_expand_board.stop("DC3")
-            dual_rgb_sensor_1.set_led_color("red")
-
-            orientation = orientation + 10
-
-        AutoAssets.shoot()
+        
         pass
 
     def EmbraceBallRoutine():
@@ -215,6 +163,10 @@ def AutoStart():
     dual_rgb_sensor_1.set_led_color("red")
     dual_rgb_sensor_2.set_led_color("red")
 
+
+    AutoAssets.ShootRoutine()
+
+    # Below here goes to ShootRoutine!
     power_expand_board.set_power("DC2",75)
     power_expand_board.set_power("DC1",-100)
     power_expand_board.set_power("DC3", 75)
@@ -236,14 +188,9 @@ def AutoStart():
 
     power_expand_board.stop("DC2")
     AutoAssets.StopMoving()
-    
-    
-    AutoAssets.StopMoving()
 
     dual_rgb_sensor_1.set_led_color("green")
     dual_rgb_sensor_2.set_led_color("green")
-    time.sleep(5)
-    # AutoAssets.ShootRoutine()
     pass
 
 
