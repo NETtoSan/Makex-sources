@@ -9,12 +9,8 @@ from mbuild.ranging_sensor import ranging_sensor_class
 
 
 auto_stage = 0
-movement_prefix = {
-    "fw": [ 50, -50, 50, -50],
-    "bw": [ -50, 50, -50, 50],
-    "rl": [ -50, -50, -50, -50],
-    "rr": [ 50, 50, 50, 50]
-}
+modes = ["index0 pls fix", "shoot", "cube"]
+colors = ['0x33FFEC', '0xFF3333', '0xFF333']
 
 
 # Switch to INDEX1 and INDEX3 if we only have short wires
@@ -46,85 +42,34 @@ class MovementAsset:
         motor3.set_power(v3)
         motor4.set_power(v4)
 
-    # This def controls and linears bot motor power graph
-    def TranscodeMotorValues(v1, v2, v3, v4):
-        # Set everything to default. Move bot forward
-        if not v1:
-            v1 = 50
-        if not v2:
-            v2 = -50
-        if not v3:
-            v3 = 50
-        if not v4:
-            v4 = -50
-        MovementAsset.move(v1, v2, v3, v4)
-
-    # This def controls and linears bot motor power using provided movement prefixes
-    def TranscodeMotorModes(mode):
-        v1 = 0 ; v2 = 0 ; v3 = 0 ; v4 = 0
-
-        if movement_prefix[mode]:
-            pass
-
     def stop():
-        MovementAsset.TranscodeMotorValues(0, 0, 0, 0)
+        motor1.set_power(0)
+        motor2.set_power(0)
+        motor3.set_power(0)
+        motor4.set_power(0)
 
 
 class AutoAssets:
     def __init__(self):
         pass
 
-    def MoveForward(v1, v2, v3, v4):
-        if not v1:
-            v1 = 50
-        if not v2:
-            v2 = -50
-        if not v3:
-            v3 = 50
-        if not v4:
-            v4 = -50
+    def MoveForward():
+        MovementAsset.move(25, -25, 25, -25)
+        pass
 
-        MovementAsset.TranscodeMotorValues(v1, v2, v3, v4)
+    def MoveBackward():
+        MovementAsset.move(-25, 25, -25, 25)
+        pass
 
-    def MoveBackward(v1, v2, v3, v4):
-        if not v1:
-            v1 = -50
-        if not v2:
-            v2 = 50
-        if not v3:
-            v3 = -50
-        if not v4:
-            v4 = 50
+    def RotateLeft():
+        MovementAsset.move(-50, -50, -50, -50)
+        pass
 
-        MovementAsset.TranscodeMotorValues(v1, v2, v3, v4)
-
-    def RotateLeft(v1, v2, v3, v4):
-        if not v1:
-            v1 = -50
-        if not v2:
-            v2 = -50
-        if not v3:
-            v3 = -50
-        if not v4:
-            v4 = -50
-
-        MovementAsset.TranscodeMotorValues(v1, v2, v3, v4)
-
-    def RotateRight(v1, v2, v3, v4):
-        if not v1:
-            v1 = 50
-        if not v2:
-            v2 = 50
-        if not v3:
-            v3 = 50
-        if not v4:
-            v4 = 50
-
-        MovementAsset.TranscodeMotorValues(v1, v2, v3, v4)
-
+    def RotateRight():
+        MovementAsset.move(50, 50, 50, 50)
+        pass
     def StopMoving():
-        MovementAsset.TranscodeMotorValues(0, 0, 0, 0)
-
+        MovementAsset.move(0, 0, 0, 0)
     def Shoot():
         power_expand_board.set_power("DC3", 100)
         pass
@@ -149,6 +94,7 @@ class AutoAssets:
         range = distance_sensor_1.get_distance()
 
         return range
+        pass
 
     # Presets
 
@@ -160,10 +106,9 @@ class AutoAssets:
         # Enable ball feed fx
         power_expand_board.set_power("DC2", 100)
         power_expand_board.set_power("DC1", -100)
-        time.sleep(2)
 
         # Suppose the bot moves forward with a timed sequence
-        AutoAssets.MoveForward(10, 10, 10, 10)
+        AutoAssets.MoveForward()
         dual_rgb_sensor_1.set_led_color("green")
         time.sleep(1)
         AutoAssets.StopMoving()
@@ -181,18 +126,18 @@ class AutoAssets:
 
         # Rotate bot 90 (suppose the moves 45'/sec)
         dual_rgb_sensor_1.set_led_color("green")
-        AutoAssets.RotateLeft()
+        AutoAssets.RotateRight()
         time.sleep(1)
         AutoAssets.StopMoving()
         dual_rgb_sensor_1.set_led_color("red")
 
         # The actual shooting mode. once the ball is loaded into the compartment
-        orientation = 0
+        orientation = 1
         while orientation < 45:
 
             dual_rgb_sensor_1.set_led_color("green")
             AutoAssets.RotateRight()
-            time.sleep(0.5)
+            time.sleep(0.2)
             AutoAssets.StopMoving()
 
             dual_rgb_sensor_1.set_led_color("red")
@@ -206,6 +151,7 @@ class AutoAssets:
 
             orientation = orientation + 10
 
+        AutoAssets.shoot()
         pass
 
     def EmbraceBallRoutine():
@@ -219,7 +165,7 @@ class AutoAssets:
             AutoAssets.MoveForward()
             # Constantly updating relative distance
             relative_distance = distance_sensor_1.get_distance()
-
+        
         pass
 
     def GrabCubeRoutine():
@@ -265,24 +211,50 @@ def AutoStart():
     # Move bot 10 secs
     # Measure distance between bot and ball
     # If near collect ball, rotate 90' and shoot ^ Above code are now inside AutoAssets.ShootRoutine()
-    # When done, quit'
+    # When done, quit' 
     dual_rgb_sensor_1.set_led_color("red")
     dual_rgb_sensor_2.set_led_color("red")
 
+    power_expand_board.set_power("DC2",75)
+    power_expand_board.set_power("DC1",-100)
+
     AutoAssets.MoveForward()
-    time.sleep(1)
-    AutoAssets.MoveBackward()
-    time.sleep(1)
-    AutoAssets.RotateRight()
-    time.sleep(1)
+    time.sleep(0.5)
     AutoAssets.RotateLeft()
+    time.sleep(0.25)
+
+    AutoAssets.MoveForward()
+    time.sleep(2)
+    AutoAssets.RotateRight()
+    time.sleep(0.25)
+    AutoAssets.StopMoving()
+
     time.sleep(1)
+    AutoAssets.MoveForward()
+    power_expand_board.set_power("BL1",100)
+    power_expand_board.set_power("BL2",100)
+    time.sleep(1.25)
+    power_expand_board.stop("DC2")
+    AutoAssets.StopMoving()
+
+
+    # time.sleep(10)
+    # power_expand_board.stop("BL1")
+    # power_expand_board.stop("BL2")
+    # AutoAssets.MoveBackward()
+    # time.sleep(1)
+    # AutoAssets.RotateRight()
+    # time.sleep(1)
+    # AutoAssets.RotateLeft()
+    # time.sleep(1)
+    
+    
     AutoAssets.StopMoving()
 
     dual_rgb_sensor_1.set_led_color("green")
     dual_rgb_sensor_2.set_led_color("green")
     time.sleep(5)
-    #AutoAssets.ShootRoutine()
+    # AutoAssets.ShootRoutine()
     pass
 
 
