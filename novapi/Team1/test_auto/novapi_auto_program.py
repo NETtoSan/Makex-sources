@@ -219,36 +219,23 @@ def AutoStart():
     power_expand_board.set_power("DC1",-100)
     power_expand_board.set_power("DC3", 75)
 
-    #AutoAssets.MoveForward()
-    #time.sleep(0.5)
-    #AutoAssets.RotateLeft()
-    #time.sleep(0.25)
+    AutoAssets.MoveForward()
+    time.sleep(0.5)
+    AutoAssets.RotateLeft()
+    time.sleep(0.25)
 
-    #AutoAssets.MoveForward()
-    #time.sleep(2)
-    #AutoAssets.RotateRight()
-    #time.sleep(0.25)
-    #AutoAssets.StopMoving()
+    AutoAssets.MoveForward()
+    time.sleep(2)
+    AutoAssets.RotateRight()
+    time.sleep(0.2)
 
-    #time.sleep(1)
-    #AutoAssets.MoveForward()
+    AutoAssets.MoveForward()
     power_expand_board.set_power("BL1",100)
     power_expand_board.set_power("BL2",100)
-    #time.sleep(1.25)
+    time.sleep(1.25)
 
-    #power_expand_board.stop("DC2")
-    #AutoAssets.StopMoving()
-
-
-    # time.sleep(10)
-    # power_expand_board.stop("BL1")
-    # power_expand_board.stop("BL2")
-    # AutoAssets.MoveBackward()
-    # time.sleep(1)
-    # AutoAssets.RotateRight()
-    # time.sleep(1)
-    # AutoAssets.RotateLeft()
-    # time.sleep(1)
+    power_expand_board.stop("DC2")
+    AutoAssets.StopMoving()
     
     
     AutoAssets.StopMoving()
