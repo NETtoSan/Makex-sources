@@ -99,7 +99,11 @@ class AutoAssets:
     # Presets
 
     def ShootRoutine():
-        power_expand_board.set_power("DC2",75)
+        dual_rgb_sensor_1.set_led_color("red")
+        dual_rgb_sensor_2.set_led_color("red")
+        time.sleep(1)    
+
+        power_expand_board.set_power("DC2",70)
         power_expand_board.set_power("DC1",-100)
         power_expand_board.set_power("DC3", 75)
         
@@ -117,9 +121,19 @@ class AutoAssets:
         power_expand_board.set_power("BL1",100)
         power_expand_board.set_power("BL2",100)
         time.sleep(1.25)
-        
-        power_expand_board.stop("DC2")
+
         AutoAssets.StopMoving()
+        dual_rgb_sensor_2.set_led_color("green")
+
+        time.sleep(10)
+        for i in range(10):
+            dual_rgb_sensor_1.set_led_color("blue")
+            AutoAssets.RotateLeft()
+            time.sleep(0.1)
+            AutoAssets.StopMoving()
+            dual_rgb_sensor_1.set_led_color("red")
+            time.sleep(0.2)
+
         pass
 
     def EmbraceBallRoutine():
@@ -180,14 +194,20 @@ def AutoStart():
     # Measure distance between bot and ball
     # If near collect ball, rotate 90' and shoot ^ Above code are now inside AutoAssets.ShootRoutine()
     # When done, quit' 
-    dual_rgb_sensor_1.set_led_color("red")
-    dual_rgb_sensor_2.set_led_color("red")
 
+    #AutoAssets.ShootRoutine()
 
-    AutoAssets.ShootRoutine()
+    power_expand_board.set_power("DC2",70)
+    power_expand_board.set_power("DC1",-100)
+    power_expand_board.set_power("DC3", 100)
+
+    power_expand_board.set_power("BL1",100)
+    power_expand_board.set_power("BL2",100)
+
 
     dual_rgb_sensor_1.set_led_color("green")
     dual_rgb_sensor_2.set_led_color("green")
+    time.sleep(1)
     pass
 
 
@@ -196,9 +216,9 @@ while True:
     time.sleep(0.001)
     if auto_stage == 1:
         AutoStart()
-        auto_stage = 0
-    else:
-        dual_rgb_sensor_1.set_led_color("blue")
-        dual_rgb_sensor_2.set_led_color("blue")
-        pass
-        pass
+        #auto_stage = 0
+    #else:
+    #    dual_rgb_sensor_1.set_led_color("blue")
+    #    dual_rgb_sensor_2.set_led_color("blue")
+    #    pass
+    #    pass
