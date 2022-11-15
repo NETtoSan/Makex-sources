@@ -201,8 +201,8 @@ def AutoStart():
     power_expand_board.set_power("DC1",-100)
     power_expand_board.set_power("DC3", 100)
 
-    power_expand_board.set_power("BL1",100)
-    power_expand_board.set_power("BL2",100)
+    power_expand_board.set_power("BL1",50)
+    power_expand_board.set_power("BL2",50)
 
 
     dual_rgb_sensor_1.set_led_color("green")
