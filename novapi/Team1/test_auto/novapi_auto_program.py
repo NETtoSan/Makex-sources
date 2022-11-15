@@ -195,15 +195,7 @@ def AutoStart():
     # If near collect ball, rotate 90' and shoot ^ Above code are now inside AutoAssets.ShootRoutine()
     # When done, quit' 
 
-    #AutoAssets.ShootRoutine()
-
-    power_expand_board.set_power("DC2",70)
-    power_expand_board.set_power("DC1",-100)
-    power_expand_board.set_power("DC3", 100)
-
-    power_expand_board.set_power("BL1",50)
-    power_expand_board.set_power("BL2",50)
-
+    AutoAssets.ShootRoutine()
 
     dual_rgb_sensor_1.set_led_color("green")
     dual_rgb_sensor_2.set_led_color("green")
@@ -217,8 +209,7 @@ while True:
     if auto_stage == 1:
         AutoStart()
         #auto_stage = 0
-    #else:
-    #    dual_rgb_sensor_1.set_led_color("blue")
-    #    dual_rgb_sensor_2.set_led_color("blue")
-    #    pass
-    #    pass
+    else:
+        dual_rgb_sensor_1.set_led_color("blue")
+        dual_rgb_sensor_2.set_led_color("blue")
+        pass
