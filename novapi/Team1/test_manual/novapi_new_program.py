@@ -71,11 +71,10 @@ def Manual():
             ManualRes.MoveRight()
 
         if gamepad.is_key_pressed("N1"):
-            power_expand_board.set_power("DC5", -20)
-        elif gamepad.is_key_pressed("N4"):
-            power_expand_board.set_power("DC5", 20)
-        else:
-            power_expand_board.stop("DC5")
+            pass
+        if gamepad.is_key_pressed("N4"):
+            pass
+
 
         if gamepad.is_key_pressed("N2"):
             if bp == 50:
@@ -105,8 +104,8 @@ def Manual():
                 lrmode = 0
             while not not gamepad.is_key_pressed("R2"):
                 pass
+        
         # Control speed
-
         if gamepad.is_key_pressed("L_Thumb"):
             if vl == 0.5:
                 vl = 0.8
@@ -117,6 +116,7 @@ def Manual():
 
             while not not gamepad.is_key_pressed("L_Thumb"):
                 pass
+        
         # Invert control direction
         if gamepad.is_key_pressed("R_Thumb"):
             if invert == 0:
@@ -263,8 +263,8 @@ class JoyRes:
 class ManualRes:
     def __init__(self):
         pass
-    # Miscellaneous
 
+    # Miscellaneous
     def InvertLED(i):
         if i != 0:
             dual_rgb_sensor_1.set_led_color("red")
@@ -276,8 +276,8 @@ class ManualRes:
             dual_rgb_sensor_2.set_led_color("red")
         else:
             dual_rgb_sensor_2.set_led_color("green")
+    
     # Joystick Controls
-
     def MoveBackward():
         global auto_stage
         encoder_motor_M1.set_power(-50)
