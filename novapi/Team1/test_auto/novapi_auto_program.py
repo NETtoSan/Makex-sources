@@ -77,14 +77,10 @@ class AutoAssets:
     # Return value functions
 
     def getSelfAngle():
-        # GetSelfAngle utilizes its own accelerometer
-        # What it does is obtain its own XYZ orientation
-        # And returns an orientation value as array
 
-        angle = [0, 0, 0]
-
+        angle = [novapi.get_pitch(), novapi.get_roll(), novapi.get_yaw()]
         return angle
-        pass
+
 
     def GetDistance():
         # GetDistance utilizes a ranging sensor Module
@@ -94,7 +90,6 @@ class AutoAssets:
         range = distance_sensor_1.get_distance()
 
         return range
-        pass
 
     # Presets
 
@@ -138,52 +133,9 @@ class AutoAssets:
 
     def EmbraceBallRoutine():
 
-        original_angle = AutoAssets.getSelfAngle()
-        relative_angle = AutoAssets.getSelfAngle()
-
-        relative_distance = distance_sensor_1.get_distance()
-
-        while relative_distance > 10:
-            AutoAssets.MoveForward()
-            # Constantly updating relative distance
-            relative_distance = distance_sensor_1.get_distance()
-        
         pass
 
     def GrabCubeRoutine():
-        # Constantly avoiding the ball location
-        # If found the ball. Rotate 90 <- find radiant/sec the bot gives
-        # <- If rotated for 1 sec
-
-        original_angle = AutoAssets.getSelfAngle()
-        relative_angle = AutoAssets.getSelfAngle()
-
-        relative_distance = distance_sensor_1.get_distance()
-
-        while relative_distance > 10:
-            AutoAssets.MoveForward()
-            # Constantly updating relative distance
-            relative_distance = distance_sensor_1.get_distance()
-
-        # Pretend its 45'/sec
-        # 30cm/sec
-        AutoAssets.RotateRight()
-        time.sleep(2)
-        AutoAssets.MoveForward()
-        time.sleep(1)
-        AutoAssets.RotateLeft()
-        time.sleep(1)
-        AutoAssets.MoveForward()
-        time.sleep(2)
-
-        # Pretend the servo arm is at its upmost angle. And it's at 0'
-        smartservo_arm.move(-90)
-        time.sleep(1)
-        cube_distance = distance_sensor_arm.get_distance()
-
-        while cube_distance > 10:
-            pass
-        # Finish the code later, ran out of ideas
 
         pass
 
