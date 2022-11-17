@@ -30,7 +30,8 @@ dual_rgb_sensor_2 = dual_rgb_sensor_class("PORT2", "INDEX2")
 smartservo_arm = smartservo_class("M6", "INDEX1")
 
 # Turret
-smartservo_updown = smartservo_class("M5", "INDEX1")
+smartservo_pitch =   smartservo_class("M5", "INDEX1")
+smartservo_updown = smartservo_class("M5", "INDEX2")
 
 # Bot motors
 encoder_motor_M1 = encoder_motor_class("M1", "INDEX1")
@@ -59,10 +60,12 @@ def Manual():
         JoyRes.MultiControl(lrmode, bp)
 
         if gamepad.is_key_pressed("Up"):
-            ManualRes.MoveForward()
+            #ManualRes.MoveForward()
+            smartservo_pitch.move(10,10)
 
         if gamepad.is_key_pressed("Down"):
-            ManualRes.MoveBackward()
+            #ManualRes.MoveBackward()
+            smartservo_pitch.move(-10,10)
 
         if gamepad.is_key_pressed("Left"):
             ManualRes.MoveLeft()
