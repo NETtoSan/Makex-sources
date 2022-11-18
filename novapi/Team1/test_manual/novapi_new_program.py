@@ -16,11 +16,13 @@ bp = 50
 vl = 0.5
 
 # DC motors
-dc1_variable = "DC1"
-dc2_variable = "DC2"
-dc3_variable = "DC3"
+feeddc_main = "DC1"
+feeddc_front = "DC2"
+feeddc_aux = "DC3"
 dc4_variable = "DC4"
 dc5_variable = "DC5"
+handdc1 = "DC6"
+handdc2 = "DC7"
 
 # Sensors
 dual_rgb_sensor_1 = dual_rgb_sensor_class("PORT2", "INDEX1")
@@ -131,9 +133,9 @@ def Manual():
 
         # Dc feed
         if feeddc == 1:
-            power_expand_board.set_power(dc2_variable, 100)
+            power_expand_board.set_power(feeddc_front, 100)
         else:
-            power_expand_board.stop(dc2_variable)
+            power_expand_board.stop(feeddc_front)
 
 
 def LoadMe():
@@ -142,9 +144,9 @@ def LoadMe():
     smartservo_arm.set_power(50)
     smartservo_arm.move(30, 10)
     # power_expand_board.set_power("BL1", 50)
-    # power_expand_board.set_power(dc1_variable, 50)
+    # power_expand_board.set_power(feeddc_main, 50)
     # power_expand_board.stop("BL1")
-    # power_expand_board.stop(dc1_variable)
+    # power_expand_board.stop(feeddc_main)
 
 
 class JoyRes:
@@ -214,19 +216,19 @@ class JoyRes:
 
     def FeedControl():
         if gamepad.is_key_pressed("L1"):
-            power_expand_board.set_power(dc1_variable, -100)
-            power_expand_board.set_power(dc3_variable, 75)
+            power_expand_board.set_power(feeddc_main, -100)
+            power_expand_board.set_power(feeddc_aux, 75)
         elif gamepad.is_key_pressed("L2"):
-            power_expand_board.set_power(dc1_variable, 100)
-            power_expand_board.set_power(dc3_variable, -75)
+            power_expand_board.set_power(feeddc_main, 100)
+            power_expand_board.set_power(feeddc_aux, -75)
         else:
             power_expand_board.stop("DC1")
 
     def ShootControl():
         if gamepad.is_key_pressed("R1"):
-            power_expand_board.set_power(dc3_variable, -100)
+            pass
         else:
-            power_expand_board.stop(dc3_variable)
+            pass
 
     def GrabControl():
         # DC4 L1 release R1 grab
@@ -240,8 +242,8 @@ class JoyRes:
         pass
 
     def HandControl():
-        power_expand_board.set_power("DC6", gamepad.get_joystick("Ry"))
-        power_expand_board.set_power("DC7", gamepad.get_joystick("Ry"))
+        power_expand_board.set_power(handdc1, gamepad.get_joystick("Ry"))
+        power_expand_board.set_power(handdc2, gamepad.get_joystick("Ry"))
         # smartservo_arm.move(gamepad.get_joystick("Ry"), 10)
         pass
 
