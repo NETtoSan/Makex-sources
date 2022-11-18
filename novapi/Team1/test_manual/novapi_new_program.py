@@ -63,11 +63,11 @@ def Manual():
 
         if gamepad.is_key_pressed("Up"):
             #ManualRes.MoveForward()
-            smartservo_pitch.move(10,10)
+            smartservo_pitch.move(-10,10)
 
         if gamepad.is_key_pressed("Down"):
             #ManualRes.MoveBackward()
-            smartservo_pitch.move(-10,10)
+            smartservo_pitch.move(10,10)
 
         if gamepad.is_key_pressed("Left"):
             ManualRes.MoveLeft()
@@ -156,9 +156,6 @@ class JoyRes:
     def MovingJoystick(invert):
         global auto_stage
 
-        # Code for bot movement from left to right.
-        # If the bot starts slipping to unwanted direction. Tune variables here
-        
         Lx = gamepad.get_joystick("Lx")  # literally Lx variable
         Fl = 0   # Front left
         Fr = 0   # Front right
