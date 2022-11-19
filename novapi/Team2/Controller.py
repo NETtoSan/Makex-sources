@@ -18,10 +18,10 @@ automatic_mode = 1
 EM1 = encoder_motor_class("M1", "INDEX1") # FRONT LEFT WHEEL
 EM2 = encoder_motor_class("M2", "INDEX1") # FRONT RIGHT WHEEL
 EM3 = encoder_motor_class("M3", "INDEX1") # BALL BELT
-EM4 = encoder_motor_class("M4", "INDEX1") # HAND
+EM4 = encoder_motor_class("M4", "INDEX1")
 SERVO1 = smartservo_class("M1", "INDEX1") # WRIST
-SERVO2 = smartservo_class("M2", "INDEX1")
-SERVO3 = smartservo_class("M3", "INDEX1")
+SERVO2 = smartservo_class("M2", "INDEX1") # HAND LEFT
+SERVO3 = smartservo_class("M3", "INDEX1") # HAND RIGHT
 SERVO4 = smartservo_class("M4", "INDEX2")
 SERVO5 = smartservo_class("M6", "INDEX1")
 SERVO6 = smartservo_class("M6", "INDEX2")
@@ -34,15 +34,15 @@ BallBeltHR ='N1'
 """Blueprint right here!
     +=== CONTROLS ===+
     Left Joystick ( Analog ): Robot's movement 6 AXIS
-    Right Joystick ( Analog ) RX: Flag movement/Drift CTL
+    Right Joystick ( Analog ) RX: Rotate Wrist
     Right Joystick ( Analog ) RY: Hand Squeeze
     Left Joystick (Click): -
     Right Joystick (Click): -
 
     DPAD LEFT: Arm Up
     DPAD RIGHT: Arm Down
-    DPAD UP: Hand Up
-    DPAD DOWN: Hand Down
+    DPAD UP: + Brushless Power  // Ice's power manager
+    DPAD DOWN: - Brushless Power // Ice's power manager
 
     BTN1: Ball Belt Hold ( CCW )
     BTN2: Ball Belt Toggle
@@ -59,20 +59,23 @@ BallBeltHR ='N1'
     M1: Wheel (Fl)
     M2: Wheel (Fr)
     M3: Belt
-    M4: Hand
-    M5: -
-    M6: -
+    M4: Wrist
+    M5: Left Hand
+    M6: Right Hand
 
+    SERVO1
+    SERVO2
+    SERVO3
     NovaPi Extension Board
     DC1: -
     DC2: Arm Belt
     DC3: Shooter Belt
-    DC8: Hand
+    DC8: -
     BL1: Shooter
     BL2: Shooter
     """
 
-def MoveModule(Mode=180):
+def MoveModule(Mode=2):
     global BP, SP
     # Used NEToSan's control scheme.
     Fl = 0
@@ -110,7 +113,16 @@ def MoveModule(Mode=180):
         EM2.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Ly") + ((Rr + drift)))))
         #EM3.set_power(maxspeedi * ((gamepad.get_joystick("Ly") + ((Fl - drift)))))
         #EM4.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Ly") - ((Fr + drift)))))
-    EM4.set_power(gamepad.get_joystick("Ry"))
+
+    if Mode == 3: # Alternative 1 
+        EM1.set_power(maxspeedi * ((gamepad.get_joystick("Ly") - ((Rl - drift)))))
+        EM2.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Ly") + ((Rr + drift)))))
+        EM3.set_power(maxspeedi * ((gamepad.get_joystick("Ly") + ((Fl - drift)))))
+        EM4.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Ly") - ((Fr + drift)))))
+
+    if Mode == 2: # Default
+        EM1.set_power(0.8*(gamepad.get_joystick("Ly")+gamepad.get_joystick("Lx")))
+        EM2.set_power(-0.8*(gamepad.get_joystick("Ly")-gamepad.get_joystick("Lx")))
 
 def FlowModule(Mode):
     global flow
@@ -148,7 +160,12 @@ def Mover(W1, W2, W3, W4):
     #EM1.set_power(W3)
     #EM1.set_power(W4)
 
-def BotMover(Direction, Amount):
+def hand_mover(v_center,v_left,v_right):
+    SERVO1.move(90, v_center)
+    SERVO2.move(90,v_left)
+    SERVO3.move(90,v_right)
+
+def BotMover(Direction, Amount,Amount2=0,Amount3=0):
     if Direction == 'U' or Direction == 'D' or Direction == 'L' or Direction == 'R':
         if Direction == 'U':
             Mover(Amount, -1 * Amount, Amount, -1 * Amount)
@@ -161,9 +178,11 @@ def BotMover(Direction, Amount):
 
         if Direction == 'R':
             Mover(Amount, Amount, Amount, Amount)
-
+        if Direction == 'HAND' or Direction == 'HND': # RESET SERVO HERE
+            hand_mover(Amount,Amount2,Amount3)
     else:
         Mover(0, 0, 0, 0)
+        hand_mover(0,0,0)
 
 def AutomaticMode():
     """25: 15cm/sec
@@ -261,10 +280,10 @@ while True:
         ShooterModule_N(1)
 
     if gamepad.is_key_pressed("Up"): # Hand Up
-        SERVO5.move(30, 30)
+        brushless += 10
 
     if gamepad.is_key_pressed("Down"): # Hand Down
-        SERVO5.move(-30, 30)
+        brushless -= 10
 
     if gamepad.is_key_pressed("Left"): # Arm Up
         power_expand_board.set_power("DC2", -50)
@@ -285,3 +304,14 @@ while True:
     if gamepad.is_key_pressed(BallBeltTG): # Ball Belt Clockwise <Toggle>
         FlowModule(1)
         pass
+
+    #rotating a hand 
+    hand_mover(gamepad.get_joystick("Rx"),0,0)
+
+    #griping the hand
+    hand_mover(0,gamepad.get_joystick("Ry"),(-1) *gamepad.get_joystick("Ry"))
+
+    if gamepad.is_key_pressed("N4"): # AUTOMATIC
+        if manual_automatic_mode == 1:
+            manual_automatic_mode = 0
+            AutomaticMode()
