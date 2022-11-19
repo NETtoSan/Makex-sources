@@ -27,14 +27,24 @@ SERVO5 = smartservo_class("M6", "INDEX1")
 SERVO6 = smartservo_class("M6", "INDEX2")
 
 # map BASIC controls
-BallBeltTG =  'N2'
-BallBeltH = 'N3'
 BallBeltHR ='N1'
+BallBeltTG = 'N2'
+BallBeltH = 'N3'
+AutoMode = 'N4'
+RotateL = 'L1'
+RotateR = 'R1'
+ShootTG = 'L2'
+ShootHD = 'R2'
+ArmUp = 'Left'
+ArmDown = 'Right'
+BPUp = 'Up'
+BPDown =  ' Down'
+
 
 """Blueprint right here!
     +=== CONTROLS ===+
     Left Joystick ( Analog ): Robot's movement 6 AXIS
-    Right Joystick ( Analog ) RX: Rotate Wrist
+    Right Joystick ( Analog ) RX: Rotate Wrist/Flag
     Right Joystick ( Analog ) RY: Hand Squeeze
     Left Joystick (Click): -
     Right Joystick (Click): -
@@ -73,6 +83,7 @@ BallBeltHR ='N1'
     DC1: -
     DC2: Arm Belt
     DC3: Shooter Belt
+    DC7: Flag
     DC8: -
     BL1: Shooter
     BL2: Shooter
@@ -228,7 +239,7 @@ def ShooterModule_N(Mode):
         power_expand_board.set_power("BL1", BP)
         power_expand_board.set_power("BL2", BP)
         #power_expand_board.set_power("DC3", -50)
-        while not not gamepad.is_key_pressed("R2"):
+        while not not gamepad.is_key_pressed(ShootHD):
             pass
 
         power_expand_board.stop("BL1")
@@ -252,51 +263,51 @@ def ShooterModule_N(Mode):
             power_expand_board.stop("BL2")
             #power_expand_board.stop("DC3")
 
-        while not not gamepad.is_key_pressed("L2"):
+        while not not gamepad.is_key_pressed(ShootTG):
             pass
 
 while True:
     time.sleep(0.001)
     MoveModule(180)
-    power_expand_board.set_power("DC7", -1 * (gamepad.get_joystick("Rx") / 10))
+    power_expand_board.set_power("DC7", -1 * (gamepad.get_joystick("Rx") / 10)) # Flag
     if gamepad.is_key_pressed(BallBeltH): # Ball Belt Clockwise <Hold>
         FlowModule(0)
 
-    if gamepad.is_key_pressed("R1"): # Rotate Bot Right
-        while not (not gamepad.is_key_pressed("R1")):
+    if gamepad.is_key_pressed(RotateR): # Rotate Bot Right
+        while not (not gamepad.is_key_pressed(RotateR)):
             time.sleep(0.001)
             BotMover('R', 100)
 
         BotMover('N', 0)
 
-    if gamepad.is_key_pressed("R2"): # Hold And Shoot
+    if gamepad.is_key_pressed(ShootHD): # Hold And Shoot
         ShooterModule_N(0)
 
-    if gamepad.is_key_pressed("L1"): # Rotate Bot Left
-        while not (not gamepad.is_key_pressed("L1")):
+    if gamepad.is_key_pressed(RotateL): # Rotate Bot Left
+        while not (not gamepad.is_key_pressed(RotateL)):
             time.sleep(0.001)
             BotMover('L', 100)
 
         BotMover('N', 0)
 
-    if gamepad.is_key_pressed("L2"): # Toggle Shoot
+    if gamepad.is_key_pressed(ShootTG): # Toggle Shoot
         ShooterModule_N(1)
 
-    if gamepad.is_key_pressed("Up"): # Hand Up
+    if gamepad.is_key_pressed(BPUp): # Hand Up
         brushless += 10
 
-    if gamepad.is_key_pressed("Down"): # Hand Down
+    if gamepad.is_key_pressed(BPDown): # Hand Down
         brushless -= 10
 
-    if gamepad.is_key_pressed("Left"): # Arm Up
+    if gamepad.is_key_pressed(ArmUp): # Arm Up
         power_expand_board.set_power("DC2", -50)
-        while not not gamepad.is_key_pressed("Left"):
+        while not not gamepad.is_key_pressed(ArmUp):
             pass
         power_expand_board.stop("DC2")
 
-    if gamepad.is_key_pressed("Right"): # Arm Down
+    if gamepad.is_key_pressed(ArmDown): # Arm Down
         power_expand_board.set_power("DC2", 50)  
-        while not not gamepad.is_key_pressed("Right"):
+        while not not gamepad.is_key_pressed(ArmDown):
             pass
 
         power_expand_board.stop("DC2")
@@ -314,7 +325,7 @@ while True:
     #griping the hand
     hand_mover(0,gamepad.get_joystick("Ry"),(-1) *gamepad.get_joystick("Ry"))
 
-    if gamepad.is_key_pressed("N4"): # AUTOMATIC
+    if gamepad.is_key_pressed(AutoMode): # AUTOMATIC
         if manual_automatic_mode == 1:
             manual_automatic_mode = 0
             AutomaticMode()
