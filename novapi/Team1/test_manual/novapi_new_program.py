@@ -81,11 +81,11 @@ def Manual():
 
         if gamepad.is_key_pressed("Up"):
             #ManualRes.MoveForward()
-            smartservo_pitch.move(-10,10)
+            smartservo_pitch.move(10,10)
 
         if gamepad.is_key_pressed("Down"):
             #ManualRes.MoveBackward()
-            smartservo_pitch.move(10,10)
+            smartservo_pitch.move(-10,10)
 
         if gamepad.is_key_pressed("Left"):
             ManualRes.MoveLeft()
