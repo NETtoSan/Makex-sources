@@ -169,7 +169,7 @@ class JoyRes:
 
     def MovingJoystick(invert,v):
         global auto_stage
-
+        global vl
         Lx = gamepad.get_joystick("Lx")  # literally Lx variable
         Fl = 0   # Front left
         Fr = 0   # Front right
