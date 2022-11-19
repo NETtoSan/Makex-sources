@@ -63,9 +63,12 @@ BallBeltHR ='N1'
     M5: Left Hand
     M6: Right Hand
 
-    SERVO1
-    SERVO2
-    SERVO3
+    SERVO1: Wrist
+    SERVO2: Left Hand
+    SERVO3: Right Hand
+    SERVO4:
+    SERVO5:
+    SERVO6:
     NovaPi Extension Board
     DC1: -
     DC2: Arm Belt
