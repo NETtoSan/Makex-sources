@@ -41,26 +41,23 @@ encoder_motor_M4 = encoder_motor_class("M4", "INDEX1")
 def AutoStart():
     dual_rgb_sensor_1.set_led_color("blue")
     dual_rgb_sensor_2.set_led_color("blue")
-    time.sleep(5)
-    pass
+    time.sleep(2)
+    
+    Manual()
 
 def Manual():
-    dual_rgb_sensor_1.set_led_color("red")
-    dual_rgb_sensor_2.set_led_color("red")
+    dual_rgb_sensor_1.set_led_color("green")
+    dual_rgb_sensor_2.set_led_color("green")
 
 
 
 while True:
     time.sleep(0.001)
 
-    dual_rgb_sensor_1.set_led_color("green")
-    dual_rgb_sensor_2.set_led_color("red")
-    while not gamepad.is_key_presed("L1"):
+    dual_rgb_sensor_1.set_led_color("red")
+    dual_rgb_sensor_2.set_led_color("green")
+
+    while not gamepad.is_key_pressed("L1"):
         pass
 
-    if auto_stage == 1:
-        AutoStart()
-        auto_stage = 0
-
-    else:
-        Manual()
+    AutoStart()
