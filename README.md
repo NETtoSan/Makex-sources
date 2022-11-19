@@ -2,13 +2,9 @@
 
 ## _The ultimate MakeX source code_
 
-## This repository has been discontinued, due to wide variety of issues
+## This repository is depricated, due to wide variety of issues
 
 This source code is for testing components from Makeblock for makex competition.
-
-- It works like magic ✨
-- It has everything you need for your own bots.
-- And oh boy we won the championship!
 
 ## Features
 - Fully automatic program with manually set timings. So things won't go wrong as we know it.
@@ -20,7 +16,4 @@ This source code is for testing components from Makeblock for makex competition.
 Makex-sources solely runs on Makeblock's CyberPi or NovaPi programming CPU. A lightweight, powerful programming CPU that can run small to relatively big projects. With a few optimized codes, these source codes will run like a breeze.
 
 ## Requirements
-Working with Makeblock's parts will require you to have [mblock program](https://mblock.makeblock.com/en-us/) and [python](https://www.python.org) installed on your computer. Otherwise it wont work, really.
-
-## Improvements
-There are tons of improvements to be made, but right now we just wanted to sit back and enjoy the current source codes we can distribute to anyone who found this repository helpful and helped you achieve competition's victory. Good luck!
+Working with Makeblock's parts will require you to have [mblock program](https://mblock.makeblock.com/en-us/) and [python](https://www.python.org) installed on your computer. Otherwise it won't work.
