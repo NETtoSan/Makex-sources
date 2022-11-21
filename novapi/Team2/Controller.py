@@ -6,14 +6,13 @@ from mbuild import power_expand_board
 from mbuild.smartservo import smartservo_class
 
 # initialize variables
-BP = 65
+BP = 40
 SP = 50
-brushless = 0
 flow = 0
 maxspeedi = 0.25
-safetyangle = 0
+brushless = 0
 automatic_mode = 1
-
+inverse = -1 # 1 to disable
 # new class
 EM1 = encoder_motor_class("M1", "INDEX1") # FRONT LEFT WHEEL
 EM2 = encoder_motor_class("M2", "INDEX1") # FRONT RIGHT WHEEL
@@ -22,9 +21,9 @@ EM4 = encoder_motor_class("M4", "INDEX1")
 SERVO1 = smartservo_class("M1", "INDEX1") # WRIST
 SERVO2 = smartservo_class("M2", "INDEX1") # HAND LEFT
 SERVO3 = smartservo_class("M3", "INDEX1") # HAND RIGHT
-SERVO4 = smartservo_class("M4", "INDEX2")
-SERVO5 = smartservo_class("M6", "INDEX1")
-SERVO6 = smartservo_class("M6", "INDEX2")
+SERVO4 = smartservo_class("M4", "INDEX1") 
+SERVO5 = smartservo_class("M5", "INDEX1")
+SERVO6 = smartservo_class("M6", "INDEX1")
 
 # map BASIC controls
 BallBeltHR ='N1'
@@ -82,61 +81,12 @@ BPDown =  ' Down'
     NovaPi Extension Board
     DC1: -
     DC2: Arm Belt
-    DC3: Shooter Belt
+    DC3: Front Belt
     DC7: Flag
     DC8: -
     BL1: Shooter
     BL2: Shooter
     """
-
-def MoveModule(Mode=2):
-    global BP, SP
-    # Used NEToSan's control scheme.
-    Fl = 0
-    Fr = 0
-    Rl = 0
-    Rr = 0
-    drift = gamepad.get_joystick("Rx")
-    if not gamepad.get_joystick("Lx") == 0:
-        if gamepad.get_joystick("Lx") < 0:
-            Fl = (gamepad.get_joystick("Lx") + 10)
-
-        if gamepad.get_joystick("Lx") > 0:
-            Fl = (gamepad.get_joystick("Lx") - 10)
-
-        Fr = (gamepad.get_joystick("Lx") + Fr)
-        Rl = (gamepad.get_joystick("Lx") + Rl)
-        Rr = (gamepad.get_joystick("Lx") + Rr)
-    if Mode == 45:
-        # Wheels angled 45 degrees
-        EM1.set_power(maxspeedi * ((gamepad.get_joystick("Ly") - ((Fl + drift)))))
-        EM2.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Ly") + ((Fr - drift)))))
-        #EM3.set_power(maxspeedi * ((gamepad.get_joystick("Ly") + ((Rl + drift)))))
-        #EM4.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Ly") - ((Rr - drift)))))
-
-    if Mode == 90:
-        # Wheels angled 90 degrees
-        EM1.set_power(maxspeedi * ((gamepad.get_joystick("Ly") + 0)))
-        EM2.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Lx") + 0)))
-        #EM3.set_power(maxspeedi * ((gamepad.get_joystick("Lx") + 0)))
-        #EM4.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Ly") + 0)))
-
-    if Mode == 180:
-        # Wheels angled 180 degrees ( Normal: Default )
-        EM1.set_power(maxspeedi * ((gamepad.get_joystick("Ly") - ((Rl - drift)))))
-        EM2.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Ly") + ((Rr + drift)))))
-        #EM3.set_power(maxspeedi * ((gamepad.get_joystick("Ly") + ((Fl - drift)))))
-        #EM4.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Ly") - ((Fr + drift)))))
-
-    if Mode == 3: # Alternative 1 
-        EM1.set_power(maxspeedi * ((gamepad.get_joystick("Ly") - ((Rl - drift)))))
-        EM2.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Ly") + ((Rr + drift)))))
-        EM3.set_power(maxspeedi * ((gamepad.get_joystick("Ly") + ((Fl - drift)))))
-        EM4.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Ly") - ((Fr + drift)))))
-
-    if Mode == 2: # Default
-        EM1.set_power(0.8*(gamepad.get_joystick("Ly")+gamepad.get_joystick("Lx")))
-        EM2.set_power(-0.8*(gamepad.get_joystick("Ly")-gamepad.get_joystick("Lx")))
 
 def FlowModule(Mode):
     global flow
@@ -144,8 +94,9 @@ def FlowModule(Mode):
         while not (not gamepad.is_key_pressed(BallBeltH)):
             time.sleep(0.001)
             EM3.set_power(90)
-
+            power_expand_board.set_power("DC3", 100)
         EM3.set_power(0)
+        power_expand_board.set_power("DC3", 0)
 
     if Mode == 1: # <Toggle> Ball Belt
         if flow == 0:
@@ -157,16 +108,20 @@ def FlowModule(Mode):
         while not (flow == 0):
             time.sleep(0.001)
             EM3.set_power(70)
+            power_expand_board.set_power("DC3", 100)
             if gamepad.is_key_pressed(BallBeltTG):
                 EM3.set_power(0)
+                power_expand_board.set_power("DC3", 0)
                 flow = 0
 
     if Mode == 2: # <Hold,Reverse> Ball Belt
         while not (not gamepad.is_key_pressed(BallBeltHR)):
             time.sleep(0.001)
             EM3.set_power(-90)
+            power_expand_board.set_power("DC3", -100)
 
         EM3.set_power(0)
+        power_expand_board.set_power("DC3", 0)
 
 def Mover(W1, W2, W3, W4):
     EM1.set_power(W1)
@@ -175,9 +130,10 @@ def Mover(W1, W2, W3, W4):
     #EM1.set_power(W4)
 
 def hand_mover(v_center,v_left,v_right):
-    SERVO1.move(90, v_center)
-    SERVO2.move(90,v_left)
-    SERVO3.move(90,v_right)
+    SERVO5.move(v_center,90)
+    SERVO4.move(-1*v_left,90)
+    SERVO6.move(v_right,90)
+
 
 def BotMover(Direction, Amount,Amount2=0,Amount3=0):
     if Direction == 'U' or Direction == 'D' or Direction == 'L' or Direction == 'R':
@@ -232,7 +188,7 @@ def AutomaticMode():
     # Reset
 
 def ShooterModule_N(Mode):
-    global brushless
+    global BP, brushless
     # Mode 0: Manual Hold
     # Mode 1: Toggle Shoot
     if Mode == 0:
@@ -266,9 +222,64 @@ def ShooterModule_N(Mode):
         while not not gamepad.is_key_pressed(ShootTG):
             pass
 
+def MoveModule(Mode=2):
+    global BP, SP
+    # Used NEToSan's control scheme.
+    Fl = 0
+    Fr = 0
+    Rl = 0
+    Rr = 0
+    drift = gamepad.get_joystick("Rx")
+    if not gamepad.get_joystick("Lx") == 0:
+        if gamepad.get_joystick("Lx") < 0:
+            Fl = (gamepad.get_joystick("Lx") + 10)
+
+        if gamepad.get_joystick("Lx") > 0:
+            Fl = (gamepad.get_joystick("Lx") - 10)
+
+        Fr = (gamepad.get_joystick("Lx") + Fr)
+        Rl = (gamepad.get_joystick("Lx") + Rl)
+        Rr = (gamepad.get_joystick("Lx") + Rr)
+    if Mode == 45:
+        # Wheels angled 45 degrees
+        EM1.set_power(maxspeedi * ((gamepad.get_joystick("Ly") - ((Fl + drift)))))
+        EM2.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Ly") + ((Fr - drift)))))
+        #EM3.set_power(maxspeedi * ((gamepad.get_joystick("Ly") + ((Rl + drift)))))
+        #EM4.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Ly") - ((Rr - drift)))))
+
+    if Mode == 90:
+        # Wheels angled 90 degrees
+        EM1.set_power(maxspeedi * ((gamepad.get_joystick("Ly") + 0)))
+        EM2.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Lx") + 0)))
+        #EM3.set_power(maxspeedi * ((gamepad.get_joystick("Lx") + 0)))
+        #EM4.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Ly") + 0)))
+
+    if Mode == 180:
+        # Wheels angled 180 degrees ( Normal: Default )
+        EM1.set_power(maxspeedi * ((gamepad.get_joystick("Ly") - ((Rl - drift)))))
+        EM2.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Ly") + ((Rr + drift)))))
+        #EM3.set_power(maxspeedi * ((gamepad.get_joystick("Ly") + ((Fl - drift)))))
+        #EM4.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Ly") - ((Fr + drift)))))
+
+    if Mode == 3: # Alternative 1 
+        EM1.set_power(maxspeedi * ((gamepad.get_joystick("Ly") - ((Rl - drift)))))
+        EM2.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Ly") + ((Rr + drift)))))
+        EM3.set_power(maxspeedi * ((gamepad.get_joystick("Ly") + ((Fl - drift)))))
+        EM4.set_power((-1 * maxspeedi) * ((gamepad.get_joystick("Ly") - ((Fr + drift)))))
+
+    if Mode == 2: # Default
+        EM1.set_power(0.8*(gamepad.get_joystick("Ly")+gamepad.get_joystick("Lx"))*inverse)
+        EM2.set_power(-0.8*(gamepad.get_joystick("Ly")-gamepad.get_joystick("Lx"))*inverse)
+    
+    #rotating a hand 
+    hand_mover(gamepad.get_joystick("Rx"),0,0)
+
+    #griping the hand
+    hand_mover(0,gamepad.get_joystick("Ry"),(-1) *gamepad.get_joystick("Ry"))
+
 while True:
     time.sleep(0.001)
-    MoveModule(180)
+    MoveModule()
     power_expand_board.set_power("DC7", -1 * (gamepad.get_joystick("Rx") / 10)) # Flag
     if gamepad.is_key_pressed(BallBeltH): # Ball Belt Clockwise <Hold>
         FlowModule(0)
@@ -294,13 +305,13 @@ while True:
         ShooterModule_N(1)
 
     if gamepad.is_key_pressed(BPUp): # Hand Up
-        brushless += 10
+        BP += 10
 
     if gamepad.is_key_pressed(BPDown): # Hand Down
-        brushless -= 10
+        BP -= 10
 
     if gamepad.is_key_pressed(ArmUp): # Arm Up
-        power_expand_board.set_power("DC2", -50)
+        power_expand_board.set_power("DC2", -100)
         while not not gamepad.is_key_pressed(ArmUp):
             pass
         power_expand_board.stop("DC2")
@@ -314,16 +325,10 @@ while True:
 
     if gamepad.is_key_pressed(BallBeltHR): # Ball Belt Counter Clockwise <Hold>
         FlowModule(2)
-
+        
     if gamepad.is_key_pressed(BallBeltTG): # Ball Belt Clockwise <Toggle>
         FlowModule(1)
         pass
-
-    #rotating a hand 
-    hand_mover(gamepad.get_joystick("Rx"),0,0)
-
-    #griping the hand
-    hand_mover(0,gamepad.get_joystick("Ry"),(-1) *gamepad.get_joystick("Ry"))
 
     if gamepad.is_key_pressed(AutoMode): # AUTOMATIC
         if manual_automatic_mode == 1:
