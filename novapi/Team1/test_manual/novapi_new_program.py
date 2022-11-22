@@ -253,6 +253,8 @@ class JoyRes:
         pass
 
     def HandControl():
+        power_expand_board.set_power(handdc1, - (gamepad.get_joystick("Ry")))
+        power_expand_board.set_power(handdc2, - (gamepad.get_joystick("Ry")))
         if gamepad.is_key_pressed("Up"):
             #ManualRes.MoveForward()
             smartservo_pitch.move(10,10)
