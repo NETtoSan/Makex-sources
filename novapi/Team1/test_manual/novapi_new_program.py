@@ -80,12 +80,10 @@ def Manual():
         JoyRes.MultiControl(lrmode, bp)
 
         if gamepad.is_key_pressed("Up"):
-            #ManualRes.MoveForward()
-            smartservo_pitch.move(10,10)
+            pass
 
         if gamepad.is_key_pressed("Down"):
-            #ManualRes.MoveBackward()
-            smartservo_pitch.move(-10,10)
+            pass
 
         if gamepad.is_key_pressed("Left"):
             ManualRes.MoveLeft()
@@ -207,14 +205,16 @@ class JoyRes:
         encoder_motor_M4.set_power(ERr)
 
     def TurretControl():
-        global auto_stage
-        # > 40 < 60
-        # if smartservo_updown.get_value("angle") > -43:
-        #    smartservo_updown.move(-1, 10)
+        if gamepad.is_key_pressed("Up"):
+            #ManualRes.MoveForward()
+            smartservo_updown.move(10,10)
 
-        # if smartservo_updown.get_value("angle") < -60:
-        #    smartservo_updown.move(1, 10)
-        # else:
+        if gamepad.is_key_pressed("Down"):
+            #ManualRes.MoveBackward()
+            smartservo_updown.move(-10,10)
+
+    def TurretControlOld():
+        global auto_stage
         if smartservo_updown.get_value("angle") < -56:
             servo_value = smartservo_updown.get_value("angle")
             while servo_value < -55:
@@ -253,9 +253,13 @@ class JoyRes:
         pass
 
     def HandControl():
-        power_expand_board.set_power(handdc1, - (gamepad.get_joystick("Ry")))
-        power_expand_board.set_power(handdc2, - (gamepad.get_joystick("Ry")))
-        # smartservo_arm.move(gamepad.get_joystick("Ry"), 10)
+        if gamepad.is_key_pressed("Up"):
+            #ManualRes.MoveForward()
+            smartservo_pitch.move(10,10)
+
+        if gamepad.is_key_pressed("Down"):
+            #ManualRes.MoveBackward()
+            smartservo_pitch.move(-10,10)
         pass
 
     def MultiControl(lc, bp):
