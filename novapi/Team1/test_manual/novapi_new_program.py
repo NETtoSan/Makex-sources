@@ -12,6 +12,7 @@ shoot = 0
 invert = 0
 feeddc = 1
 lrmode = 0  # Differentiate between shoot and arm control mode
+turret_origin_angle = 0
 bp = 50
 vl = 0.5
 
@@ -23,7 +24,7 @@ dc4_variable = "DC4"
 dc5_variable = "DC5"
 handdc1 = "DC6"
 handdc2 = "DC7"
-
+ 
 # Sensors
 dual_rgb_sensor_1 = dual_rgb_sensor_class("PORT2", "INDEX1")
 dual_rgb_sensor_2 = dual_rgb_sensor_class("PORT2", "INDEX2")
@@ -254,6 +255,7 @@ class JoyRes:
 
     def HandControl():
         smartservo_pitch.move(10, gamepad.get_joystick/ 10)
+
         if gamepad.is_key_pressed("Up"):
             power_expand_board.set_power(handdc1, -100)
             power_expand_board.set_power(handdc2, -100)
@@ -261,6 +263,7 @@ class JoyRes:
         if gamepad.is_key_pressed("Down"):
             power_expand_board.set_power(handdc2, 100)
             power_expand_board.set_power(handdc2, 100) 
+
     def MultiControl(lc, bp):
         if lc == 0:
             # Gun control mode
@@ -438,7 +441,49 @@ class AutoAssets:
         pass
 
     def GrabCubeRoutine():
+        dual_rgb_sensor_1.set_led_color("green")
+        time.sleep(1)
 
+        # TO THE CENTER
+        AutoAssets.RotateLeft()
+        time.sleep(1) #Rotate bot from the start
+        AutoAssets.MoveForward()
+        time.sleep(2) #Walk to the middle
+        AutoAssets.MoveRight()
+        time.sleep(1) #Rotate to the right to face directly at the cube
+        AutoAssets.StopMoving()
+
+        # GRABING THE CUBE
+        AutoAssets.MoveForward()
+        time.sleep(2)
+        AutoAssets.StopMoving()
+        
+        #DC4 is the hand
+        power_expand_board.set_power("DC4", -50)
+        time.sleep(0.5)
+        power_expand_board.stop("DC4")
+        AutoAssets.MoveForward()
+        time.sleep(0.25)
+        power_expand_board.set_power("DC4", 50)
+        time.sleep(0.25)
+
+        # LIFT THE CUBE  
+        power_expand_board.set_power(handdc1, -100)
+        power_expand_board.set_power(handdc2, -100)
+        time.sleep(2)
+
+        # WALK AWAY
+        AutoAssets.MoveBackward()
+        time.sleep(1)
+        AutoAssets.StopMoving()
+        time.sleep(0.25)
+
+        # RELEASE CUBE
+        power_expand_board.set_power("DC4", -50)
+        time.sleep(1.5)
+
+        # RETURN MANUAL
+        Manual()
         pass
 
 auto_stage = 1
