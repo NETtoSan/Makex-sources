@@ -253,17 +253,14 @@ class JoyRes:
         pass
 
     def HandControl():
-        power_expand_board.set_power(handdc1, - (gamepad.get_joystick("Ry")))
-        power_expand_board.set_power(handdc2, - (gamepad.get_joystick("Ry")))
+        smartservo_pitch.move(10, gamepad.get_joystick/ 10)
         if gamepad.is_key_pressed("Up"):
-            #ManualRes.MoveForward()
-            smartservo_pitch.move(10,10)
-
+            power_expand_board.set_power(handdc1, -100)
+            power_expand_board.set_power(handdc2, -100)
+        
         if gamepad.is_key_pressed("Down"):
-            #ManualRes.MoveBackward()
-            smartservo_pitch.move(-10,10)
-        pass
-
+            power_expand_board.set_power(handdc2, 100)
+            power_expand_board.set_power(handdc2, 100) 
     def MultiControl(lc, bp):
         if lc == 0:
             # Gun control mode
@@ -278,6 +275,8 @@ class JoyRes:
             # Hand control mode
             JoyRes.HandControl()
             JoyRes.GrabControl()
+
+            power_expand_board.stop(feeddc_main)
             power_expand_board.stop("BL1")
             power_expand_board.stop("BL2")
 
