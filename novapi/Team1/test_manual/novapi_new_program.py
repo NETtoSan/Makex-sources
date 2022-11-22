@@ -396,8 +396,8 @@ class AutoAssets:
         dual_rgb_sensor_2.set_led_color("red")
         time.sleep(1)    
 
-        power_expand_board.set_power("DC2",70)
-        power_expand_board.set_power("DC1",-100)
+        power_expand_board.set_power("DC2",100)
+        power_expand_board.set_power("DC1",-90)
         
         AutoAssets.MoveForward()
         time.sleep(0.5)
@@ -410,15 +410,15 @@ class AutoAssets:
         time.sleep(0.2)
         
         AutoAssets.MoveForward()
-        power_expand_board.set_power("BL1",100)
-        power_expand_board.set_power("BL2",100)
+        power_expand_board.set_power("BL1",90)
+        power_expand_board.set_power("BL2",90)
         time.sleep(1.25)
 
         AutoAssets.StopMoving()
         dual_rgb_sensor_2.set_led_color("green")
 
         time.sleep(10)
-        for i in range(10):
+        for i in range(5):
             dual_rgb_sensor_1.set_led_color("blue")
             AutoAssets.RotateLeft()
             time.sleep(0.1)
