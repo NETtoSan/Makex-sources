@@ -62,7 +62,7 @@ def AutoStart():
             Manual()
         pass
         
-    AutoAssets.ShootRoutine()
+    AutoAssets.GrabCubeRoutine()
     time.sleep(5)
     pass
 
@@ -443,6 +443,33 @@ class AutoAssets:
         pass
 
     def GrabCubeRoutine():
+        dual_rgb_sensor_1.set_led_color("green")
+        time.sleep(1)
+
+        power_expand_board.set_power(handdc1, -100)
+        power_expand_board.set_power(handdc2, -100)
+        smartservo_pitch.move(-90,50)
+        time.sleep(2)
+        power_expand_board.stop(handdc1)
+        power_expand_board.stop(handdc2)
+
+        # TO THE CENTER
+        AutoAssets.MoveForward()
+        time.sleep(0.25)
+        AutoAssets.RotateLeft()
+        time.sleep(0.75) #Rotate bot from the start
+        AutoAssets.StopMoving()
+        time.sleep(1)
+        AutoAssets.MoveForward()
+        time.sleep(4)
+        AutoAssets.RotateRight()
+        time.sleep(0.75)
+        AutoAssets.MoveForward()
+        time.sleep(5)
+        AutoAssets.StopMoving()
+        pass
+
+    def GrabCubeDemo():
         dual_rgb_sensor_1.set_led_color("green")
         time.sleep(1)
 
