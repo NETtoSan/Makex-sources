@@ -261,9 +261,9 @@ class JoyRes:
         power_expand_board.set_power(handdc1, -gamepad.get_joystick("Ry"))
         power_expand_board.set_power(handdc2, -gamepad.get_joystick("Ry"))
         if gamepad.is_key_pressed("Up"):
-            smartservo_pitch.move(10,50)
+            smartservo_pitch.move(-10,50)
         if gamepad.is_key_pressed("Down"):
-            smartservo_pitch.move(10,-50)
+            smartservo_pitch.move(10,50)
 
     def MultiControl(lc, bp):
         if lc == 0:
