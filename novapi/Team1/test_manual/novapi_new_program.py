@@ -51,6 +51,13 @@ def AutoStart():
     global auto_stage
     dual_rgb_sensor_1.set_led_color("blue")
     while not gamepad.is_key_pressed("L1"):
+        if gamepad.is_key_pressed("L2"):
+            for i in range(3):
+                dual_rgb_sensor_1.set_led_color("red")
+                time.sleep(0.2)
+                dual_rgb_sensor_1.set_led_color("blue")
+                time.sleep(0.2)
+            Manual()
         pass
         
     AutoAssets.ShootRoutine()
@@ -63,21 +70,22 @@ def Manual():
     global lrmode
     global feeddc
     global bp
+    global vl
     LoadMe()
     while True:
         time.sleep(0.001)
-        JoyRes.MovingJoystick(invert)
+        JoyRes.MovingJoystick(invert,vl)
         ManualRes.InvertLED(invert)
         ManualRes.ControlLED(lrmode)
         JoyRes.MultiControl(lrmode, bp)
 
         if gamepad.is_key_pressed("Up"):
             #ManualRes.MoveForward()
-            smartservo_pitch.move(-10,10)
+            smartservo_pitch.move(10,10)
 
         if gamepad.is_key_pressed("Down"):
             #ManualRes.MoveBackward()
-            smartservo_pitch.move(10,10)
+            smartservo_pitch.move(-10,10)
 
         if gamepad.is_key_pressed("Left"):
             ManualRes.MoveLeft()
@@ -159,9 +167,9 @@ class JoyRes:
     def __init__(self):
         pass
 
-    def MovingJoystick(invert):
+    def MovingJoystick(invert,v):
         global auto_stage
-
+        global vl
         Lx = gamepad.get_joystick("Lx")  # literally Lx variable
         Fl = 0   # Front left
         Fr = 0   # Front right
@@ -245,8 +253,8 @@ class JoyRes:
         pass
 
     def HandControl():
-        power_expand_board.set_power(handdc1, gamepad.get_joystick("Ry"))
-        power_expand_board.set_power(handdc2, gamepad.get_joystick("Ry"))
+        power_expand_board.set_power(handdc1, - (gamepad.get_joystick("Ry")))
+        power_expand_board.set_power(handdc2, - (gamepad.get_joystick("Ry")))
         # smartservo_arm.move(gamepad.get_joystick("Ry"), 10)
         pass
 
