@@ -87,10 +87,12 @@ def Manual():
             pass
 
         if gamepad.is_key_pressed("Left"):
-            ManualRes.MoveLeft()
+            power_expand_board.set_power("DC8", 100)
 
-        if gamepad.is_key_pressed("Right"):
-            ManualRes.MoveRight()
+        elif gamepad.is_key_pressed("Right"):
+            power_expand_board.set_power("DC8", -100)
+        else:
+            power_expand_board.stop("DC8")
 
         if gamepad.is_key_pressed("N1"):
             pass
@@ -235,6 +237,7 @@ class JoyRes:
             power_expand_board.set_power(feeddc_aux, -75)
         else:
             power_expand_board.stop("DC1")
+            power_expand_board.stop(feeddc_aux)
 
     def ShootControl():
         if gamepad.is_key_pressed("R1"):
@@ -254,17 +257,13 @@ class JoyRes:
         pass
 
     def HandControl():
-        smartservo_pitch.move(gamepad.get_joystick("Ry")/ 10,50)
 
+        power_expand_board.set_power(handdc1, -gamepad.get_joystick("Ry"))
+        power_expand_board.set_power(handdc2, -gamepad.get_joystick("Ry"))
         if gamepad.is_key_pressed("Up"):
-            power_expand_board.set_power(handdc1, -100)
-            power_expand_board.set_power(handdc2, -100)
-        elif gamepad.is_key_pressed("Down"):
-            power_expand_board.set_power(handdc1, 100)
-            power_expand_board.set_power(handdc2, 100)
-        else:
-            power_expand_board.stop(handdc1)
-            power_expand_board.stop(handdc2)
+            smartservo_pitch.move(10,50)
+        if gamepad.is_key_pressed("Down"):
+            smartservo_pitch.move(10,-50)
 
     def MultiControl(lc, bp):
         if lc == 0:
