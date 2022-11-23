@@ -3,7 +3,7 @@ def vel_from_angle_distance(number1, number2): # arg1: angle (degrees) arg2: dis
     #global x, y, velocity, _E0_B9_81, c, a, xf, yf, theta2, x_, mps, velocity_back
     x_ = number2 * (1 / math.cos(number1 / 180.0 * math.pi))
     x = x_
-    velocity = math.sqrt((4.9 * (x * x)) / ((math.cos(4 / 180.0 * math.pi) * math.cos(4 / 180.0 * math.pi)) * ((math.tan(4 / 180.0 * math.pi) * x + ))))
+    velocity = math.sqrt((4.9 * (x * x)) / ((math.cos(4 / 180.0 * math.pi) * math.cos(4 / 180.0 * math.pi)) * ((math.tan(4 / 180.0 * math.pi) * x + 0.05))))
     return velocity
 
 def power_to_velocity(power): #Returns m/s from Brushless power precentage
