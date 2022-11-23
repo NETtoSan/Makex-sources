@@ -1,17 +1,18 @@
 # codes make you cry
 import novapi
+import math
 from mbuild import gamepad
 from mbuild.encoder_motor import encoder_motor_class
 from mbuild import power_expand_board
 from mbuild.smartservo import smartservo_class
 
 # initialize mechanic variables
-BP = 80
+BP = 40
 SP = 50
 flow = 0
 maxspeedi = 0.25
 brushless = 0
-automatic_mode = 1
+manual_automatic_mode = 1
 inverse = -1 # 1 to disable
 inverse2 = 1
 
@@ -98,8 +99,7 @@ def vel_from_angle_distance(number1, number2): # arg1: angle (degrees) arg2: dis
     #global x, y, velocity, _E0_B9_81, c, a, xf, yf, theta2, x_, mps, velocity_back
     x_ = number2 * (1 / math.cos(number1 / 180.0 * math.pi))
     x = x_
-    velocity = math.sqrt((4.9 * (x * x)) / ((math.cos(4 / 180.0 * math.pi) * math.cos(4 / 180.0 * math.pi)) * ((math.tan(4 / 180.0 * math.pi) * x + y))))
-    return velocity
+    return math.sqrt((4.9 * (x * x)) / ((math.cos(4 / 180.0 * math.pi) * math.cos(4 / 180.0 * math.pi)) * ((math.tan(4 / 180.0 * math.pi) * x + 0.05))))
 
 def power_to_velocity(power): #Returns m/s from Brushless power precentage
     return 0.2284 * power
@@ -107,17 +107,15 @@ def power_to_velocity(power): #Returns m/s from Brushless power precentage
 def velocity_to_power(velocity): #Returns Brushless power percentage from velocity
     return velocity / 0.2284
 
-def rpm_to_mps(radius, rpm): #Reurns m/s from RPM and Wheel Radius
+def rpm_to_mps(rpm): #Reurns m/s from RPM and Wheel Radius
     #global mps
-    mps = (2 * (3.1452 * (radius * rpm))) / 60
-    return mps
+    return (2 * (3.1452 * (0.029 * rpm))) / 60
 
-def mps_to_rpm(mps,radius):
-    rpm = 60*mps/(2 * (3.1452 * radius))
-    return rpm
+def mps_to_rpm(mps):
+    return 60*mps/(2 * (3.1452 * 0.029))
 
-def angle_to_distance(angle) : #for the wheels
-    return ( angle / 180 ) * math.pi * 2.9
+def angle_to_distance(angle,blength) : #for the wheels
+    return ( angle / 180 ) * math.pi * blength
 
 def distance_and_time_to_speed(x,t) : 
     return x / t
@@ -164,15 +162,16 @@ def FlowModule(Mode):
         EM3.set_power(0)
         power_expand_board.set_power("DC3", 0)
 
-def Mover(W1=0, W2=0):
-    EM1.set_speed(W1)
-    EM2.set_speed(W2)
+def Mover(W1=0, W2=0,angle=90):
+    EM1.move(angle,W1)
+    EM2.move(angle,W2)
     #EM1.set_power(W3)
     #EM1.set_power(W4)
 
 
 def BotMover(dir,power):
     MoveElements = ['U','D','L','R']
+    power = int(power)
     if dir == 'U':
         Mover(power, power)
 
@@ -201,23 +200,69 @@ def hand_mover(v_center,v_left,v_right): # UNRELIABLE, FIX THIS LATER
     if SERVO6.get_value("current") > limit:
         SERVO6.set_power(0)
 
+def AutomaticMode2():
+    EM1.move(360, 0)
+    #EM2.move(360, 50)
+    EM2.set_speed(int(mps_to_rpm(distance_and_time_to_speed(angle_to_distance(90,0.5),0.5)))) #turn 90 cw degree+
+    time.sleep(0.5)
+    EM1.set_speed(int(mps_to_rpm(distance_and_time_to_speed(0.26,1)))) #moves foward 26 cm
+    EM2.set_speed(int(mps_to_rpm(distance_and_time_to_speed(0.26,1))))
+    time.sleep(1)
+    EM1.set_speed(0)
+    EM2.set_speed(int(-1 * mps_to_rpm(distance_and_time_to_speed(angle_to_distance(90,0.5),0.5)))) #turn -90 degree+
+    time.sleep(0.5)
+    #put the hand up
+    power_expand_board.set_power("DC7", -1 * 10) # Flag
+    hand_mover(0,100,100)
+    time.sleep(1)
+    hand_mover(0,0,0)
+    time.sleep(4)
+    power_expand_board.set__power("DC7",-2)
+    EM1.set_speed(mps_to_rpm(distance_and_time_to_speed(1.80,5))) #moves foward 26 cm
+    EM2.set_speed(mps_to_rpm(distance_and_time_to_speed(1.80,5)))
+    time.sleep(5)
+    EM1.set_speed(0) #moves foward 26 cm
+    EM2.set_speed(0)
+
 def AutomaticMode():
     """25: 15cm/sec
     50: 30cm/sec
     100: 60cm/sec
     Based on NETtoSan's calculations."""
-    BotMover('R',mps_to_rpm(distance_and_time_to_speed(angle_to_distance(17.39),0.5)))
+    EM1.set_speed(0)
+    EM2.set_speed(mps_to_rpm(distance_and_time_to_speed(angle_to_distance(17.39,0.5),0.5))) #turn 17.39 degree+
+    #BotMover('R',mps_to_rpm(distance_and_time_to_speed(angle_to_distance(17.39),0.5)))
     time.sleep(0.5)
-    BotMover('U',mps_to_rpm(distance_and_time_to_speed(0.87,1)))
+    EM1.set_speed(mps_to_rpm(distance_and_time_to_speed(0.87,1))) #moves foward 87 cm
+    EM2.set_speed(mps_to_rpm(distance_and_time_to_speed(0.87,1)))
+    #BotMover('U',)
     time.sleep(1)
-    EM3.set_power(90)
+    EM3.set_speed(90)
     power_expand_board.set_power("DC3", 100)
     time.sleep(5)
-    BotMover('L',mps_to_rpm(distance_and_time_to_speed(angle_to_distance(17.39),0.125)))
+    EM3.set_power(-0)
+    power_expand_board.set_power("DC3", -0)
+    EM1.set_speed(mps_to_rpm(distance_and_time_to_speed(angle_to_distance(17.39,0.5),0.125)))
+    EM2.set_speed(0)
     time.sleep(0.125)
-    BotMover('D',mps_to_rpm(distance_and_time_to_speed(0.25,1)))
+    #EM1.set_speed(-1*mps_to_rpm(distance_and_time_to_speed(0.25,1)))
+    #EM2.set_speed(-1*mps_to_rpm(distance_and_time_to_speed(0.25,1)))
+    #time.sleep(1)
+    EM1.set_speed(mps_to_rpm(distance_and_time_to_speed(angle_to_distance(17.39,0.5),0.125)))
+    time.sleep(0.125)
+    EM1.set_speed(-1*mps_to_rpm(distance_and_time_to_speed(0.10,1)))
+    EM2.set_speed(-1*mps_to_rpm(distance_and_time_to_speed(0.10,1)))
     time.sleep(1)
-    BotMover('L',mps_to_rpm(distance_and_time_to_speed(angle_to_distance(17.39),0.125)))
+    EM1.set_speed(0)
+    EM2.set_speed(mps_to_rpm(distance_and_time_to_speed(angle_to_distance(17.39,0.5),0.5))) #turn 17.39 degree+
+    #BotMover('R',mps_to_rpm(distance_and_time_to_speed(angle_to_distance(17.39),0.5)))
+    time.sleep(0.5)
+    EM3.set_power(90)
+    power_expand_board.set_power("DC3", 100)
+    power_expand_board.set_power("BL1", BP)
+    power_expand_board.set_power("BL2", BP)
+    
+    '''
     #smaller triangle here
     #large triangle below
     for i in range(-10,45,5): # roughly a triangle (18 cycles) 
@@ -225,8 +270,11 @@ def AutomaticMode():
         power_expand_board.set_power("BL1", mybppower)
         power_expand_board.set_power("BL2", mybppower)
         time.sleep(1)
-        BotMover('R',mps_to_rpm(distance_and_time_to_speed(angle_to_distance(17.39),0.5))) # CHANGE HERE!
+        EM1.set_speed(mps_to_rpm(distance_and_time_to_speed(angle_to_distance(17.39),0.5))) # CHANGE HERE!
         #BotMover() # Reset
+    '''
+  
+    
     
 
 def ShooterModule_N(Mode):
@@ -272,15 +320,16 @@ def MoveModule():
     power_expand_board.set_power("DC2",gamepad.get_joystick("Ry")*-1)
 
     if gamepad.is_key_pressed('Left'):
-        hand_mover(0,50,-50)
+        hand_mover(0,100*10,-100*10)
     if gamepad.is_key_pressed('Right'):
-        hand_mover(0,-50,50)
+        hand_mover(0,-100*10,100*10)
     
 
 
 # ================= Main Program ===================== #
 
 while True:
+
     time.sleep(0.001)
     MoveModule()
     power_expand_board.set_power("DC7", -1 * (gamepad.get_joystick("Rx") / 10)) # Flag
@@ -310,10 +359,10 @@ while True:
         
 
     if gamepad.is_key_pressed(BPUp): # Brushless power up
-        if BP == 80:
+        if BP == 40:
             BP = 30
         else:
-            BP = 80
+            BP = 40
 
     #if gamepad.is_key_pressed(BPDown): # Brushless power down
     #    BP -= 10
@@ -333,7 +382,7 @@ while True:
     if gamepad.is_key_pressed(AutoMode): # AUTOMATIC
         if manual_automatic_mode == 1:
             manual_automatic_mode = 0
-            AutomaticMode()
+            AutomaticMode2()
     
     if gamepad.is_key_pressed('N3'): # Rotate Bot Left
         while not not gamepad.is_key_pressed('N3'):
