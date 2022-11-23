@@ -148,7 +148,7 @@ def start():
     if ebatlevel == 0:
         cyberpi.console.println("No external battery")
     if batlevel < 10:
-        cyberpi.console.println("Battery low! Do not use on stage!")
+        cyberpi.console.println("Battery low! Do not use on stage!")  
 
     cyberpi.console.println("Preparing bot.....")
     time.sleep(1)
