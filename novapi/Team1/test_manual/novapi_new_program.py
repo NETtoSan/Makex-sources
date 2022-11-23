@@ -6,26 +6,27 @@ from mbuild import gamepad
 import novapi
 import time
 
-# initialize the variables
-auto_stage = 0
-shoot = 0
-invert = 0
-feeddc = 1
-lrmode = 0  # Differentiate between shoot and arm control mode
-turret_origin_angle = 0
-bp = 50
-vl = 0.5
+# Important variables
+auto_stage = 0 # Auto
+shoot = 0 #
+invert = 0 # Invert movements
+feeddc = 1 # DC front on/off
+lrmode = 0  # 0 = shoot, 1 = arm
+turret_origin_angle = 0 # for reset servo angle
+bp = 50 # brushless power
+vl = 0.5 # Movement speed
 
 # DC motors
-feeddc_main = "DC1"
-feeddc_front = "DC2"
-feeddc_aux = "DC3"
-dc4_variable = "DC4"
-dc5_variable = "DC5"
-handdc1 = "DC6"
-handdc2 = "DC7"
+feeddc_main = "DC1" # Main feed belt
+feeddc_front = "DC2" # Front roller
+feeddc_aux = "DC3" # No need!
+unsighed_dc = "DC4" # Assign if new parts are added
+unsigned_dc2 = "DC5" # Assign if new parts are added
+handdc1 = "DC6" # hand updown 
+handdc2 = "DC7" # hand updown
+handdc_roll = "DC8" # Rotate cubes updown
  
-# Sensors
+# Indicators
 dual_rgb_sensor_1 = dual_rgb_sensor_class("PORT2", "INDEX1")
 dual_rgb_sensor_2 = dual_rgb_sensor_class("PORT2", "INDEX2")
 
@@ -87,12 +88,12 @@ def Manual():
             pass
 
         if gamepad.is_key_pressed("Left"):
-            power_expand_board.set_power("DC8", 100)
+            power_expand_board.set_power(handdc_roll, 100)
 
         elif gamepad.is_key_pressed("Right"):
-            power_expand_board.set_power("DC8", -100)
+            power_expand_board.set_power(handdc_roll, -100)
         else:
-            power_expand_board.stop("DC8")
+            power_expand_board.stop(handdc_roll)
 
         if gamepad.is_key_pressed("N1"):
             pass
