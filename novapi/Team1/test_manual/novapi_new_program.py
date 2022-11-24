@@ -357,11 +357,11 @@ class AutoAssets:
         pass
 
     def MoveForward():
-        MovementAsset.move(25, -25, 25, -25)
+        MovementAsset.move(50, -50, 50, -50)
         pass
 
     def MoveBackward():
-        MovementAsset.move(-25, 25, -25, 25)
+        MovementAsset.move(-50, 50, -50, 50)
         pass
 
     def RotateLeft():
@@ -405,31 +405,31 @@ class AutoAssets:
         power_expand_board.set_power("DC1",-100)
         
         AutoAssets.MoveForward()
-        time.sleep(0.5)
+        time.sleep(0.25)
         AutoAssets.RotateLeft()
         time.sleep(0.25)
 
         AutoAssets.MoveForward()
-        time.sleep(2)
+        time.sleep(1)
         AutoAssets.RotateRight()
         time.sleep(0.2)
         
         AutoAssets.MoveForward()
         power_expand_board.set_power("BL1",100)
         power_expand_board.set_power("BL2",100)
-        time.sleep(1.25)
+        time.sleep(0.75)
 
         AutoAssets.StopMoving()
         dual_rgb_sensor_2.set_led_color("green")
 
-        time.sleep(5)
-        for i in range(6):
-            dual_rgb_sensor_1.set_led_color("blue")
-            AutoAssets.RotateLeft()
-            time.sleep(0.1)
-            AutoAssets.StopMoving()
-            dual_rgb_sensor_1.set_led_color("red")
-            time.sleep(0.3)
+        #time.sleep(5)
+        #for i in range(6):
+        #    dual_rgb_sensor_1.set_led_color("blue")
+        #    AutoAssets.RotateLeft()
+        #    time.sleep(0.1)
+        #    AutoAssets.StopMoving()
+        #    dual_rgb_sensor_1.set_led_color("red")
+        #    time.sleep(0.3)
 
         pass
 
@@ -439,32 +439,46 @@ class AutoAssets:
 
     def GrabCubeRoutine():
         dual_rgb_sensor_1.set_led_color("green")
-        time.sleep(1)
+        time.sleep(0.5)
 
+        power_expand_board.set_power("DC4",-50)
+        time.sleep(0.5)
+        power_expand_board.set_power("DC4",0)
         power_expand_board.set_power(handdc1, -100)
         power_expand_board.set_power(handdc2, -100)
         smartservo_pitch.move(-90,50)
-        time.sleep(2)
+        time.sleep(1.9)
+        power_expand_board.set_power(handdc1, 100)
+        power_expand_board.set_power(handdc2, 100)
+        time.sleep(0.95)
         power_expand_board.stop(handdc1)
         power_expand_board.stop(handdc2)
 
         # TO THE CENTER
         AutoAssets.MoveForward()
-        time.sleep(0.5)
+        time.sleep(0.25)
         AutoAssets.RotateLeft()
         time.sleep(0.75) #Rotate bot from the start
-        AutoAssets.StopMoving()
-        time.sleep(1)
         AutoAssets.MoveForward()
-        time.sleep(3.5)
+        time.sleep(1.85)
         AutoAssets.RotateRight()
         time.sleep(0.75)
 
         # TO THE CUBE!
 
         AutoAssets.MoveForward()
-        time.sleep(5)
+        time.sleep(2)
         AutoAssets.StopMoving()
+
+        # GRAB CUBE
+        power_expand_board.set_power("DC4",50)
+        time.sleep(1)
+        power_expand_board.set_power(handdc1, -100)
+        power_expand_board.set_power(handdc2, -100)
+        time.sleep(0.75)
+        power_expand_board.stop(handdc1)
+        power_expand_board.stop(handdc2)
+
         pass
 
     def GrabCubeDemo():
