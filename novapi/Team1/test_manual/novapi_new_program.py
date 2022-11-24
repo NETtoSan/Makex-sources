@@ -455,15 +455,18 @@ class AutoAssets:
 
         # TO THE CENTER
         AutoAssets.MoveForward()
-        time.sleep(0.25)
+        time.sleep(0.5)
         AutoAssets.RotateLeft()
         time.sleep(0.75) #Rotate bot from the start
         AutoAssets.StopMoving()
         time.sleep(1)
         AutoAssets.MoveForward()
-        time.sleep(4)
+        time.sleep(3.5)
         AutoAssets.RotateRight()
         time.sleep(0.75)
+
+        # TO THE CUBE!
+
         AutoAssets.MoveForward()
         time.sleep(5)
         AutoAssets.StopMoving()
