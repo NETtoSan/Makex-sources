@@ -374,8 +374,8 @@ def testAuto() :
 
 # Tests
 def movevl(v1,v2):
-    EM1.set_power(v1)
-    EM2.set_power(-v2)
+    EM3.set_power(v1)
+    EM1.set_power(-v2)
 def autoshoot():
      time.sleep(1)
      movevl(50,50)
