@@ -2,8 +2,6 @@
 
 ## _The ultimate MakeX source code_
 
-## This repository has been discontinued, due to wide variety of issues
-
 This source code is for testing components from Makeblock for makex competition.
 
 - It works like magic ✨
