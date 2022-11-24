@@ -1,7 +1,7 @@
 from mbuild.encoder_motor import encoder_motor_class
 from mbuild import power_expand_board
 from mbuild.ranging_sensor import ranging_sensor_class
-
+import novapi
 
 EM1 = encoder_motor_class("M1", "INDEX1") # RIGHT MOTOR
 EM2 = encoder_motor_class("M2", "INDEX1") # FEED BELT
@@ -12,16 +12,17 @@ distance_sensor_1 = ranging_sensor_class("PORT3", "INDEX1")
 
 ranging_value = 0
 steps = 0
-
+origin_angle = 0 
 def movevl(v1,v2):
     EM3.set_power(v1)
     EM1.set_power(-v2)
 
 def autoshoot():
-    global ranging_value
-    global steps
+    global ranging_value, steps, origin_angle
     power_expand_board.set_power("DC1",-70)
 
+
+    # Move to ball zone
     time.sleep(1)
     movevl(-50,50)
     time.sleep(0.25)     
@@ -29,9 +30,11 @@ def autoshoot():
     time.sleep(0.6)
     movevl(50,-50)
     time.sleep(0.35)
-    movevl(50,50)
+
+    # Collect ball
+    movevl(50,50)  # get ball
     time.sleep(0.7)
-    movevl(-50,-50)
+    movevl(-50,-50) # go back
     time.sleep(0.5)
     movevl(0,0)
     
