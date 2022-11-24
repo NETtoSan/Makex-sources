@@ -42,11 +42,6 @@ encoder_motor_M1 = encoder_motor_class("M1", "INDEX1")
 encoder_motor_M2 = encoder_motor_class("M2", "INDEX1")
 encoder_motor_M3 = encoder_motor_class("M3", "INDEX1")
 encoder_motor_M4 = encoder_motor_class("M4", "INDEX1")
-# Auto motors
-motor1 = encoder_motor_class("M1", "INDEX1")
-motor2 = encoder_motor_class("M2", "INDEX1")
-motor3 = encoder_motor_class("M3", "INDEX1")
-motor4 = encoder_motor_class("M4", "INDEX1")
 
 
 def AutoStart():
@@ -345,16 +340,16 @@ class MovementAsset:
         pass
 
     def move(v1, v2, v3, v4):
-        motor1.set_power(v1)
-        motor2.set_power(v2)
-        motor3.set_power(v3)
-        motor4.set_power(v4)
+        encoder_motor_M1.set_power(v1)
+        encoder_motor_M2.set_power(v2)
+        encoder_motor_M3.set_power(v3)
+        encoder_motor_M4.set_power(v4)
 
     def stop():
-        motor1.set_power(0)
-        motor2.set_power(0)
-        motor3.set_power(0)
-        motor4.set_power(0)
+        encoder_motor_M1.set_power(0)
+        encoder_motor_M2.set_power(0)
+        encoder_motor_M3.set_power(0)
+        encoder_motor_M4.set_power(0)
 
 
 class AutoAssets:
