@@ -19,7 +19,8 @@ def movevl(v1,v2):
 
 def autoshoot():
     global ranging_value
-    power_expand_board.set_power("DC1",-100)
+    global steps
+    power_expand_board.set_power("DC1",-70)
 
     time.sleep(1)
     movevl(-50,50)
@@ -30,28 +31,32 @@ def autoshoot():
     time.sleep(0.35)
     movevl(50,50)
     time.sleep(0.7)
+    movevl(-50,-50)
+    time.sleep(0.5)
     movevl(0,0)
     
     # SHOOT BALL . WAIT BALL TO GET NEAR RANGING SENSOR
-    while True: #ranging_value is 0:
+    while steps < 3: #ranging_value is 0:
 
         ranging_value = float(distance_sensor_1.get_distance())
         if ranging_value < 10:
-            power_expand_board.set_power("BL1",100)
-            power_expand_board.set_power("BL2",100)
+            power_expand_board.set_power("BL1",50)
+            power_expand_board.set_power("BL2",50)
             EM2.set_power(-100)
-            time.sleep(2)
+            time.sleep(2.5)
             movevl(-50,50)
             time.sleep(0.15)
             movevl(0,0)
+
+            steps += 1
         else:
             EM2.set_power(-50)
             power_expand_board.set_power("BL1",0)
             power_expand_board.set_power("BL2",0)
 
-    #power_expand_board.set_power("BL1", 0)
-    #power_expand_board.set_power("BL2", 0)
-    #power_expand_board.stop("DC1")
-    #EM2.set_power(0)
+    power_expand_board.set_power("BL1", 0)
+    power_expand_board.set_power("BL2", 0)
+    power_expand_board.stop("DC1")
+    EM2.set_power(0)
 
 autoshoot()
