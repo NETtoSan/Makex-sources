@@ -47,17 +47,16 @@ encoder_motor_M4 = encoder_motor_class("M4", "INDEX1")
 def AutoStart():
     global auto_stage
     dual_rgb_sensor_1.set_led_color("blue")
-    while not gamepad.is_key_pressed("L1"):
-        if gamepad.is_key_pressed("L2"):
+    while not gamepad.is_key_pressed("N3"):
+        if gamepad.is_key_pressed("N4"):
             for i in range(3):
                 dual_rgb_sensor_1.set_led_color("red")
                 time.sleep(0.2)
                 dual_rgb_sensor_1.set_led_color("blue")
                 time.sleep(0.2)
-            Manual()
+            AutoAssets.GrabCubeRoutine()
         pass
-        
-    AutoAssets.GrabCubeRoutine()
+    Manual()
     time.sleep(5)
     pass
 
@@ -386,10 +385,6 @@ class AutoAssets:
 
 
     def GetDistance():
-        # GetDistance utilizes a ranging sensor Module
-        # What it does is detects an object in front of it
-        # And returns a distance value as number
-
         range = distance_sensor_1.get_distance()
 
         return range
@@ -492,52 +487,6 @@ class AutoAssets:
         power_expand_board.set_power("DC4",-50)
         time.sleep(0.25)
         power_expand_board.stop("DC4")
-        pass
-
-    def GrabCubeDemo():
-        dual_rgb_sensor_1.set_led_color("green")
-        time.sleep(1)
-
-        # TO THE CENTER
-        AutoAssets.RotateLeft()
-        time.sleep(1) #Rotate bot from the start
-        AutoAssets.MoveForward()
-        time.sleep(2) #Walk to the middle
-        AutoAssets.MoveRight()
-        time.sleep(1) #Rotate to the right to face directly at the cube
-        AutoAssets.StopMoving()
-
-        # GRABING THE CUBE
-        AutoAssets.MoveForward()
-        time.sleep(2)
-        AutoAssets.StopMoving()
-        
-        #DC4 is the hand
-        power_expand_board.set_power("DC4", -50)
-        time.sleep(0.5)
-        power_expand_board.stop("DC4")
-        AutoAssets.MoveForward()
-        time.sleep(0.25)
-        power_expand_board.set_power("DC4", 50)
-        time.sleep(0.25)
-
-        # LIFT THE CUBE  
-        power_expand_board.set_power(handdc1, -100)
-        power_expand_board.set_power(handdc2, -100)
-        time.sleep(2)
-
-        # WALK AWAY
-        AutoAssets.MoveBackward()
-        time.sleep(1)
-        AutoAssets.StopMoving()
-        time.sleep(0.25)
-
-        # RELEASE CUBE
-        power_expand_board.set_power("DC4", -50)
-        time.sleep(1.5)
-
-        # RETURN MANUAL
-        Manual()
         pass
 
 auto_stage = 1
