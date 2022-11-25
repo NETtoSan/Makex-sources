@@ -55,7 +55,15 @@ def AutoStart():
                 dual_rgb_sensor_1.set_led_color("blue")
                 time.sleep(0.2)
             AutoAssets.GrabCubeRoutine()
+        if gamepad.is_key_pressed("N1"):
+            for i in range(3):
+                dual_rgb_sensor_1.set_led_color("green")
+                time.sleep(0.2)
+                dual_rgb_sensor_1.set_led_color("red")
+                time.sleep(0.2)
+            AutoAssets.ShootRoutine()           
         pass
+        
     Manual()
     time.sleep(5)
     pass
@@ -236,9 +244,9 @@ class JoyRes:
 
     def ShootControl():
         if gamepad.is_key_pressed("R1"):
-            pass
+            power_expand_board.set_power("DC5", -100)
         else:
-            pass
+            power_expand_board.stop("DC5")
 
     def GrabControl():
         # DC4 L1 release R1 grab
