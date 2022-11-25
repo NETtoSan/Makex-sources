@@ -184,10 +184,9 @@ def MoveModule():
     # Hand gripper
     if gamepad.is_key_pressed('Left'):
         hand_mover(0,100,-100)
-        time.sleep(0.001)
-        hand_mover(0,0,0)
-    if gamepad.is_key_pressed('Right'):
+    elif gamepad.is_key_pressed('Right'):
         hand_mover(0,-100,100)
+    else:
         time.sleep(0.001)
         hand_mover(0,0,0)
 
