@@ -130,12 +130,11 @@ def FlowListener(Mode):
             flow = 0
 
 def hand_mover(v_center,v_left,v_right): # UNRELIABLE, FIX THIS LATER
-    SERVO5.move(v_center,10)
-    SERVO4.move(-1*v_left,10)
-    SERVO6.move(v_right,10)
+    SERVO5.move(v_center,20)
+    SERVO4.move(-1*v_left,20)
+    SERVO6.move(v_right,20)
     limit = 1000
-    if SERVO5.get_value("current") > limit:
-        SERVO5.set_power(0)
+    
     if SERVO4.get_value("current") > limit:
         SERVO4.set_power(0)
     if SERVO6.get_value("current") > limit:
@@ -187,7 +186,6 @@ def MoveModule():
     elif gamepad.is_key_pressed('Right'):
         hand_mover(0,-100,100)
     else:
-        time.sleep(0.001)
         hand_mover(0,0,0)
 
 
@@ -197,6 +195,10 @@ origin_angle = 0
 def movevl(v1,v2):
     LeftWheel.set_power(v1)
     RightWheel.set_power(-v2)
+
+def autocube():
+    
+    pass
 
 def autoshoot():
     ison = True
@@ -293,14 +295,14 @@ while True:
         ShooterListener(1)
         
     if gamepad.is_key_pressed(BPUp): # Brushless power up
-        if BP != 50:
-            BP = 50
+        if BP != 40:
+            BP = 40
         while not not gamepad.is_key_pressed(BPUp):
             pass
 
     if gamepad.is_key_pressed(BPDown): # Brushless power down
-        if BP != 25:
-            BP = 25
+        if BP != 30:
+            BP = 30
         while not not gamepad.is_key_pressed(BPDown):
             pass
    
