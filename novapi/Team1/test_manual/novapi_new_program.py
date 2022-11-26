@@ -210,11 +210,9 @@ class JoyRes:
 
     def TurretControl():
         if gamepad.is_key_pressed("Up"):
-            #ManualRes.MoveForward()
             smartservo_updown.move(10,10)
 
         if gamepad.is_key_pressed("Down"):
-            #ManualRes.MoveBackward()
             smartservo_updown.move(-10,10)
 
     def TurretControlOld():
@@ -302,43 +300,6 @@ class ManualRes:
             dual_rgb_sensor_2.set_led_color("red")
         else:
             dual_rgb_sensor_2.set_led_color("green")
-    
-    # Joystick Controls
-    def MoveBackward():
-        global auto_stage
-        encoder_motor_M1.set_power(-50)
-        encoder_motor_M2.set_power(50)
-        encoder_motor_M3.set_power(-50)
-        encoder_motor_M4.set_power(50)
-
-    def MoveForward():
-        global auto_stage
-        encoder_motor_M1.set_power(50)
-        encoder_motor_M2.set_power(-50)
-        encoder_motor_M3.set_power(50)
-        encoder_motor_M4.set_power(-50)
-
-    def MoveRight():
-        global auto_stage
-        encoder_motor_M1.set_power(50)
-        encoder_motor_M2.set_power(50)
-        encoder_motor_M3.set_power(-50)
-        encoder_motor_M4.set_power(-50)
-
-    def MoveLeft():
-        global auto_stage
-        encoder_motor_M1.set_power(-50)
-        encoder_motor_M2.set_power(-50)
-        encoder_motor_M3.set_power(50)
-        encoder_motor_M4.set_power(50)
-
-    def StopMoving():
-        global auto_stage
-        encoder_motor_M1.set_power(0)
-        encoder_motor_M2.set_power(0)
-        encoder_motor_M3.set_power(0)
-        encoder_motor_M4.set_power(0)
-
 
 class MovementAsset:
     def __init__(self):
@@ -458,6 +419,7 @@ class AutoAssets:
 
         # TO THE CENTER
         power_expand_board.set_power(feeddc_front,100)
+        power_expand_board.set_power(feeddc_main,-100)
         AutoAssets.MoveForward()
         time.sleep(0.26)
         AutoAssets.RotateLeft()
