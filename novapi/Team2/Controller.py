@@ -16,6 +16,7 @@ brushless = 0
 manual_automatic_mode = 1
 inverse = 1 # 1 to disable
 inverse2 = 1
+fliparm = 0
 
 # new class
 RightWheel = encoder_motor_class("M1", "INDEX1") # FRONT RIGHT WHEEL
@@ -178,7 +179,12 @@ def MoveModule():
         
 
     # Move hand up/down
-    power_expand_board.set_power("DC2",gamepad.get_joystick("Ry")*-1)
+    invalue = gamepad.get_joystick("Ry")*-1
+    if invalue is 0:
+        invalue = -10
+    else:
+        gamepad.get_joystick("Ry")*-1
+    power_expand_board.set_power("DC2",invalue)
 
     # Hand gripper
     if gamepad.is_key_pressed('Left'):
@@ -295,14 +301,14 @@ while True:
         ShooterListener(1)
         
     if gamepad.is_key_pressed(BPUp): # Brushless power up
-        if BP != 40:
-            BP = 40
+        if BP != 30:
+            BP = 30
         while not not gamepad.is_key_pressed(BPUp):
             pass
 
     if gamepad.is_key_pressed(BPDown): # Brushless power down
-        if BP != 30:
-            BP = 30
+        if BP != 15:
+            BP = 15
         while not not gamepad.is_key_pressed(BPDown):
             pass
    
@@ -331,6 +337,17 @@ while True:
     if gamepad.is_key_pressed('R2'): # Rotate ball belt manually <Hold>
         inverse = inverse*-1
         while not not gamepad.is_key_pressed('R2'):
+            pass
+        
+    if gamepad.is_key_pressed("N4"):
+        if fliparm == 0:
+            SERVO5.move_to(-180,50)
+            fliparm = 1
+        else:
+            SERVO5.move_to(180,50)
+            fliparm = 0
+
+        while not not gamepad.is_key_pressed("N4"):
             pass
 
     #Check values
