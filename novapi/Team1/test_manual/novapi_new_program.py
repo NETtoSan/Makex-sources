@@ -170,44 +170,19 @@ class JoyRes:
         pass
 
     def MovingJoystick(invert,v):
-        global auto_stage
         global vl
-        Lx = gamepad.get_joystick("Lx")  # literally Lx variable
-        Fl = 0   # Front left
-        Fr = 0   # Front right
-        Rl = 0   # Rear left
-        Rr = 0   # Rear right
+        Lx = gamepad.get_joystick("Lx")
+        Ly = gamepad.get_joystick("Ly")
+        Rx = gamepad.get_joystick("Rx")
+
+        EFl = -vl * (Lx - Rx)
+        EFr = -vl * (Ly + Rx)
+        ERl = vl * (Ly - Rx)
+        ERr = vl * (Lx + Rx)
+
+        MovementAsset.move(EFl, EFr, ERl, ERr)
 
         
-        Fl = Lx
-        Fr = Lx
-        Rl = Lx
-        Rr = Lx
-
-        EFl = vl * (gamepad.get_joystick("Ly") - Rl
-                    - gamepad.get_joystick("Rx"))
-        EFr = -vl * (gamepad.get_joystick("Ly") + Rr
-                     + gamepad.get_joystick("Rx"))
-        ERl = vl * (gamepad.get_joystick("Ly")
-                    + Fl - gamepad.get_joystick("Rx"))
-        ERr = -vl * (gamepad.get_joystick("Ly") - Fr
-                     + gamepad.get_joystick("Rx"))
-
-        if invert == 1:
-            # If the controls are inverted The arms are now the bot's front
-            EFr = vl * (gamepad.get_joystick("Ly")
-                        - Fl - gamepad.get_joystick("Rx"))
-            EFl = -vl * (gamepad.get_joystick("Ly") + Fr
-                         + gamepad.get_joystick("Rx"))
-            ERr = vl * (gamepad.get_joystick("Ly") + Rl
-                        - gamepad.get_joystick("Rx"))
-            ERl = -vl * (gamepad.get_joystick("Ly") - Rr
-                         + gamepad.get_joystick("Rx"))
-        encoder_motor_M1.set_power(EFl)
-        encoder_motor_M2.set_power(EFr)
-        encoder_motor_M3.set_power(ERl)
-        encoder_motor_M4.set_power(ERr)
-
     def TurretControl():
         if gamepad.is_key_pressed("Up"):
             smartservo_updown.move(10,10)
