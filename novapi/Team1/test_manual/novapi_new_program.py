@@ -13,7 +13,7 @@ invert = 0 # Invert movements
 feeddc = 1 # DC front on/off
 lrmode = 0  # 0 = shoot, 1 = arm
 turret_origin_angle = 0 # for reset servo angle
-bp = 50 # brushless power
+bp = 100 # brushless power
 vl = 0.5 # Movement speed
 
 # DC motors
@@ -104,12 +104,10 @@ def Manual():
 
 
         if gamepad.is_key_pressed("N2"):
-            if bp == 50:
-                bp = 100
-            elif bp == 100:
+            if bp == 100:
                 bp = 0
             else:
-                bp = 50
+                bp = 100
             while not not gamepad.is_key_pressed("N2"):
                 pass
             pass
@@ -441,6 +439,7 @@ class AutoAssets:
         pass
 
     def GrabCubeRoutine():
+        global feeddc_front
         dual_rgb_sensor_1.set_led_color("green")
         time.sleep(0.5)
 
@@ -458,6 +457,7 @@ class AutoAssets:
         power_expand_board.stop(handdc2)
 
         # TO THE CENTER
+        power_expand_board.set_power(feeddc_front,100)
         AutoAssets.MoveForward()
         time.sleep(0.26)
         AutoAssets.RotateLeft()
@@ -478,6 +478,7 @@ class AutoAssets:
         #AutoAssets.StopMoving()
 
         # GRAB CUBE
+        power_expand_board.stop(feeddc_front)
         AutoAssets.RotateLeft()
         time.sleep(0.2)
         AutoAssets.StopMoving()
