@@ -399,11 +399,12 @@ class AutoAssets:
 
         pass
 
-    def GrabCubeRoutine():
+    def GrabCubeRoutine(): # THIS STARTS FROM THE LEFT FOR NOW
         global feeddc_front
         dual_rgb_sensor_1.set_led_color("green")
         time.sleep(0.5)
 
+        # UTILIZE ARM
         power_expand_board.set_power("DC4",-50)
         time.sleep(0.7)
         power_expand_board.set_power("DC4",0)
@@ -422,11 +423,11 @@ class AutoAssets:
         power_expand_board.set_power(feeddc_main,-100)
         AutoAssets.MoveForward()
         time.sleep(0.26)
-        AutoAssets.RotateLeft()
+        AutoAssets.RotateRight()
         time.sleep(0.25) #Rotate bot from the start
         AutoAssets.MoveForward()
         time.sleep(0.4452)
-        AutoAssets.RotateRight()
+        AutoAssets.RotateLeft()
         time.sleep(0.28)
         AutoAssets.MoveForward()
         time.sleep(1.6)
@@ -440,24 +441,24 @@ class AutoAssets:
         #AutoAssets.StopMoving()
 
         # GRAB CUBE
-        power_expand_board.stop(feeddc_front)
-        AutoAssets.RotateLeft()
-        time.sleep(0.2)
-        AutoAssets.StopMoving()
-        power_expand_board.set_power("DC4",50)
-        time.sleep(1)
-        power_expand_board.set_power(handdc1, -100)
-        power_expand_board.set_power(handdc2, -100)
-        time.sleep(0.9)
-        power_expand_board.stop(handdc1)
-        power_expand_board.stop(handdc2)
-        AutoAssets.MoveBackward()
-        time.sleep(1)
-        AutoAssets.StopMoving()
+        #power_expand_board.stop(feeddc_front)
+        #AutoAssets.RotateLeft()
+        #time.sleep(0.2)
+        #AutoAssets.StopMoving()
+        #power_expand_board.set_power("DC4",50)
+        #time.sleep(1)
+        #power_expand_board.set_power(handdc1, -100)
+        #power_expand_board.set_power(handdc2, -100)
+        #time.sleep(0.9)
+        #power_expand_board.stop(handdc1)
+        #power_expand_board.stop(handdc2)
+        #AutoAssets.MoveBackward()
+        #time.sleep(1)
+        #AutoAssets.StopMoving()
 
-        power_expand_board.set_power("DC4",-50)
-        time.sleep(0.25)
-        power_expand_board.stop("DC4")
+        #power_expand_board.set_power("DC4",-50)
+        #time.sleep(0.25)
+        #power_expand_board.stop("DC4")
         pass
 
 auto_stage = 1
