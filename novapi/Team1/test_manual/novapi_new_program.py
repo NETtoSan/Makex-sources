@@ -14,7 +14,7 @@ feeddc = 1 # DC front on/off
 lrmode = 0  # 0 = shoot, 1 = arm
 turret_origin_angle = 0 # for reset servo angle
 bp = 100 # brushless power
-vl = 0.5 # Movement speed
+vl = 0.7 # Movement speed
 
 # DC motors
 feeddc_main = "DC1" # Main feed belt
@@ -54,14 +54,14 @@ def AutoStart():
                 time.sleep(0.2)
                 dual_rgb_sensor_1.set_led_color("blue")
                 time.sleep(0.2)
-            AutoAssets.GrabCubeRoutine()
+            AutoAssets.GrabCubeRoutine("right")
         if gamepad.is_key_pressed("N1"):
             for i in range(3):
                 dual_rgb_sensor_1.set_led_color("green")
                 time.sleep(0.2)
                 dual_rgb_sensor_1.set_led_color("red")
                 time.sleep(0.2)
-            AutoAssets.ShootRoutine()           
+            AutoAssets.GrabCubeRoutine("left")           
         pass
         
     Manual()
@@ -78,7 +78,6 @@ def Manual():
     LoadMe()
     while True:
         time.sleep(0.001)
-        JoyRes.MovingJoystick(invert,vl)
         ManualRes.InvertLED(invert)
         ManualRes.ControlLED(lrmode)
         JoyRes.MultiControl(lrmode, bp)
@@ -98,7 +97,7 @@ def Manual():
             power_expand_board.stop(handdc_roll)
 
         if gamepad.is_key_pressed("N1"):
-            pass
+            pass  
         if gamepad.is_key_pressed("N4"):
             pass
 
@@ -169,16 +168,30 @@ class JoyRes:
     def __init__(self):
         pass
 
-    def MovingJoystick(invert,v):
+    def MovingShooting():
         global vl
         Lx = gamepad.get_joystick("Lx")
         Ly = gamepad.get_joystick("Ly")
         Rx = gamepad.get_joystick("Rx")
 
-        EFl = -vl * (Lx - Rx)
+        EFl = vl * (Ly - Rx)
+        EFr = vl * (-Lx - Rx)
+        ERl = -vl * (-Lx + Rx)
+        ERr = -vl * (Ly + Rx)
+
+        MovementAsset.move(EFl, EFr, ERl, ERr)
+
+        
+    def MovingArm():
+        global vl
+        Lx = gamepad.get_joystick("Lx")
+        Ly = gamepad.get_joystick("Ly")
+        Rx = gamepad.get_joystick("Rx")
+
+        EFl = -vl * (Lx + Rx)
         EFr = -vl * (Ly + Rx)
         ERl = vl * (Ly - Rx)
-        ERr = vl * (Lx + Rx)
+        ERr = vl * (Lx - Rx)
 
         MovementAsset.move(EFl, EFr, ERl, ERr)
 
@@ -245,7 +258,7 @@ class JoyRes:
             JoyRes.TurretControl()
             JoyRes.ShootControl()
             JoyRes.FeedControl()
-
+            JoyRes.MovingShooting()
             # < 15 -- 23 > : 25 max
             power_expand_board.set_power("BL1", bp)
             power_expand_board.set_power("BL2", bp)
@@ -253,7 +266,7 @@ class JoyRes:
             # Hand control mode
             JoyRes.HandControl()
             JoyRes.GrabControl()
-
+            JoyRes.MovingArm()
             power_expand_board.stop(feeddc_main)
             power_expand_board.stop("BL1")
             power_expand_board.stop("BL2")
@@ -298,19 +311,19 @@ class AutoAssets:
         pass
 
     def MoveForward():
-        MovementAsset.move(50, -50, 50, -50)
+        MovementAsset.move(70, 0, 0, -70)
         pass
 
     def MoveBackward():
-        MovementAsset.move(-50, 50, -50, 50)
+        MovementAsset.move(-70, 0, 0, 70)
         pass
 
     def RotateLeft():
-        MovementAsset.move(-50, -50, -50, -50)
+        MovementAsset.move(-70, -70, -70, -70)
         pass
 
     def RotateRight():
-        MovementAsset.move(50, 50, 50, 50)
+        MovementAsset.move(70, 70, 70, 70)
         pass
     def StopMoving():
         MovementAsset.move(0, 0, 0, 0)
@@ -374,7 +387,7 @@ class AutoAssets:
 
         pass
 
-    def GrabCubeRoutine(): # THIS STARTS FROM THE LEFT FOR NOW
+    def GrabCubeRoutine(sides): # THIS STARTS FROM THE LEFT FOR NOW
         global feeddc_front
         dual_rgb_sensor_1.set_led_color("green")
         time.sleep(0.5)
@@ -387,9 +400,6 @@ class AutoAssets:
         power_expand_board.set_power(handdc2, -100)
         smartservo_pitch.move(-90,50)
         time.sleep(1.9)
-        power_expand_board.set_power(handdc1, 100)
-        power_expand_board.set_power(handdc2, 100)
-        time.sleep(0.9)
         power_expand_board.stop(handdc1)
         power_expand_board.stop(handdc2)
 
@@ -398,16 +408,30 @@ class AutoAssets:
         power_expand_board.set_power(feeddc_main,-100)
         AutoAssets.MoveForward()
         time.sleep(0.26)
-        AutoAssets.RotateRight()
+        if sides is "left": 
+            AutoAssets.RotateRight()
+        elif sides is "right":
+            AutoAssets.RotateLeft()
         time.sleep(0.25) #Rotate bot from the start
         AutoAssets.MoveForward()
         time.sleep(0.4452)
-        AutoAssets.RotateLeft()
+        if sides is "left": 
+            AutoAssets.RotateLeft()
+        if sides is "right":
+            AutoAssets.RotateRight()
         time.sleep(0.28)
         AutoAssets.MoveForward()
         time.sleep(1.6)
 
         AutoAssets.StopMoving()
+        AutoAssets.RotateRight()
+        time.sleep(0.7)
+        AutoAssets.StopMoving()
+        power_expand_board.set_power(handdc1, 100)
+        power_expand_board.set_power(handdc2, 100)
+        time.sleep(0.9)
+        power_expand_board.stop(handdc1)
+        power_expand_board.stop(handdc2)
 
         # TO THE CUBE!
 
