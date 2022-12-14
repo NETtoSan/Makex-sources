@@ -433,31 +433,6 @@ class AutoAssets:
         power_expand_board.stop(handdc1)
         power_expand_board.stop(handdc2)
 
-        # TO THE CUBE!
-
-        #AutoAssets.MoveForward()
-        #time.sleep(2)
-        #AutoAssets.StopMoving()
-
-        # GRAB CUBE
-        #power_expand_board.stop(feeddc_front)
-        #AutoAssets.RotateLeft()
-        #time.sleep(0.2)
-        #AutoAssets.StopMoving()
-        #power_expand_board.set_power("DC4",50)
-        #time.sleep(1)
-        #power_expand_board.set_power(handdc1, -100)
-        #power_expand_board.set_power(handdc2, -100)
-        #time.sleep(0.9)
-        #power_expand_board.stop(handdc1)
-        #power_expand_board.stop(handdc2)
-        #AutoAssets.MoveBackward()
-        #time.sleep(1)
-        #AutoAssets.StopMoving()
-
-        #power_expand_board.set_power("DC4",-50)
-        #time.sleep(0.25)
-        #power_expand_board.stop("DC4")
         pass
 
 auto_stage = 1
