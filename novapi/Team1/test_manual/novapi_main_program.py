@@ -245,8 +245,13 @@ class JoyRes:
 
     def HandControl():
 
-        power_expand_board.set_power(handdc1, -gamepad.get_joystick("Ry"))
+        power_expand_board.set_power(handdc1, -gamepad.get_joystick("Rx"))
         power_expand_board.set_power(handdc2, -gamepad.get_joystick("Ry"))
+
+        power_expand_board.set_power("DC1",100) # It's all in ur head over time. And the similarities as you work with it
+        power_expand_board.set_power("DC1",100) # It's all in ur head over time. And the similarities as you work with it
+        
+        
         if gamepad.is_key_pressed("Up"):
             smartservo_pitch.move(-10,50)
         if gamepad.is_key_pressed("Down"):
@@ -423,7 +428,8 @@ class AutoAssets:
         AutoAssets.MoveForward()
         time.sleep(1.6)
 
-        AutoAssets.StopMoving()
+        AutoAssets.StopMoving()     # Suppose this function stops all motors
+
         AutoAssets.RotateRight()
         time.sleep(0.7)
         AutoAssets.StopMoving()
@@ -432,32 +438,6 @@ class AutoAssets:
         time.sleep(0.9)
         power_expand_board.stop(handdc1)
         power_expand_board.stop(handdc2)
-
-        # TO THE CUBE!
-
-        #AutoAssets.MoveForward()
-        #time.sleep(2)
-        #AutoAssets.StopMoving()
-
-        # GRAB CUBE
-        #power_expand_board.stop(feeddc_front)
-        #AutoAssets.RotateLeft()
-        #time.sleep(0.2)
-        #AutoAssets.StopMoving()
-        #power_expand_board.set_power("DC4",50)
-        #time.sleep(1)
-        #power_expand_board.set_power(handdc1, -100)
-        #power_expand_board.set_power(handdc2, -100)
-        #time.sleep(0.9)
-        #power_expand_board.stop(handdc1)
-        #power_expand_board.stop(handdc2)
-        #AutoAssets.MoveBackward()
-        #time.sleep(1)
-        #AutoAssets.StopMoving()
-
-        #power_expand_board.set_power("DC4",-50)
-        #time.sleep(0.25)
-        #power_expand_board.stop("DC4")
         pass
 
 auto_stage = 1
