@@ -97,7 +97,7 @@ class AutoCode:
 
 while True:
     time.sleep(0.001)
-    #ManualCode.Movement()
+    ManualCode.JoystickMovement()
     ManualCode.ButtonControls()
 
     #SmartCameraCode
@@ -109,6 +109,8 @@ while True:
     if(novacam.detect_sign(1)):
 
         # Align bot angle to default ( arena angle )
+        # GET THIS TO WORK FIRST!
+
         roll = novapi.get_roll()
         default_angle = 0
         while(roll is not default_angle):
@@ -120,17 +122,17 @@ while True:
                 roll = novapi.get_roll()
 
         # Move the bot bot always perpendicular to arena's angle
-        center = novacam.detect_sign_location(1, "middle")
-        while(center is not True):
-            stat  = novacam.detect_sign_location(1, "left")
-            if(stat is True):
-                AutoCode.Movement("left")
-                center = novacam.detect_sign_location(1, "middle")
-            else:
-                stat = novacam.detect_sign_location(1, 'right')
-                if(stat is True):
-                    AutoCode.Movement("left")
-                    center = novacam.detect_sign_location(1, "middle")
+        #center = novacam.detect_sign_location(1, "middle")
+        #while(center is not True):
+        #    stat  = novacam.detect_sign_location(1, "left")
+        #    if(stat is True):
+        #        AutoCode.Movement("left")
+        #        center = novacam.detect_sign_location(1, "middle")
+        #    else:
+        #        stat = novacam.detect_sign_location(1, 'right')
+        #        if(stat is True):
+        #            AutoCode.Movement("left")
+        #            center = novacam.detect_sign_location(1, "middle")
        
         # Obtain distance between bot and objects
         # Code goes here blablablablalbalbal
