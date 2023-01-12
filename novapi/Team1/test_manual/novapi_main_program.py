@@ -65,7 +65,6 @@ def AutoStart():
         pass
         
     Manual()
-    time.sleep(5)
     pass
 
 def Manual():
