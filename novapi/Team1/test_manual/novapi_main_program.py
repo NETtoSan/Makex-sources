@@ -54,6 +54,8 @@ def Manual():
         ManualRes.ControlLED(lrmode)
         JoyRes.MultiControl(lrmode, bp)
 
+
+        # Movement test
         if gamepad.is_key_pressed("Up"):
             ManualRes.MoveForward()
 
@@ -66,13 +68,7 @@ def Manual():
         if gamepad.is_key_pressed("Right"):
             ManualRes.MoveRight()
 
-        if gamepad.is_key_pressed("N1"):
-            power_expand_board.set_power("DC5", -20)
-        elif gamepad.is_key_pressed("N4"):
-            power_expand_board.set_power("DC5", 20)
-        else:
-            power_expand_board.stop("DC5")
-
+        # Brushless motor speed
         if gamepad.is_key_pressed("N2"):
             if bp == 50:
                 bp = 100
@@ -84,6 +80,7 @@ def Manual():
                 pass
             pass
 
+        # DC front control
         if gamepad.is_key_pressed("N3"):
             if feeddc == 0:
                 feeddc = 1
@@ -101,8 +98,8 @@ def Manual():
                 lrmode = 0
             while not not gamepad.is_key_pressed("R2"):
                 pass
-        # Control speed
 
+        # Control speed
         if gamepad.is_key_pressed("L_Thumb"):
             if vl == 0.5:
                 vl = 0.8
@@ -113,6 +110,7 @@ def Manual():
 
             while not not gamepad.is_key_pressed("L_Thumb"):
                 pass
+
         # Invert control direction
         if gamepad.is_key_pressed("R_Thumb"):
             if invert == 0:
@@ -122,7 +120,7 @@ def Manual():
             while not not gamepad.is_key_pressed("R_Thumb"):
                 pass
 
-        # Dc feed
+        # DC front
         if feeddc == 1:
             power_expand_board.set_power(dc_front, -100)
         else:
@@ -247,31 +245,31 @@ class ManualRes:
 
     def MoveBackward():
         global auto_stage
-        encode_fl.set_power(-50)
-        encode_fr.set_power(50)
-        encode_rl.set_power(-50)
-        encode_rr.set_power(50)
+        encode_fl.set_power(-70)
+        encode_fr.set_power(70)
+        encode_rl.set_power(-70)
+        encode_rr.set_power(70)
 
     def MoveForward():
         global auto_stage
-        encode_fl.set_power(50)
-        encode_fr.set_power(-50)
-        encode_rl.set_power(50)
-        encode_rr.set_power(-50)
+        encode_fl.set_power(70)
+        encode_fr.set_power(-70)
+        encode_rl.set_power(70)
+        encode_rr.set_power(-70)
 
     def MoveRight():
         global auto_stage
-        encode_fl.set_power(50)
-        encode_fr.set_power(50)
-        encode_rl.set_power(-50)
-        encode_rr.set_power(-50)
+        encode_fl.set_power(70)
+        encode_fr.set_power(70)
+        encode_rl.set_power(-70)
+        encode_rr.set_power(-70)
 
     def MoveLeft():
         global auto_stage
-        encode_fl.set_power(-50)
-        encode_fr.set_power(-50)
-        encode_rl.set_power(50)
-        encode_rr.set_power(50)
+        encode_fl.set_power(-70)
+        encode_fr.set_power(-70)
+        encode_rl.set_power(70)
+        encode_rr.set_power(70)
 
     def StopMoving():
         global auto_stage
@@ -289,5 +287,4 @@ while True:
         auto_stage = 0
 
     else:
-        smartservo_arm.move_to(0, 10)
         Manual()
