@@ -35,7 +35,7 @@ def drive(v1,v2,v3,v4):
     encoder_motor_M3.set_power(v3)
     encoder_motor_M4.set_power(v4)
 
-def led_stauts(data):
+def led_status(data):
     if data[0] is "FLASH":
         status_led.set_led_color(data[1])
     elif data[0] is "STILL":
