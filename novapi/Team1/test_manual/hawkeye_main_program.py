@@ -143,31 +143,14 @@ class JoyRes:
         # If the bot starts slipping to unwanted direction. Tune variables here
         
         Lx = gamepad.get_joystick("Lx")  # literally Lx variable
+        Rx = gamepad.get_joystick("Rx")
+        Ly = gamepad.get_joystick("Ly")
 
-        Fl = Lx
-        Fr = Lx 
-        Rl = Lx 
-        Rr = Lx
+        EFl = vl *  (Ly - Lx - Rx)
+        EFr = -vl * (Ly + Lx + Rx)
+        ERl = vl *  (Ly + Lx - Rx)
+        ERr = -vl * (Ly - Lx + Rx)
 
-        EFl = vl * (gamepad.get_joystick("Ly") - Rl
-                    - gamepad.get_joystick("Rx"))
-        EFr = -vl * (gamepad.get_joystick("Ly") + Rr
-                     + gamepad.get_joystick("Rx"))
-        ERl = vl * (gamepad.get_joystick("Ly")
-                    + Fl - gamepad.get_joystick("Rx"))
-        ERr = -vl * (gamepad.get_joystick("Ly") - Fr
-                     + gamepad.get_joystick("Rx"))
-
-        if invert == 1:
-            # If the controls are inverted The arms are now the bot's front
-            EFr = vl * (gamepad.get_joystick("Ly")
-                        - Fl - gamepad.get_joystick("Rx"))
-            EFl = -vl * (gamepad.get_joystick("Ly") + Fr
-                         + gamepad.get_joystick("Rx"))
-            ERr = vl * (gamepad.get_joystick("Ly") + Rl
-                        - gamepad.get_joystick("Rx"))
-            ERl = -vl * (gamepad.get_joystick("Ly") - Rr
-                         + gamepad.get_joystick("Rx"))
         encode_fl.set_power(EFl)
         encode_fr.set_power(EFr)
         encode_rl.set_power(ERl)
