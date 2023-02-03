@@ -60,6 +60,10 @@ while True:
 
         if smart_camera_1.detect_sign_location(1, "middle"):
             drive_middle()
+        if smart_camera_1.detect_sign_location(1, "up"):
+            drive_middle()
+        if smart_camera_1.detect_sign_location(1, "down"):
+            drive_middle()
 
         elif smart_camera_1.detect_sign_location(1, "right"):
             origin_angle = float(novapi.get_yaw())    #FINISH THIS AT THE LAB!
