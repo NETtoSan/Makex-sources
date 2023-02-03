@@ -21,13 +21,16 @@ auto_spec = {
     "cube_light_intensity": 10,  # Measure distance from the cube when ranging sensor is not available
     "angle_offset": 0,           # Tolerable angle for janky mecanum 
     
-    "status_led": ["PORT3","INDEX1"],   # Initiate auto led
+    "status_led": [["PORT2","INDEX1"],["PORT2","INDEX2"]],   # Initiate auto led
     "cube_found": ["STILL", "blue"],     # Status when the cube is found
     "cube_ready": ["STILL", "green"],    # Status when the cube is ready to be grabbed
     "cube_done":  ["FLASH", "green"],    # Status when the cube is on our side
     "cube_gone":  ["FLASH", "red"]       # Status when the cube suddenly disappeared
 }
-status_led = dual_rgb_sensor_class(auto_spec["status_led"][0], auto_spec["status_led"][1])
+lights = {
+    "1" : dual_rgb_sensor_class(auto_spec["status_led"][0][0], auto_spec["status_led"][0][1]),
+    "2" : dual_rgb_sensor_class(auto_spec["status_led"][1][0], auto_spec["status_led"][1][1])
+}
 
 def drive(v1,v2,v3,v4):
     encoder_motor_M1.set_power(v1)
@@ -35,11 +38,14 @@ def drive(v1,v2,v3,v4):
     encoder_motor_M3.set_power(v3)
     encoder_motor_M4.set_power(v4)
 
-def led_status(data):
+def led_status(data,light):
+    if light == None:
+        light = lights["1"] # Defaults led light to 1
+        
     if data[0] is "FLASH":
-        status_led.set_led_color(data[1])
+        light.set_led_color(data[1])
     elif data[0] is "STILL":
-        status_led.set_led_color(data[1])
+        light.set_led_color(data[1])
 
 def drive_middle():
     ranging_sensor = float(ranging_sensor_1.get_distance())
@@ -86,5 +92,5 @@ while True:
             drive(0, 0, 0, 0)
     else:
         smart_camera_1.open_light()
-        led_status(auto_spec["cube_gone"])
+        led_status(auto_spec["cube_gone"],lights["1"])
         drive(0, 0, 0, 0)
