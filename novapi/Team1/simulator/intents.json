@@ -1,0 +1,13 @@
+{
+    "sensors": "random",
+    "sensor_value":{
+        "cube_distance": 100,
+        "cube_location":{
+            "x":100,
+            "y":0
+        }
+    },
+
+    "robot_slide_inaccuracy": 0.05,
+    "robot_slide_rot": 0.05
+}

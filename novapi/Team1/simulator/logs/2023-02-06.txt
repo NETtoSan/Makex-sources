@@ -1,0 +1,113 @@
+MakeX Challenge energy innovator auto cube program
+
+> SENSORS: RANDOM NUMBERS
+> JSON FILE: ./intents.json
+> CAMERA: True
+> RANGING_SENSORS: True
+[I] Setting rgb color to blue
+[I] Set motor speed for 50 -50 50 -50 fwd for 1 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 1 sec
+True [cube_x:9 cube_y:28]
+[!] AUTO CORRECTING CUBE LOCATION
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[!] SLIDING TO CUBE
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[---] AUTO CORRECTING CUBE LOCATION
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[---] AUTO CORRECTING CUBE DONE
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[---] AUTO CORRECTING CUBE LOCATION
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[---] AUTO CORRECTING CUBE DONE
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[---] AUTO CORRECTING CUBE LOCATION
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[---] AUTO CORRECTING CUBE DONE
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[---] AUTO CORRECTING CUBE LOCATION
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[I] Set motor speed for -50 50 -50 50 bwd for 0.01 sec
+[---] AUTO CORRECTING CUBE DONE
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[I] Set motor speed for 50 50 -50 -50 srt for 0.01 sec
+[-!-] CUBE AT POSITION
+True [cube_x:0 cube_y:28 cube_range_was:59 cube_range_now:10]
+Grabbing cube
+[I] Set motor speed for 50 50 -50 -50 srt for 2 sec
+Releasing cube
+
+--------------------
+> Auto code done <
+[I] The cube is on our alliance side
+Log file has been saved at ./2023-02-06.txt
+--------------------
