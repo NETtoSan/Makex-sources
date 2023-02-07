@@ -10,8 +10,10 @@ cube_done = False
 
 def logutil(s):
     global logs
-    print(s)
-    logs.append(s)
+    t = time.localtime(time.time())
+    ctime = f"[{t.tm_hour}:{t.tm_min}:{t.tm_sec}]"
+    print(f"{ctime} {s}")
+    logs.append(f"{ctime} {s}")
 def isneg(v):
     if v > 0:
         return False
@@ -19,12 +21,13 @@ def isneg(v):
         return False
     else:
         return True
-def stat():
+def stat(t):
         global logs
         logutil("\n--------------------")
         logutil("> Auto code done <")
         logutil("[!] The cube is not on our alliance side") if cube_done is False else logutil("[I] The cube is on our alliance side")
-        logutil(f"Log file has been saved at ./{date.today()}.txt")
+        logutil(f"Time elapsed {t} seconds. {'time out!' if t > 30 else 'Auto completed in time limit'}")
+        logutil(f"[I] Log file has been saved at ./{date.today()}.txt")
         logutil("--------------------")
 
         with open(f'./novapi/Team1/simulator/{date.today()}.txt','w') as tfile:
@@ -127,6 +130,9 @@ class auto():
 
     def modes(self,prompt):
         global cube_done, logs
+        # Log time init, starting time
+        start_time = time.localtime(time.time()).tm_sec
+
         logutil("MakeX Challenge energy innovator auto cube program\n")
         logutil("> SENSORS: RANDOM NUMBERS\n> JSON FILE: ./intents.json\n> CAMERA: True\n> RANGING_SENSORS: True")
         self.lights.set_rgb_color("blue")
@@ -187,7 +193,9 @@ class auto():
             cube_done = True 
         else:
             cube_done = False
-        stat()
+        
+        end_time = time.localtime(time.time())
+        stat(start_time - end_time)
 
 # FUNCTIONS
 boot()
