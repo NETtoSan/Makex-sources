@@ -8,6 +8,69 @@ commands = ["restart", "settings", "about", "exit (CTRL+C)"]
 logs = []
 cube_done = False
 
+settings_config = {
+    "motors":{
+        "DC1": {
+            "TYPE": "ROLLER_DC",
+            "RPM": 200
+            },
+        "DC2": {
+            "TYPE": "ARMDC_UPDOWN",
+            "RPM": 200
+        },
+        "DC3": {
+            "TYPE": "ARMDC_GRAB",
+            "RPM": 50
+        },
+        "DC4": {
+            "TYPE": "NOT SET",
+            "RPM": 200
+        },
+        "DC5": {
+            "TYPE": "NOT SET",
+            "RPM": 200
+        },
+        "DC6": {
+            "TYPE": "NOT SET",
+            "RPM": 200
+        },
+        "DC7": {
+            "TYPE": "NOT STE",
+            "RPM": 200
+        },
+        "DC8": {
+            "TYPE": "NOT SET",
+            "RPM": 200
+        },
+    },
+    "encoders":{
+        "EM1": {
+            "NAME": "WHEEL_FRONTLEFT",
+            "TYPE": "ENCODER_MOTOR"
+        },
+        "EM2": {
+            "NAME": "WHEEL_FRONTRIGHT",
+            "TYPE": "ENCODER_MOTOR"
+        },
+        "EM3": {
+            "NAME": "WHEEL_BACKLEFT",
+            "TYPE": "ENCODER_MOTOR"
+        },
+        "EM4": {
+            "NAME": "WHEEL_BACKRIGHT",
+            "TYPE": "ENCODER_MOTOR"
+        },
+        "EM5": {
+            "NAME": "FEEDBELT",
+            "TYPE": "ENCODER_MOTOR"
+        },
+        "EM6": {
+            "NAME": "SERVO",
+            "TYPE": "ENCODER_MOTOR"
+        }
+    }
+}
+
 def logutil(s):
     global logs
     t = time.localtime(time.time())
@@ -15,25 +78,22 @@ def logutil(s):
     print(f"{ctime} {s}")
     logs.append(f"{ctime} {s}")
 def isneg(v):
-    if v > 0:
-        return False
-    elif v == 0:
-        return False
-    else:
-        return True
-def stat(t):
+    return False if v > 0 else False if v == 0 else True
+def stat(ts):
         global logs
+        t = time.localtime(time.time())
+        nowtime = f"{t.tm_hour}{t.tm_min}{t.tm_sec}"
         logutil("\n--------------------")
         logutil("> Auto code done <")
         logutil("[!] The cube is not on our alliance side") if cube_done is False else logutil("[I] The cube is on our alliance side")
-        logutil(f"Time elapsed {t} seconds. {'time out!' if t > 30 else 'Auto completed in time limit'}")
-        logutil(f"[I] Log file has been saved at ./{date.today()}.txt")
+        logutil(f"Time elapsed {t} seconds. {'time out!' if ts > 30 else 'Auto completed in time limit'}")
+        logutil(f"[I] Log file has been saved at ./logs/{date.today()}/{nowtime}.txt")
         logutil("--------------------")
 
-        with open(f'./novapi/Team1/simulator/{date.today()}.txt','w') as tfile:
+        with open(f'./logs/{date.today()}/{nowtime}.txt','w') as tfile:
             tfile.write('\n'.join(logs))
-def ask():
-    prompt = input(f"Available scenarios: [{' , '.join(modes)}]\nAvailable commands:  [{' , '.join(commands)}]\n> ")
+def ask(which):
+    prompt = input(f"Available scenarios: [{' , '.join(modes)}]\nAvailable commands:  [{' , '.join(commands)}]\n> " if which == "main" else f"Available settings: [{' , '.join(settings_config)}]\n> ")
     return prompt
 def about():
     print("\n\n\nMakeX robot simulator Version 0.3")
@@ -45,12 +105,6 @@ def about():
 def boot():
     print("\n----------- NETto!_NS Scenario simulator -----------") 
     print("> god help me")
-    print("[L] ./cube.py && ../hawkeye_main_program.py")
-    print("[L] ./mbuild_simulate.py")
-    print("[L] ./cube_verifier.py")
-    print("[L] ./mbuild_data.json")
-    print("[L] ./cube_data.json")
-    print("[C] ssh:nettosan@192.168.1.34:~/ /dev/ttyUSB0")
     print("[I] By NETto & LuPow132\nVersion 0.3\n")
 
 class led_lights():
@@ -63,8 +117,7 @@ class led_lights():
             color.index(col)
             logutil(f"[I] Setting rgb color to {col}")
         except ValueError:
-            print("[!] That color DOES NOT exist")
-            logs.append("[!] That color DOES NOT exist")
+            logutil("[!] That color DOES NOT exist")
 class encode_motor():
     def __init__ (self):
         pass
@@ -110,7 +163,22 @@ class bot():
             movement = "rrt"
         logutil(f"[I] Set motor speed for {v1} {v2} {v3} {v4} {movement} for {sec} sec")
         time.sleep(sec)
-        
+
+# SETTINGS
+def settings():
+    prompt_exit = 0
+    prompt_selector = { "now": 0, "max": len(settings_config) -1 }
+    while prompt_exit == 0:
+        prompt = ask("settings")
+        print(f"Keywords prompted: {prompt}\n")
+        if prompt == "exit" or prompt == "quit":
+            prompt_exit = 1
+        else:
+            a = settings_config.get(prompt)
+            if a is None:
+                print("That DOES NOT exist!")
+
+
 # BOT CORE
 smartcam = smart_camera()
 rangesensor = ranging_sensor()
@@ -131,7 +199,7 @@ class auto():
     def modes(self,prompt):
         global cube_done, logs
         # Log time init, starting time
-        start_time = time.localtime(time.time()).tm_sec
+        start_time = int(time.localtime(time.time()).tm_sec)
 
         logutil("MakeX Challenge energy innovator auto cube program\n")
         logutil("> SENSORS: RANDOM NUMBERS\n> JSON FILE: ./intents.json\n> CAMERA: True\n> RANGING_SENSORS: True")
@@ -194,14 +262,14 @@ class auto():
         else:
             cube_done = False
         
-        end_time = time.localtime(time.time())
-        stat(start_time - end_time)
+        end_time = int(time.localtime(time.time()).tm_sec) - start_time
+        stat(end_time)
 
 # FUNCTIONS
 boot()
 while True:
     time.sleep(1)
-    prompt  = ask()
+    prompt  = ask("main")
     print(f"Keywords prompted: {prompt}")
     auto_test = auto()
     if prompt == "auto":
@@ -215,5 +283,7 @@ while True:
         about()
     elif prompt == "exit":
         quit()
+    elif prompt == "settings":
+        settings()
     else:
         print("[!] Not a valid scenario\n")
