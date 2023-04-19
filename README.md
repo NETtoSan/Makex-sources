@@ -1,6 +1,6 @@
 # Makex-sources
 
-## _The ultimate MakeX source code_
+## _The ultimate MakeX competition code. From a contestant_
 
 This source code is for testing components from Makeblock for makex competition.
 - And oh boy we won the championship! (Local MakeX competition managed by the university called KMITL)
