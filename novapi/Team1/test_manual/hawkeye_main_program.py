@@ -5,7 +5,7 @@ from mbuild import power_expand_board
 from mbuild import gamepad
 import novapi
 import time
-
+import math
 # initialize the variables
 auto_stage = 0
 shoot = 0
@@ -135,11 +135,17 @@ class JoyRes:
     def __init__(self):
         pass
 
+    def move(v1,v2,v3,v4):
+        encode_fl.set_power(v1)
+        encode_fr.set_power(v2)
+        encode_rl.set_power(v3)
+        encode_rr.set_power(v4)
+
     def MovingJoystick():
         global vl, invert
         # Code for bot movement from left to right.
         # If the bot starts slipping to unwanted direction. Tune variables here
-        
+        """
         Lx = gamepad.get_joystick("Lx")  # literally Lx variable
         Rx = gamepad.get_joystick("Rx")
         Ly = gamepad.get_joystick("Ly")
@@ -148,11 +154,28 @@ class JoyRes:
         EFr = -vl * (Ly + Lx + Rx)
         ERl = vl *  (Ly + Lx - Rx)
         ERr = -vl * (Ly - Lx + Rx)
+        """
+        lx = gamepad.get_joystick("Lx")
+        rx = gamepad.get_joystick("Rx")
+        ly = -gamepad.get_jostick("Ly")
+        theta = math.atan2(ly, lx)
+        power = math.hypot(lx, ly)
 
-        encode_fl.set_power(EFl)
-        encode_fr.set_power(EFr)
-        encode_rl.set_power(ERl)
-        encode_rr.set_power(ERr)
+        sin = math.sin(theta - math.pi/ 4)
+        cos = math.cos(theta - math.pi/ 4)
+        pmx = math.max(abs(sin), abs(cos))
+
+        EFl = power * cos/max + rx
+        EFr = power * sin/max - rx
+        ERl = power * sin/max + rx
+        ERr = power * cos/max - rx
+
+        if ((power + abs(lx) > 1)):
+            EFl != power + abs(lx)
+            EFr != power + abs(lx)
+            ERl != power + abs(lx)
+            ERr != power + abs(lx)
+        JoyRes.move(EFl,EFr,ERl,ERr)
 
     def TurretControl():
         global dc_gun

@@ -8,69 +8,6 @@ commands = ["restart", "settings", "about", "exit (CTRL+C)"]
 logs = []
 cube_done = False
 
-settings_config = {
-    "motors":{
-        "DC1": {
-            "TYPE": "ROLLER_DC",
-            "RPM": 200
-            },
-        "DC2": {
-            "TYPE": "ARMDC_UPDOWN",
-            "RPM": 200
-        },
-        "DC3": {
-            "TYPE": "ARMDC_GRAB",
-            "RPM": 50
-        },
-        "DC4": {
-            "TYPE": "NOT SET",
-            "RPM": 200
-        },
-        "DC5": {
-            "TYPE": "NOT SET",
-            "RPM": 200
-        },
-        "DC6": {
-            "TYPE": "NOT SET",
-            "RPM": 200
-        },
-        "DC7": {
-            "TYPE": "NOT STE",
-            "RPM": 200
-        },
-        "DC8": {
-            "TYPE": "NOT SET",
-            "RPM": 200
-        },
-    },
-    "encoders":{
-        "EM1": {
-            "NAME": "WHEEL_FRONTLEFT",
-            "TYPE": "ENCODER_MOTOR"
-        },
-        "EM2": {
-            "NAME": "WHEEL_FRONTRIGHT",
-            "TYPE": "ENCODER_MOTOR"
-        },
-        "EM3": {
-            "NAME": "WHEEL_BACKLEFT",
-            "TYPE": "ENCODER_MOTOR"
-        },
-        "EM4": {
-            "NAME": "WHEEL_BACKRIGHT",
-            "TYPE": "ENCODER_MOTOR"
-        },
-        "EM5": {
-            "NAME": "FEEDBELT",
-            "TYPE": "ENCODER_MOTOR"
-        },
-        "EM6": {
-            "NAME": "SERVO",
-            "TYPE": "ENCODER_MOTOR"
-        }
-    }
-}
-
 def logutil(s):
     global logs
     t = time.localtime(time.time())
