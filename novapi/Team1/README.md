@@ -1,11 +1,11 @@
 # 2022 Makex Challenge
 This MakeX competition is another competition we have joined after winning the local XMaker's Explorer kind of thing. **However**, with the lack of parts, fundings, virtually everything, we have to come up with different methods of trying out new ideas.
-
+____
 ## What the bot must do
 **[1] The easiest yet them all is to propel the yellow balls in the stage with high accuracy. And to have high gun elevation/ depression.**\
 **[2] Another one is to have relatively big and efficient arm in which to grab the cubes at the middle row easily.**\
 **[3] It's also nice to add some sensors, specially the one that can measure range and a camera to help players aim the opponent's target**
-____
+
 ## The ideas
 The ideas we've tried for this 2022's MakeX Challenge is.... I'd say **A lot** for a short amount of time.
 
@@ -20,6 +20,7 @@ The ideas we've tried for this 2022's MakeX Challenge is.... I'd say **A lot** f
 [5] Yeah we got tired to time each movement's in seconds. Luckily not with floating numbers for the sake of accuracy. So we just let the bot complete its mission on its own
 
 ____
+
 # The code
 This folder consists of\
 **[1] An actual code we used in the competition `./test_manual`\
