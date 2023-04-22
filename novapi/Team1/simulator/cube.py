@@ -87,10 +87,10 @@ def stat(ts):
         logutil("> Auto code done <")
         logutil("[!] The cube is not on our alliance side") if cube_done is False else logutil("[I] The cube is on our alliance side")
         logutil(f"Time elapsed {t} seconds. {'time out!' if ts > 30 else 'Auto completed in time limit'}")
-        logutil(f"[I] Log file has been saved at ./logs/{date.today()}/{nowtime}.txt")
+        logutil(f"[I] Log file has been saved at ./logs/{date.today()}{nowtime}.txt")
         logutil("--------------------")
 
-        with open(f'./logs/{date.today()}/{nowtime}.txt','w') as tfile:
+        with open(f'./logs/{date.today()}{nowtime}.txt','w') as tfile:
             tfile.write('\n'.join(logs))
 def ask(which):
     prompt = input(f"Available scenarios: [{' , '.join(modes)}]\nAvailable commands:  [{' , '.join(commands)}]\n> " if which == "main" else f"Available settings: [{' , '.join(settings_config)}]\n> ")
@@ -100,7 +100,7 @@ def about():
     print("By NETto and Lupow132 (2023)")
     print("This software or python source code is intended for demonstration purposes\nand does not interfere with MakeBlock co.ltd")
     print("This software is intended to use for simulating MakeX challenge robotics competiton\nand such equipment is simulated through generating random numbers")
-    print("\nGenerated given random numbers and you need to do whatever it takes to make cube x,y is 0. Basically an auto cube program")
+    print("\nGenerated given random numbers and you need to do whatever it takes to make cube x,y is 0. Basically an auto cube program\nFor more precise numbers. run ./scenario_generator.py and plot numbers form there")
     print("\n\nThis software is intended to use inside iRobot ST-BUU. But if you are from the outside schools. Feel free\n")
 def boot():
     print("\n----------- NETto!_NS Scenario simulator -----------") 
