@@ -17,7 +17,7 @@ The ideas we've tried for this 2022's MakeX Challenge is.... I'd say **A lot** f
 [5] Accelerometer dependant and odometry for automatic program**
 > [1] The Holonomic X Drive is an improvisation we have to face with very limiting resources. We do not have mecanum wheels. And have to use these 4 omniwheels to work with a code that's designed for mecanum wheels.\
 [2] The rubber wheel brushless motor technique is also another improvisation we came up with to counteract with lack of parts. Which also introduced a Flywheel into a competition. We can propel the balls efficiently with just 10% of the motor's power.\
-[5] Yeah we're get tired to time each movement's in seconds. Luckily not with floating numbers. So we just let the bot complete its mission on its own
+[5] Yeah we got tired to time each movement's in seconds. Luckily not with floating numbers for the sake of accuracy. So we just let the bot complete its mission on its own
 
 ____
 # The code
