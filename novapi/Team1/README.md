@@ -28,4 +28,26 @@ This folder consists of\
 [3] A code where we test each sensors and the bot's efficiency in completing each tasks. Especially the ones that it has to move in x,y coordinates `./test_auto`**
 >*!!! The code that contains the movement in x,y coordinates is not in `./test_auto` because we do not have the robot anymore. If you wanted to see its currently unfinished code please head to `./simulator/pure_persuit.py`*
 ____
+
+# The Novapi connections
+- **Encoder motor**\
+**These wheel configs are used both for omniwheels and mecanum wheels**\
+EM1: Front left wheel\
+EM2: Front right wheel\
+EM3: Rear left wheel\
+EM4: Rear right wheel\
+**DC ports are used to power the motors and other peripherals**\
+DC1: Unknown\
+DC2: Unknown\
+DC3: Unknown\
+DC4: Unknown\
+DC5: Unknown\
+DC6: Unknown\
+DC7: Unknown\
+DC8: Unknown\
+**MBuild ports are used to connect its smarts**\
+I forgot how many mbuilds ive used.
+
+**! Please head to `./test_manual/hawkeye_main_program.py` and find out for yourself !**
+____
 **More information coming soon i'm trying to remember what i've done to this repository**
