@@ -1,3 +1,16 @@
+
+
+ ################################################
+ #         A HOLONOMIC MECANUM SOLUTIONS        # 
+ # - (C) 2023, NETtoSan                         #
+ # - Thai Nichi Institute of Technology         #
+ # This is to provide a solutions in which to   #
+ # drive mecanum wheel with holonomic aspects   #
+ # This is made suitable for odometry purposes  #
+ ################################################
+
+
+
 import math
 from time import sleep
 import random
@@ -25,11 +38,12 @@ def pure_persuit(target_pos):
     if keep_pos is True: starting_pos = [target_pos[0], target_pos[1]]
 
     # Holonomic code
-    power = (dX + dY) / 2 
+    power = (abs(dX) + abs(dY)) / 2 
     rot_speed = 0 # gamepad.get_joysticl("Rx")
 
     # This code calcultes time to run the motors
     duration = power # Dummy code
+
     '''
     # This code updates novapi location using novapi accelerometers
     novapi_x = 0
@@ -41,12 +55,34 @@ def pure_persuit(target_pos):
         sleep(0.01)
         print(f"{novapi_x}: {dX}, {novapi_y}: {dY}")
     '''
-    holonomic(power, [target_angle, dX, dY], rot_speed)
+
+    holonomic_angles(power, [target_angle, dX, dY], rot_speed)
+    holonomic_xy(power, [target_angle, dX, dY], rot_speed)
     #sleep(duration)
 
     #sleep(x)
 
-def holonomic(power, packet, rot_speed):
+def holonomic_angles(power:int, packet:list, rot_speed:int): # Use this for auto code!
+    #power = power/10
+    packet[0] = (packet[0] + 180) % 360 - 180
+    angle_rad = math.radians(- packet[0])
+
+    vx = round(power * math.cos(angle_rad))
+    vy = round(power * math.sin(angle_rad))
+
+    #if(isneg(packet[0])): vy = -vy
+    #if(isneg(packet[0]) or isneg(angle_rad)): vx = -vx
+
+    EFl =   constrain((vx - vy) - rot_speed, -100, 100)
+    EFr = - constrain((vx + vy) + rot_speed, -100, 100)
+    ERl =   constrain((vx + vy) - rot_speed, -100, 100)
+    ERr = - constrain((vx - vy) + rot_speed, -100, 100)
+
+    # --- OUTPUT --- #
+    print(f"------\n1) ACTUAL POWER ({packet[0]}) ({angle_rad})\n({vx}) ({vy})\nLEFT {EFl} : RIGHT {EFr}\nLEFT {ERl} : RIGHT {ERr}\n\n")
+    # --- OUTPUT --- #
+
+def holonomic_xy(power:int, packet:list, rot_speed:int): # Use this for manual code!
 
     # -- PACKET REQUIREMENTS -- #
     # packet[0] = target_angle
@@ -57,7 +93,6 @@ def holonomic(power, packet, rot_speed):
     lx = packet[1]        # gamepad.get_joystick("Lx")
     ly = packet[2]        # gamepad.get_joystick("Ly")
     rot_speed = rot_speed # gamepad.get_joystick("Rx")
-    angles = packet[0]    # default_angle, unused!
     theta = math.atan2(ly, lx)
     mPwr = constrain(math.hypot(lx, ly), -100, 100)
 
@@ -65,29 +100,25 @@ def holonomic(power, packet, rot_speed):
     cos = round(math.cos(theta - math.pi / 4))
     pmx = max(abs(sin), abs(cos))
 
-    EFl = mPwr * cos/pmx + rot_speed  # Motor front left
-    EFr = -mPwr * sin/pmx - rot_speed # Motor front right
-    ERl = mPwr * sin/pmx + rot_speed  # Motor back left
-    ERr = -mPwr * cos/pmx - rot_speed # Motor back right
+    EFl =   ((mPwr * cos/pmx) + rot_speed)  # Motor front left
+    EFr = - ((mPwr * sin/pmx) - rot_speed)  # Motor front right
+    ERl =   ((mPwr * sin/pmx) + rot_speed)  # Motor back left
+    ERr = - ((mPwr * cos/pmx) - rot_speed) # Motor back right
     
 
     # --- OUTPUT --- #
-    print(f"------\nACTUAL POWER\nLEFT {EFl} : RIGHT {EFr}\nLEFT {ERl} : RIGHT {ERr}\n--- OUTPUT CODE\nLEFT: {EFl} : RIGHT {-EFr}\nLEFT : {ERl} : RIGHT {-ERr}\n\n")
+    print(f"------\n2) ACTUAL POWER\nLEFT {EFl} : RIGHT {EFr}\nLEFT {ERl} : RIGHT {ERr}\n\n")
     # --- OUTPUT --- #
 
-    #print(f"OVERALL POWER\npure_persuit: {power} , holonomic: {mPwr}\nmax: {pmx}")
-    #print(f"{angles} : {total} : {total2}")
-    #print(f"{angles} : {theta}\n{angles} : {mPwr}\n{angles} : {sin}\n{angles} : {cos}\n{angles} : {pmx}")
-
-def isneg(v):
+def isneg(v:int):
     return False if v > 0 else False if v == 0 else True
 
-def constrain(v,mn,mx):
+def constrain(v:int, mn:int, mx:int):
     if v < mn : return mn
     if v > mx : return mx
     return v
 
-def run(x,y):
+def run(x:int ,y:int):
     global starting_pos, mode
     print("\n")
     pure_persuit([x,y])
