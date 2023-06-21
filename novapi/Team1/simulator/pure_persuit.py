@@ -47,9 +47,17 @@ def pure_persuit(target_pos):
     #sleep(x)
 
 def holonomic(power, packet, rot_speed):
-    lx = packet[1]      # x
-    ly = packet[2]      # y
-    angles = packet[0]  # default_angle, unused!
+
+    # -- PACKET REQUIREMENTS -- #
+    # packet[0] = target_angle
+    # packet[1] = x
+    # packet[2] = y
+    # -- PACKET REQUIREMENTS -- #
+
+    lx = packet[1]        # gamepad.get_joystick("Lx")
+    ly = packet[2]        # gamepad.get_joystick("Ly")
+    rot_speed = rot_speed # gamepad.get_joystick("Rx")
+    angles = packet[0]    # default_angle, unused!
     theta = math.atan2(ly, lx)
     mPwr = constrain(math.hypot(lx, ly), -100, 100)
 
@@ -57,20 +65,19 @@ def holonomic(power, packet, rot_speed):
     cos = round(math.cos(theta - math.pi / 4))
     pmx = max(abs(sin), abs(cos))
 
-    EFl = mPwr * cos/pmx + 0
-    EFr = mPwr * sin/pmx - 0
-    ERl = mPwr * sin/pmx + 0
-    ERr = mPwr * cos/pmx - 0
+    EFl = mPwr * cos/pmx + rot_speed  # Motor front left
+    EFr = -mPwr * sin/pmx - rot_speed # Motor front right
+    ERl = mPwr * sin/pmx + rot_speed  # Motor back left
+    ERr = -mPwr * cos/pmx - rot_speed # Motor back right
     
 
     # --- OUTPUT --- #
-    print(f"------\nMOTOR POWER\nLEFT {EFl} : RIGHT {EFr}\nLEFT {ERl} : RIGHT {ERr}\n--- ACUTAL POWER\nLEFT: {EFl} : RIGHT {-EFr}\nLEFT : {ERl} : RIGHT {-ERr}\n\n")
+    print(f"------\nACTUAL POWER\nLEFT {EFl} : RIGHT {EFr}\nLEFT {ERl} : RIGHT {ERr}\n--- OUTPUT CODE\nLEFT: {EFl} : RIGHT {-EFr}\nLEFT : {ERl} : RIGHT {-ERr}\n\n")
     # --- OUTPUT --- #
-    
+
     #print(f"OVERALL POWER\npure_persuit: {power} , holonomic: {mPwr}\nmax: {pmx}")
     #print(f"{angles} : {total} : {total2}")
     #print(f"{angles} : {theta}\n{angles} : {mPwr}\n{angles} : {sin}\n{angles} : {cos}\n{angles} : {pmx}")
-    pass
 
 def isneg(v):
     return False if v > 0 else False if v == 0 else True
