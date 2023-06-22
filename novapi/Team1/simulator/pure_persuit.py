@@ -12,15 +12,25 @@
 
 
 import math
-from time import sleep
 import random
+import keyboard
+import os
+from time import sleep
 
 # Keep bot position
 keep_pos  = False
-option = 1
 wheel_size = 58 # In millimeters!. Will do it later
 starting_pos = [0,0] # Update this using novapi accelerometer (if present)
 mode = "2"
+
+def isneg(v:int):
+    return False if v > 0 else False if v == 0 else True
+
+def constrain(v:int, mn:int, mx:int):
+    if v < mn : return mn
+    if v > mx : return mx
+    return v
+
 
 # Pure persuit
 def pure_persuit(target_pos):
@@ -29,40 +39,21 @@ def pure_persuit(target_pos):
 
     dX = target_pos[0] - starting_pos[0] # Change to gamepad Lx
     dY = target_pos[1] - starting_pos[1] # Change to gamepad Ly
+    rot_speed = 0
+    power = constrain(math.sqrt((dX * dX) + (dY * dY)) * 10, -100, 100)
     path = int(math.sqrt((dX * dX) + (dY * dY)))
 
-    target_angle =  starting_angle - math.degrees(math.atan2(dY , dX)) if option == 1 else math.degrees(math.atan2(dY, dX))
+    target_angle =  starting_angle - math.degrees(math.atan2(dY , dX))
     angle_to_rotate = starting_angle + target_angle # Convert this to for loop using novapi accelerometer as reference
     print(f"X:{dX} Y:{dY} ; PATH TO TRAVEL:{path} cm ; target_angle: {target_angle} ; bot angle then: {angle_to_rotate}")
 
-    if keep_pos is True: starting_pos = [target_pos[0], target_pos[1]]
-
     # Holonomic code
-    power = (abs(dX) + abs(dY)) / 2 
-    rot_speed = 0 # gamepad.get_joysticl("Rx")
-
-    # This code calcultes time to run the motors
-    duration = power # Dummy code
-
-    '''
-    # This code updates novapi location using novapi accelerometers
-    novapi_x = 0
-    novapi_y = 0
-    while novapi_x != dX or novapi_y != dY:
-        holonomic(power, [target_angle, dX, dY], rot_speed)
-        if novapi_x != dX : novapi_x += 1 #if isneg(dX) is False else - random.randint(0, 3) # Change this to novapi accel FRONT
-        if novapi_y != dY : novapi_y += 1 #if isneg(dY) is False else - random.randint(0, 3) # Change this to novapi accel SIDE RIGHT
-        sleep(0.01)
-        print(f"{novapi_x}: {dX}, {novapi_y}: {dY}")
-    '''
-
     holonomic_angles(power, [target_angle, dX, dY], rot_speed)
-    holonomic_xy(power, [target_angle, dX, dY], rot_speed)
-    #sleep(duration)
+    #holonomic_xy(power, [target_angle, dX, dY], rot_speed)
 
-    #sleep(x)
-
+# Angle based holonomic
 def holonomic_angles(power:int, packet:list, rot_speed:int): # Use this for auto code!
+
     #power = power/10
     packet[0] = (packet[0] + 180) % 360 - 180
     angle_rad = math.radians(- packet[0])
@@ -79,56 +70,52 @@ def holonomic_angles(power:int, packet:list, rot_speed:int): # Use this for auto
     ERr = - constrain((vx - vy) + rot_speed, -100, 100)
 
     # --- OUTPUT --- #
-    print(f"------\n1) ACTUAL POWER ({packet[0]}) ({angle_rad})\n({vx}) ({vy})\nLEFT {EFl} : RIGHT {EFr}\nLEFT {ERl} : RIGHT {ERr}\n\n")
+    print(f"------\n1) ACTUAL POWER ({packet[0]}) ({angle_rad})\n({vx}) ({vy})\nLEFT {EFl} : RIGHT {-EFr}\nLEFT {ERl} : RIGHT {-ERr}\n\n")
     # --- OUTPUT --- #
-
-def holonomic_xy(power:int, packet:list, rot_speed:int): # Use this for manual code!
-
-    # -- PACKET REQUIREMENTS -- #
-    # packet[0] = target_angle
-    # packet[1] = x
-    # packet[2] = y
-    # -- PACKET REQUIREMENTS -- #
-
-    lx = packet[1]        # gamepad.get_joystick("Lx")
-    ly = packet[2]        # gamepad.get_joystick("Ly")
-    rot_speed = rot_speed # gamepad.get_joystick("Rx")
-    theta = math.atan2(ly, lx)
-    mPwr = constrain(math.hypot(lx, ly), -100, 100)
-
-    sin = round(math.sin(theta - math.pi / 4))
-    cos = round(math.cos(theta - math.pi / 4))
-    pmx = max(abs(sin), abs(cos))
-
-    EFl =   ((mPwr * cos/pmx) + rot_speed)  # Motor front left
-    EFr = - ((mPwr * sin/pmx) - rot_speed)  # Motor front right
-    ERl =   ((mPwr * sin/pmx) + rot_speed)  # Motor back left
-    ERr = - ((mPwr * cos/pmx) - rot_speed) # Motor back right
     
-
-    # --- OUTPUT --- #
-    print(f"------\n2) ACTUAL POWER\nLEFT {EFl} : RIGHT {EFr}\nLEFT {ERl} : RIGHT {ERr}\n\n")
-    # --- OUTPUT --- #
-
-def isneg(v:int):
-    return False if v > 0 else False if v == 0 else True
-
-def constrain(v:int, mn:int, mx:int):
-    if v < mn : return mn
-    if v > mx : return mx
-    return v
-
 def run(x:int ,y:int):
     global starting_pos, mode
-    print("\n")
     pure_persuit([x,y])
     print(f"Expected position: {starting_pos}")
     print("-------")
+    if(keep_value == True):
+        print("KEEP VALUE ON!")
+
+    os.system('cls')
+
+pos = [0, 0]
+keep_value = False
 
 while True:
     try:
-        pos = input("Enter coordinates to simulate ")
-        pos = pos.split(" ")
+        if keyboard.is_pressed('w') or keyboard.is_pressed('a') or keyboard.is_pressed('s') or keyboard.is_pressed('d'):
+            if keyboard.is_pressed('w'):
+                pos[1] = pos[1] + 1
+            if keyboard.is_pressed('s'):
+                pos[1] = pos[1] - 1
+            if keyboard.is_pressed('a'):
+                pos[0] = pos[0] - 1
+            if keyboard.is_pressed('d'):
+                pos[0] = pos[0] + 1
+        else:
+            if keep_value == True:
+                pass
+            else:
+                pos[0] = 0
+                pos[1] = 0
+        if keyboard.is_pressed("q"):
+            if keep_value == False:
+                keep_value = True
+            else:
+                keep_value = False
+
+        if keyboard.is_pressed("r"):
+            os.system('cls')
+            print("# ---------- ! Reset ! ---------- #")
+            pos = [0, 0]
+            keep_value = False
+            sleep(3)
+
         run(int(pos[0]),int(pos[1]))
     except SyntaxError:
         print("Error")
