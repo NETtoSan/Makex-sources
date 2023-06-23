@@ -12,14 +12,19 @@
 
 
 from mbuild.encoder_motor import encoder_motor_class
+from mbuild.smart_camera import smart_camera_class
 from mbuild import gamepad
 import math
+import novapi
 
 encode_fl = encoder_motor_class("M1", "INDEX1")
 encode_fr = encoder_motor_class("M2", "INDEX1")
 encode_rl = encoder_motor_class("M3", "INDEX1")
 encode_rr = encoder_motor_class("M4", "INDEX1")
+smart_cam = smart_camera_class("PORT1", "INDEX1")
 
+# Set smart camera mode to COLOR!
+smart_cam.set_mode("color")
 
 rot_spd = int
 track = False
@@ -34,7 +39,7 @@ ks = 0
 
 # BACKGROUND PROCESS. PUT STUFFS IN IF YOU NEED TO RUN SOMETHING!
 def backgroundProcess():
-    lock_target("1") # track ball
+    lock_target(1) # track ball
 
 # Built functions to conpensate missing python functions
 def isneg(v):
@@ -104,10 +109,10 @@ def find_rot_pid(s, t):
 def lock_target(signature): # lock target -> find object -> track target
     global rot_spd
     if find_object(signature):
-        led_on("green") # Dual RGB sensor
         rot_spd = track_target(signature)
-    led_on("red") # Dual RGB sensor
-    
+    else:
+        rot_spd = 0
+        
 def find_object(signature):
     stat = bool
     if not smart_cam: return False # Returns false if a camera is not detected
@@ -121,8 +126,11 @@ def find_object(signature):
 
 def track_target(signature):
     distance = float
-    distance = smart_cam.find_x(signature) # Change this !. This is a theoretical code
-    distance = find_rot_pid(0, distance)   # Change this if it doesnt work!
+    distance = smart_cam.get_sign_x(signature) # Change this !. This is a theoretical code
+
+    # Ways to find PID for rotation speed!
+    distance = find_rot_pid(0, distance)                          # Change this if it doesnt work!
+    distance = smart_cam.get_sign_diff_speed(signature, "x", 160) # A makeblock's official way
     return distance
 # ---- TEST ---- #
 
