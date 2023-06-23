@@ -1,16 +1,12 @@
- 
 
-################################################
+
+ ################################################
  #         A HOLONOMIC MECANUM SOLUTIONS        # 
  # - (C) 2023, NETtoSan                         #
  # - Thai Nichi Institute of Technology         #
- #                                              #
- # This is to provide a solution in which to    #
+ # This is to provide a solutions in which to   #
  # drive mecanum wheel with holonomic aspects   #
  # This is made suitable for odometry purposes  #
- ################################################
- # For Piboonbumpen demonstration school Burapha#
- # University ONLY!                             #
  ################################################
 
 
@@ -24,6 +20,21 @@ encode_fr = encoder_motor_class("M2", "INDEX1")
 encode_rl = encoder_motor_class("M3", "INDEX1")
 encode_rr = encoder_motor_class("M4", "INDEX1")
 
+
+rot_spd = int
+track = False
+
+# ---- PID ---- #
+kp = 0
+ki = 0
+kd = 0
+ks = 0
+# ---- PID ---- #
+
+
+# BACKGROUND PROCESS. PUT STUFFS IN IF YOU NEED TO RUN SOMETHING!
+def backgroundProcess():
+    lock_target("1") # track ball
 
 # Built functions to conpensate missing python functions
 def isneg(v):
@@ -40,16 +51,23 @@ def drive(v1, v2, v3, v4):
     encode_rl.set_power(v3)
     encode_rr.set_power(v4)
 
-# Find relative path
-def pure_persuit():
-    starting_angle = 90  # novapi.get_rot("Y")
+def throttle_curve(v,s):
+    return s * (v ** 2)
 
-    dX = gamepad.get_joystick("Lx")
-    dY = gamepad.get_joystick("Ly")
-    rX = gamepad.get_joystick("Rx")
+
+# Find relative path
+def pure_persuit(x, y, rot, auto:bool):
+    starting_angle = 90  # novapi.get_rot("Y") # Subtract starting angle. Which is exactly 90 degrees away.
+    sensitivity = 0.005 # 0 <----> 0.01 ; The less the wider, the less sensitive it will be
+                        # 0.01 = 1 : 1 input to power ratio. 
+                        # 0.00 = 0. No power will be provided. (value * power) ; power = 0, motor_power = 0
+
+    dX = -1 * x
+    dY = y
+    rX = rot
 
     target_angle =  starting_angle - math.degrees(math.atan2(dY , dX))
-    power = constrain(math.sqrt((dX * dX) + (dY * dY)) * 10, -100, 100)
+    power = constrain(throttle_curve(math.sqrt((dX * dX) + (dY * dY)), sensitivity) * 10, -100, 100)
     holonomic(power, [target_angle, dX, dY], rX)
 
 # Calculate each motor power to travel
@@ -69,6 +87,73 @@ def holonomic(power, packet, rot_speed): # Use this for auto code!
 
     drive(EFl, EFr, ERl, ERr)
 
+# --- TEST ---- #
+def find_rot_pid(s, t):
+
+    error = t - s
+    integral = integral + (error * 0.25)
+    derivative = error - prev_error
+    prev_error = error
+    start = (s - t)
+    tpower = (error * kp) + (integral*ki) + (derivative*kd)  + (start*ks)
+
+    # Limit values between -100 and 100
+    tpower = constrain(tpower, -100, 100)
+    return int(tpower)
+
+def lock_target(signature): # lock target -> find object -> track target
+    global rot_spd
+    if find_object(signature):
+        rot_spd = track_target(signature)
+
+def find_object(signature):
+    stat = bool
+    if not smart_cam: return False # Returns false if a camera is not detected
+
+    if smart_cam.detect_sign(signature): # Change this !. This is a theoretical code
+        stat = True
+    else:
+        stat = False
+    
+    return stat
+
+def track_target(signature):
+    distance = float
+    distance = smart_cam.find_x(signature) # Change this !. This is a theoretical code
+    distance = find_rot_pid(0, distance)   # Change this if it doesnt work!
+    return distance
+# ---- TEST ---- #
+
+def Manual():
+    backgroundProcess() # Run process in the background. 1st priority
+
+    x = gamepad.get_joystick("Rx"),
+    y = gamepad.get_joystick("Lx"),
+    rx = gamepad.get_joystick("Rx")
+
+    # Toggle target tracking mode
+    if gamepad.is_key_pressed("N1"):
+        if track == True:
+            track = False
+        else:
+            track = True
+
+    
+    # Switch to target tracking mode to rotate bot
+    if track is True:
+        rx = rot_spd # The function is already called in backgroundProcess()
+    else:
+        rx = gamepad.get_joystick("Rx")
+
+    pure_persuit(x, y, rx, False)
+
+def Auto():
+    pure_persuit(0, 100, rot_spd, True)
+    pure_persuit(300, 0, rot_spd, True)
+
+    Manual()
+
 while True:
-    pure_persuit()
+    #Manual()
+    #Auto()
     pass

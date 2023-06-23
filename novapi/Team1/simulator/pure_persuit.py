@@ -31,16 +31,19 @@ def constrain(v:int, mn:int, mx:int):
     if v > mx : return mx
     return v
 
+def throttle_curve(v,s):
+    return s * (v ** 2)
 
 # Pure persuit
 def pure_persuit(target_pos):
     global starting_pos
     starting_angle = 90  # novapi.get_rot("Y")
+    sensitivity = 0.005
 
-    dX = target_pos[0] - starting_pos[0] # Change to gamepad Lx
-    dY = target_pos[1] - starting_pos[1] # Change to gamepad Ly
+    dX = -1 * target_pos[0] # Change to gamepad Lx
+    dY = target_pos[1] # Change to gamepad Ly
     rot_speed = 0
-    power = constrain(math.sqrt((dX * dX) + (dY * dY)) * 10, -100, 100)
+    power = constrain(throttle_curve(math.sqrt((dX * dX) + (dY * dY)), sensitivity), -100, 100)
     path = int(math.sqrt((dX * dX) + (dY * dY)))
 
     target_angle =  starting_angle - math.degrees(math.atan2(dY , dX))
