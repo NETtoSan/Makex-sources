@@ -104,8 +104,10 @@ def find_rot_pid(s, t):
 def lock_target(signature): # lock target -> find object -> track target
     global rot_spd
     if find_object(signature):
+        led_on("green") # Dual RGB sensor
         rot_spd = track_target(signature)
-
+    led_on("red") # Dual RGB sensor
+    
 def find_object(signature):
     stat = bool
     if not smart_cam: return False # Returns false if a camera is not detected
