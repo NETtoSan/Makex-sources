@@ -61,11 +61,11 @@ def throttle_curve(v,s):
 
 
 # Find relative path
-def pure_persuit(x, y, rot, auto:bool):
+def pure_pursuit(x, y, rot, auto:bool):
     starting_angle = 90  # novapi.get_rot("Y") # Subtract starting angle. Which is exactly 90 degrees away.
-    sensitivity = 0.005 # 0 <----> 0.01 ; The less the wider, the less sensitive it will be
-                        # 0.01 = 1 : 1 input to power ratio. 
-                        # 0.00 = 0. No power will be provided. (value * power) ; power = 0, motor_power = 0
+    sensitivity = 0.005  # 0 <----> 0.01 ; The less the wider, the less sensitive it will be
+                         # 0.01 = 1 : 1 input to power ratio. 
+                         # 0.00 = 0. No power will be provided. (value * power) ; power = 0, motor_power = 0
 
     dX = -1 * x
     dY = y
@@ -73,7 +73,16 @@ def pure_persuit(x, y, rot, auto:bool):
 
     target_angle =  starting_angle - math.degrees(math.atan2(dY , dX))
     power = constrain(throttle_curve(math.sqrt((dX * dX) + (dY * dY)), sensitivity) * 10, -100, 100)
-    holonomic(power, [target_angle, dX, dY], rX)
+
+    novapi_x = 0 # Novapi accelerometer pointing RIGHT
+    novapi_y = 0 # Novapi accelerometer pointing FORWARD
+
+    if auto == True:
+        # Make this while to constantly update holonomic x and y values
+        while novapi_x != x and novapi_y != y:
+            holonomic(power, [target_angle, dX, dY], rX)
+    else:
+        holonomic(power, [target_angle, dX, dY], rX)
 
 # Calculate each motor power to travel
 def holonomic(power, packet, rot_speed): # Use this for auto code!
@@ -93,26 +102,13 @@ def holonomic(power, packet, rot_speed): # Use this for auto code!
     drive(EFl, EFr, ERl, ERr)
 
 # --- TEST ---- #
-def find_rot_pid(s, t):
-
-    error = t - s
-    integral = integral + (error * 0.25)
-    derivative = error - prev_error
-    prev_error = error
-    start = (s - t)
-    tpower = (error * kp) + (integral*ki) + (derivative*kd)  + (start*ks)
-
-    # Limit values between -100 and 100
-    tpower = constrain(tpower, -100, 100)
-    return int(tpower)
-
 def lock_target(signature): # lock target -> find object -> track target
     global rot_spd
     if find_object(signature):
         rot_spd = track_target(signature)
     else:
         rot_spd = 0
-        
+
 def find_object(signature):
     stat = bool
     if not smart_cam: return False # Returns false if a camera is not detected
@@ -132,6 +128,19 @@ def track_target(signature):
     distance = find_rot_pid(0, distance)                          # Change this if it doesnt work!
     distance = smart_cam.get_sign_diff_speed(signature, "x", 160) # A makeblock's official way
     return distance
+
+def find_rot_pid(s, t):
+
+    error = t - s
+    integral = integral + (error * 0.25)
+    derivative = error - prev_error
+    prev_error = error
+    start = (s - t)
+    tpower = (error * kp) + (integral*ki) + (derivative*kd)  + (start*ks)
+
+    # Limit values between -100 and 100
+    tpower = constrain(tpower, -100, 100)
+    return int(tpower)
 # ---- TEST ---- #
 
 def Manual():
@@ -148,18 +157,22 @@ def Manual():
         else:
             track = True
 
+        # Prevent stuffs from happening!
+        while not not gamepad.is_key_pressed("N1"):
+            pass
+        pass
     
     # Switch to target tracking mode to rotate bot
-    if track is True:
+    if track == True:
         rx = rot_spd # The function is already called in backgroundProcess()
     else:
         rx = gamepad.get_joystick("Rx")
 
-    pure_persuit(x, y, rx, False)
+    pure_pursuit(x, y, rx, False)
 
 def Auto():
-    pure_persuit(0, 100, rot_spd, True)
-    pure_persuit(300, 0, rot_spd, True)
+    pure_pursuit(0, 100, rot_spd, True)
+    pure_pursuit(300, 0, rot_spd, True)
 
     Manual()
 
