@@ -36,8 +36,8 @@ kd = 0
 ks = 0
 # --- PID --- #
 
-novapi_travelled_x = 0
-novapi_travelled_y = 0
+novapi_travelled_x = 0 # Needs to be updated every time. Missing equation!
+novapi_travelled_y = 0 # Needs to be updated every time. Missing equation!
 
 # Background task init
 def backgroundProcess():
@@ -64,6 +64,15 @@ class track_while_scan:
         else:
             rot_spd = 0 
     
+    # Camera degree thing. Could be useful to lock target with servo
+    def get_object_deg(pixel):
+        v = pixel / track_while_scan.get_cam_ppd(pixel, 65)
+        return v 
+    def get_cam_ppd(pixel, fov_deg):
+        #ppd = pixel-per-degree
+        return pixel / fov_deg
+    # Camera degree thing
+
     # An extra target lock using servos. While using camera to scan for objects
     def find_target(signature):
         pass
