@@ -38,12 +38,6 @@ ks = 0
 
 novapi_travelled_x = 0 # Needs to be updated every time. Missing equation!
 novapi_travelled_y = 0 # Needs to be updated every time. Missing equation!
-
-# Background task init
-def backgroundProcess():
-    track_while_scan.lock_target(1)
-    updatePosition()
-
 # Test functions #
 
 # Built functions to conpensate missing python functions
@@ -54,31 +48,34 @@ def constrain(v, mn, mx):
     if v < mn : return mn
     if v > mx : return mx
     return v
-    
+
 # Track while scan
 class track_while_scan:
-    def lock_target(signature):
+    def lock_target(signature:int):
         global rot_spd
         if smart_cam.detect_sign(signature):
             rot_spd = ( smart_cam.get_sign_x(signature) - 160 ) * -0.5
         else:
-            rot_spd = 0 
+            rot_spd = 0
+        
+        return rot_spd
     
     # Camera degree thing. Could be useful to lock target with servo
-    def get_object_deg(pixel):
+    def get_object_deg(pixel:int):
         v = pixel / track_while_scan.get_cam_ppd(pixel, 65)
         return v 
-    def get_cam_ppd(pixel, fov_deg):
+    def get_cam_ppd(pixel:int, fov_deg:int):
         #ppd = pixel-per-degree
         return pixel / fov_deg
     # Camera degree thing
 
     # An extra target lock using servos. While using camera to scan for objects
-    def find_target(signature):
+    def find_target(signature:int):
         pass
 
-    def find_target_x(signature):
+    def find_target_x(signature:int):
         pass
+
 
 # Movement function
 class wheels:
@@ -218,6 +215,12 @@ def updatePosition():
 class challenge_default:
     def __init__ (self):
         self_mode = "default"
+    
+    # Background task init
+    def backgroundProcess():
+        track_while_scan.lock_target(1)
+        updatePosition()
+
     def auto(coords_list:list):
 
         for coordinate in coords_list:
@@ -226,7 +229,7 @@ class challenge_default:
     def manual():
         while True:
             global rot_spd, track
-            backgroundProcess()
+            challenge_default.backgroundProcess()
 
             x = gamepad.get_joystick("Lx")
             y = gamepad.get_joystick("Ly")
