@@ -4,7 +4,7 @@
  #         A HOLONOMIC MECANUM SOLUTIONS        # 
  # - (C) 2023, NETtoSan                         #
  # - Thai Nichi Institute of Technology         #
- # This is to provide a solutions in which to   #
+ # This is to provide a solution in which to    #
  # drive mecanum wheel with holonomic aspects   #
  # This is made suitable for odometry purposes  #
  ################################################
