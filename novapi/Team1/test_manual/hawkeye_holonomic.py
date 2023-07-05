@@ -9,7 +9,11 @@
  # This is made suitable for odometry purposes  #
  ################################################
  
- # PS:1 This code is for MakeX Challenge 2023
+ # PS:1 This code DOES NOT provide full challenge bot capabilities
+ #      This only supplements necessary function to drive all 4 mecanum wheels
+ #      If you need full functionality, please use ./hawkeye_main_program.py
+ # PS:2 Rapid holonomic code change may occur. View latest holonomic simulation code via
+ #      ../simulator/{pid_test or pure_persuit}.py
 
 
 from mbuild.encoder_motor import encoder_motor_class
@@ -265,4 +269,4 @@ class challenge_default:
         while True:
             challenge_default.manual(use_buttons_for_rot)
 
-challenge_default.manual()
+challenge_default.challenge_runtime()
