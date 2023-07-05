@@ -36,13 +36,8 @@ kd = 0
 ks = 0
 # --- PID --- #
 
-novapi_travelled_x = 0
-novapi_travelled_y = 0
-
-def backgroundProcess():
-    track_while_scan.lock_target(1)
-    updatePosition()
-
+novapi_travelled_x = 0 # Needs to be updated every time. Missing equation!
+novapi_travelled_y = 0 # Needs to be updated every time. Missing equation!
 # Test functions #
 
 # Built functions to conpensate missing python functions
@@ -53,26 +48,40 @@ def constrain(v, mn, mx):
     if v < mn : return mn
     if v > mx : return mx
     return v
-    
+
 # Track while scan
 class track_while_scan:
-    def lock_target(signature):
+    def lock_target(signature:int):
         global rot_spd
         if smart_cam.detect_sign(signature):
             rot_spd = ( smart_cam.get_sign_x(signature) - 160 ) * -0.5
         else:
-            rot_spd = 0 
+            rot_spd = 0
+        
+        return rot_spd
     
+    # Camera degree thing. Could be useful to lock target with servo
+    def get_object_deg(pixel:int):
+        v = pixel / track_while_scan.get_cam_ppd(pixel, 65)
+        return v 
+    def get_cam_ppd(pixel:int, fov_deg:int):
+        #ppd = pixel-per-degree
+        return pixel / fov_deg
+    # Camera degree thing
+
     # An extra target lock using servos. While using camera to scan for objects
-    def find_target(signature):
+    def find_target(signature:int):
         pass
 
-    def find_target_x(signature):
+    def find_target_x(signature:int):
         pass
 
-class motors:
+
+# Movement function
+class wheels:
     # Calculate motor power using y = x theorem
     def throttle_curve(v, s, e):
+        # Using formula y = s * (x-h)^e, but s = a, e = N; N = 2 parabola; N = 3 polynomial
         return s * (v ** e)
     
     # Drive all the motors in one go
@@ -90,7 +99,7 @@ class motors:
         rX = rot
 
         target_angle =  starting_angle - math.degrees(math.atan2(dY , dX))
-        power = constrain(motors.throttle_curve(math.sqrt((dX * dX) + (dY * dY)), 0.005, 2) * 10, -100, 100)
+        power = constrain(wheels.throttle_curve(math.sqrt((dX * dX) + (dY * dY)), 0.005, 2) * 10, -100, 100)
         
         # Automatic stage
         if auto == True:
@@ -99,20 +108,20 @@ class motors:
             rX = 0
 
             target_angle =  starting_angle - math.degrees(math.atan2(dY , dX))
-            power = constrain(motors.throttle_curve(math.sqrt((dX * dX) + (dY * dY)), 0.005, 2) * 10, -100, 100)
+            power = constrain(wheels.throttle_curve(math.sqrt((dX * dX) + (dY * dY)), 0.005, 2) * 10, -100, 100)
 
             if novapi_travelled_x < x:
                 while novapi_travelled_x < x:
                     novapi_travelled_x += novapi.get_acceleration("x")
-                    motors.holonomic(power, [target_angle, dX, dY], rx)
+                    wheels.holonomic(power, [target_angle, dX, dY], rX)
             elif novapi_travelled_x > x:
                 while novapi_travelled_x > x:
                     novapi_travelled_x += novapi.get_acceleration("x")
-                    motors.holonomic(power, [target_angle, dX, dY], rx)
+                    wheels.holonomic(power, [target_angle, dX, dY], rX)
 
-            motors.drive(0,0,0,0)
+            wheels.drive(0,0,0,0)
         else:
-            motors.holonomic(power, [target_angle, dX, dY], rX)
+            wheels.holonomic(power, [target_angle, dX, dY], rX)
 
     # Calculate each motor power to travel
     def holonomic(power, packet, rot_speed): # Use this for auto code!
@@ -129,8 +138,9 @@ class motors:
         ERl =   constrain((vx + vy) - rot_speed, -100, 100)
         ERr = - constrain((vx - vy) + rot_speed, -100, 100)
 
-        motors.drive(EFl, EFr, ERl, ERr)
+        wheels.drive(EFl, EFr, ERl, ERr)
 
+# DC motors bundle
 class dc_motor:
     #ใส่ port ของ dc motor
     #เช่น "DC1"
@@ -194,7 +204,7 @@ class dc_motor:
         else:
             power_expand_board.set_power(self.port, double_hold_default_speed) #ค่า default ของมอเตอร์
 
-# Functions
+# Functions for background tasks
 def updatePosition():
     global novapi_travelled_x, novapi_travelled_y
     novapi_travelled_x += novapi.get_acceleration("x")
@@ -205,19 +215,25 @@ def updatePosition():
 class challenge_default:
     def __init__ (self):
         self_mode = "default"
+    
+    # Background task init
+    def backgroundProcess():
+        track_while_scan.lock_target(1)
+        updatePosition()
+
     def auto(coords_list:list):
 
         for coordinate in coords_list:
-            motors.pure_persuit(coordinate[0], coordinate[1], 0, True)
+            wheels.pure_persuit(coordinate[0], coordinate[1], 0, True)
 
     def manual():
         while True:
             global rot_spd, track
-            backgroundProcess()
+            challenge_default.backgroundProcess()
 
             x = gamepad.get_joystick("Lx")
             y = gamepad.get_joystick("Ly")
-            rot = motors.throttle_curve(gamepad.get_joystick("Rx"), 0.0001, 3)
+            rot = wheels.throttle_curve(gamepad.get_joystick("Rx"), 0.0001, 3)
 
             if gamepad.is_key_pressed("N1"):
                 if track == False:
@@ -231,7 +247,7 @@ class challenge_default:
                 rot = rot_spd
 
 
-        motors.pure_persuit(x, y, rot, False)
+            wheels.pure_persuit(x, y, rot, False)
 
 
 challenge_default.manual()
