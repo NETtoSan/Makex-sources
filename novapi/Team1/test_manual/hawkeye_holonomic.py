@@ -49,7 +49,13 @@ def constrain(v, mn, mx):
     if v > mx : return mx
     return v
 
-# Track while scan
+# Background tasks
+def updatePosition():
+    global novapi_travelled_x, novapi_travelled_y
+    novapi_travelled_x += novapi.get_acceleration("x")
+    novapi_travelled_y += novapi.get_acceleration("y")
+
+# Class
 class track_while_scan:
     def lock_target(signature:int):
         global rot_spd
@@ -76,23 +82,21 @@ class track_while_scan:
     def find_target_x(signature:int):
         pass
 
-
-# Movement function
 class wheels:
-    # Calculate motor power using y = x theorem
-    def throttle_curve(v, s, e):
-        # Using formula y = s * (x-h)^e, but s = a, e = N; N = 2 parabola; N = 3 polynomial
-        return s * (v ** e)
-    
     # Drive all the motors in one go
-    def drive(v1, v2, v3, v4):
+    def drive(v1:int, v2:int, v3:int, v4:int):
         encode_fl.set_power(v1)
         encode_fr.set_power(v2)
         encode_rl.set_power(v3)
         encode_rr.set_power(v4)
         
+    # Calculate motor power using y = x theorem
+    def throttle_curve(v:int, s:float, e:int):
+        # Using formula y = s * (x-h)^e, but s = a, e = N; N = 2 parabola; N = 3 polynomial
+        return s * (v ** e)
+    
     # Find relative path
-    def pure_persuit(x, y, rot, auto:bool):
+    def pure_persuit(x:int, y:int, rot:int, auto:bool):
         starting_angle = 90  # novapi.get_rot("Y")
         dX = (-1 * x * 0.3)
         dY = (y * 0.3)
@@ -124,7 +128,7 @@ class wheels:
             wheels.holonomic(power, [target_angle, dX, dY], rX)
 
     # Calculate each motor power to travel
-    def holonomic(power, packet, rot_speed): # Use this for auto code!
+    def holonomic(power:float, packet:list, rot_speed:int): # Use this for auto code!
 
         #power = power/10
         packet[0] = (packet[0] + 180) % 360 - 180
@@ -140,7 +144,6 @@ class wheels:
 
         wheels.drive(EFl, EFr, ERl, ERr)
 
-# DC motors bundle
 class dc_motor:
     #ใส่ port ของ dc motor
     #เช่น "DC1"
@@ -204,12 +207,6 @@ class dc_motor:
         else:
             power_expand_board.set_power(self.port, double_hold_default_speed) #ค่า default ของมอเตอร์
 
-# Functions for background tasks
-def updatePosition():
-    global novapi_travelled_x, novapi_travelled_y
-    novapi_travelled_x += novapi.get_acceleration("x")
-    novapi_travelled_y += novapi.get_acceleration("y")
-
 
 # Necessary for robot's functionality
 class challenge_default:
@@ -221,33 +218,51 @@ class challenge_default:
         track_while_scan.lock_target(1)
         updatePosition()
 
+    def rot_styles(style:bool, buttons:list):
+        # True -> Button preferences; False -> gamepad.get_joystick("Rx")
+        # buttons: 0 = "left side", 1 = "right side"
+        v = int
+        if style == True:
+            if gamepad.is_key_pressed(buttons[0]):
+                v = -40
+            if gamepad.is_key_pressed(buttons[1]):
+                v = 40
+
+        else:
+            v = gamepad.get_joystick("Rx")
+        return v
+    
     def auto(coords_list:list):
 
         for coordinate in coords_list:
             wheels.pure_persuit(coordinate[0], coordinate[1], 0, True)
 
-    def manual():
+    def manual(rot_btns:bool):
+        # rot_btns = Use 
+
+        global rot_spd, track
+        challenge_default.backgroundProcess()
+
+        x = gamepad.get_joystick("Lx")
+        y = gamepad.get_joystick("Ly")
+        rot = wheels.throttle_curve(challenge_default.rot_styles(rot_btns, ["L1", "R1"]), 0.0001, 3)
+
+        if gamepad.is_key_pressed("N1"):
+            if track == False:
+                track = True
+            else:
+                track = False
+            while gamepad.is_key_pressed("N1"):
+                pass
+
+        if track == True:
+            rot = rot_spd
+
+        wheels.pure_persuit(x, y, rot, False)
+    
+    def challenge_runtime():
+        use_buttons_for_rot = True
         while True:
-            global rot_spd, track
-            challenge_default.backgroundProcess()
-
-            x = gamepad.get_joystick("Lx")
-            y = gamepad.get_joystick("Ly")
-            rot = wheels.throttle_curve(gamepad.get_joystick("Rx"), 0.0001, 3)
-
-            if gamepad.is_key_pressed("N1"):
-                if track == False:
-                    track = True
-                else:
-                    track = False
-                while not not gamepad.is_key_pressed("N1"):
-                    pass
-
-            if track == True:
-                rot = rot_spd
-
-
-            wheels.pure_persuit(x, y, rot, False)
-
+            challenge_default.manual(use_buttons_for_rot)
 
 challenge_default.manual()
