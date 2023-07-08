@@ -82,8 +82,8 @@ class motors:
     # Find relative path
     def pure_persuit(x, y, rot, auto:bool):
         starting_angle = 90  # novapi.get_rot("Y")
-        dX = (-1 * x * 0.3)
-        dY = (y * 0.3)
+        dX = 0.3 * (-1 * x)
+        dY = 0.3 * (y)
         rX = rot
 
         target_angle =  starting_angle - math.degrees(math.atan2(dY , dX))
@@ -101,11 +101,11 @@ class motors:
             if novapi_travelled_x < x:
                 while novapi_travelled_x < x:
                     novapi_travelled_x += novapi.get_acceleration("x")
-                    motors.holonomic(power, [target_angle, dX, dY], rx)
+                    motors.holonomic(power, [target_angle, dX, dY], rX)
             elif novapi_travelled_x > x:
                 while novapi_travelled_x > x:
                     novapi_travelled_x += novapi.get_acceleration("x")
-                    motors.holonomic(power, [target_angle, dX, dY], rx)
+                    motors.holonomic(power, [target_angle, dX, dY], rX)
 
             motors.drive(0,0,0,0)
         else:
