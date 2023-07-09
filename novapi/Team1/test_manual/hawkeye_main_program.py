@@ -91,21 +91,7 @@ class motors:
         
         # Automatic stage
         if auto == True:
-            dX = (-1 * x * 0.3) - novapi_travelled_x
-            dY = (y * 0.3) - novapi_travelled_y
-            rX = 0
-
-            target_angle =  starting_angle - math.degrees(math.atan2(dY , dX))
-            power = constrain(motors.throttle_curve(math.sqrt((dX * dX) + (dY * dY)), 0.005, 2) * 10, -100, 100)
-
-            if novapi_travelled_x < x:
-                while novapi_travelled_x < x:
-                    novapi_travelled_x += novapi.get_acceleration("x")
-                    motors.holonomic(power, [target_angle, dX, dY], rx)
-            elif novapi_travelled_x > x:
-                while novapi_travelled_x > x:
-                    novapi_travelled_x += novapi.get_acceleration("x")
-                    motors.holonomic(power, [target_angle, dX, dY], rx)
+            pass # Do this later
 
             motors.drive(0,0,0,0)
         else:
