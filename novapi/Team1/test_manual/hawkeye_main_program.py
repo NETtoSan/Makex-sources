@@ -91,26 +91,38 @@ class motors:
         
         # Automatic stage
         if auto == True:
-            dX = (-1 * x * 0.3) - novapi_travelled_x
-            dY = (y * 0.3) - novapi_travelled_y
-            rX = 0
-
-            target_angle =  starting_angle - math.degrees(math.atan2(dY , dX))
-            power = constrain(motors.throttle_curve(math.sqrt((dX * dX) + (dY * dY)), 0.005, 2) * 10, -100, 100)
-
-            if novapi_travelled_x < x:
-                while novapi_travelled_x < x:
-                    novapi_travelled_x += novapi.get_acceleration("x")
-                    motors.holonomic(power, [target_angle, dX, dY], rX)
-            elif novapi_travelled_x > x:
-                while novapi_travelled_x > x:
-                    novapi_travelled_x += novapi.get_acceleration("x")
-                    motors.holonomic(power, [target_angle, dX, dY], rX)
-
+            motors.holonomic_auto([x,y], starting_angle)
             motors.drive(0,0,0,0)
         else:
             motors.holonomic(power, [target_angle, dX, dY], rX)
 
+    def holonomic_auto(coords:list, starting_angle):
+        x = coords[0]; y = coords[1]
+        dX = (-1 * x * 0.3) - novapi_travelled_x
+        dY = (y * 0.3) - novapi_travelled_y
+        rX = 0
+
+        ein_auto = True
+        target_angle =  starting_angle - math.degrees(math.atan2(dY , dX))
+        power = constrain(motors.throttle_curve(math.sqrt((dX * dX) + (dY * dY)), 0.005, 2) * 10, -100, 100)
+
+        if ein_auto == True:
+            if novapi_travelled_x < x:
+                while novapi_travelled_x < x:
+                    novapi_travelled_x += novapi.get_acceleration("x")
+                    motors.holonomic(power, [target_angle, dX, dY], rX)
+                motors.holonomic(0, [0, 0, 0], 0)
+
+            elif novapi_travelled_x > x:
+                while novapi_travelled_x > x:
+                    novapi_travelled_x += novapi.get_acceleration("x")
+                    motors.holonomic(power, [target_angle, dX, dY], rX)
+                motors.holonomic(0, [0, 0, 0], 0)
+
+            else:
+                motors.holonomic(0, [0, 0, 0], 0) # Stop code
+        else:
+            motors.holonomic(0, [0, 0, 0], 0)
     # Calculate each motor power to travel
     def holonomic(power, packet, rot_speed): # Use this for auto code!
 

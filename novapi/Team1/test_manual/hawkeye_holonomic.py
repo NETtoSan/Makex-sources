@@ -86,7 +86,7 @@ class track_while_scan:
     def find_target_x(signature:int):
         pass
 
-class wheels:
+class motors:
     # Drive all the motors in one go
     def drive(v1:int, v2:int, v3:int, v4:int):
         encode_fl.set_power(v1)
@@ -107,29 +107,31 @@ class wheels:
         rX = rot
 
         target_angle =  starting_angle - math.degrees(math.atan2(dY , dX))
-        power = constrain(wheels.throttle_curve(math.sqrt((dX * dX) + (dY * dY)), 0.005, 2) * 10, -100, 100)
+        power = constrain(motors.throttle_curve(math.sqrt((dX * dX) + (dY * dY)), 0.005, 2) * 10, -100, 100)
         
+
         # Automatic stage
         if auto == True:
-            dX = (-1 * x * 0.3) - novapi_travelled_x
-            dY = (y * 0.3) - novapi_travelled_y
-            rX = 0
-
-            target_angle =  starting_angle - math.degrees(math.atan2(dY , dX))
-            power = constrain(wheels.throttle_curve(math.sqrt((dX * dX) + (dY * dY)), 0.005, 2) * 10, -100, 100)
-
-            if novapi_travelled_x < x:
-                while novapi_travelled_x < x:
-                    novapi_travelled_x += novapi.get_acceleration("x")
-                    wheels.holonomic(power, [target_angle, dX, dY], rX)
-            elif novapi_travelled_x > x:
-                while novapi_travelled_x > x:
-                    novapi_travelled_x += novapi.get_acceleration("x")
-                    wheels.holonomic(power, [target_angle, dX, dY], rX)
-
-            wheels.drive(0,0,0,0)
+            motors.holonomic_auto([x,y], starting_angle)
+            motors.drive(0,0,0,0)
         else:
-            wheels.holonomic(power, [target_angle, dX, dY], rX)
+            motors.holonomic(power, [target_angle, dX, dY], rX)
+
+    # Necessary for auto code
+    def holonomic_auto(coords:list, starting_angle):
+        x = coords[0]; y = coords[1]
+        dX = (-1 * x * 0.3) - novapi_travelled_x
+        dY = (y * 0.3) - novapi_travelled_y
+        rX = 0
+
+        ein_auto = True
+        target_angle =  starting_angle - math.degrees(math.atan2(dY , dX))
+        power = constrain(motors.throttle_curve(math.sqrt((dX * dX) + (dY * dY)), 0.005, 2) * 10, -100, 100)
+
+        if ein_auto == True:
+            pass
+        else:
+            motors.holonomic(0, [0, 0, 0], 0)
 
     # Calculate each motor power to travel
     def holonomic(power:float, packet:list, rot_speed:int): # Use this for auto code!
@@ -146,7 +148,7 @@ class wheels:
         ERl =   constrain((vx + vy) - rot_speed, -100, 100)
         ERr = - constrain((vx - vy) + rot_speed, -100, 100)
 
-        wheels.drive(EFl, EFr, ERl, ERr)
+        motors.drive(EFl, EFr, ERl, ERr)
 
 class dc_motor:
     #ใส่ port ของ dc motor
@@ -211,7 +213,6 @@ class dc_motor:
         else:
             power_expand_board.set_power(self.port, double_hold_default_speed) #ค่า default ของมอเตอร์
 
-
 # Necessary for robot's functionality
 class challenge_default:
     def __init__ (self):
@@ -222,15 +223,15 @@ class challenge_default:
         track_while_scan.lock_target(1)
         updatePosition()
 
-    def rot_styles(style:bool, buttons:list):
+    def rot_styles(style, buttons):
         # True -> Button preferences; False -> gamepad.get_joystick("Rx")
         # buttons: 0 = "left side", 1 = "right side"
-        v = int
+        v = 0
         if style == True:
             if gamepad.is_key_pressed(buttons[0]):
-                v = -40
+                v = -100
             if gamepad.is_key_pressed(buttons[1]):
-                v = 40
+                v = 100
 
         else:
             v = gamepad.get_joystick("Rx")
@@ -239,7 +240,7 @@ class challenge_default:
     def auto(coords_list:list):
 
         for coordinate in coords_list:
-            wheels.pure_persuit(coordinate[0], coordinate[1], 0, True)
+            motors.pure_persuit(coordinate[0], coordinate[1], 0, True)
 
     def manual(rot_btns:bool):
         # rot_btns = Use 
@@ -249,7 +250,7 @@ class challenge_default:
 
         x = gamepad.get_joystick("Lx")
         y = gamepad.get_joystick("Ly")
-        rot = wheels.throttle_curve(challenge_default.rot_styles(rot_btns, ["L1", "R1"]), 0.0001, 3)
+        rot = motors.throttle_curve(challenge_default.rot_styles(rot_btns, ["L1", "R1"]), 0.0001, 3)
 
         if gamepad.is_key_pressed("N1"):
             if track == False:
@@ -262,7 +263,7 @@ class challenge_default:
         if track == True:
             rot = rot_spd
 
-        wheels.pure_persuit(x, y, rot, False)
+        motors.pure_persuit(x, y, rot, False)
     
     def challenge_runtime():
         use_buttons_for_rot = True
