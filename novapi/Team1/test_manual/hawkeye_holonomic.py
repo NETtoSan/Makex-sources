@@ -242,7 +242,7 @@ class challenge_default:
     def arm():
         pass
 
-    def btn_prefrences(buttons, variable:str, switching:list):
+    def btn_preferences(buttons, variable:str, switching:list): # Test this function
         if gamepad.is_key_pressed(buttons):
             if variable == switching[1]:
                 variable = switching[2]
