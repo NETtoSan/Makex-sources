@@ -32,7 +32,7 @@ smart_cam = smart_camera_class("PORT5", "INDEX1")
 smart_cam.set_mode("color")
 rot_spd = 0
 track = True
-
+gun = True # True = gun; False = arm
 # --- PID --- #
 kp = 0
 ki = 0
@@ -237,6 +237,21 @@ class challenge_default:
             v = gamepad.get_joystick("Rx")
         return v
     
+    def gun():
+        pass
+    def arm():
+        pass
+
+    def btn_prefrences(buttons, variable:str, switching:list):
+        if gamepad.is_key_pressed(buttons):
+            if variable == switching[1]:
+                variable = switching[2]
+            else:
+                variable = switching[1]
+            pass
+        else:
+            pass
+
     def auto(coords_list:list):
 
         for coordinate in coords_list:
@@ -266,8 +281,18 @@ class challenge_default:
         motors.pure_persuit(x, y, rot, False)
     
     def challenge_runtime():
+        global gun
         use_buttons_for_rot = True
         while True:
             challenge_default.manual(use_buttons_for_rot)
+            challenge_default.btn_preferences("N4", gun, [True, False]) # Test this
+
+            # Test this
+            if gun == True:
+                challenge_default.gun()
+            else:
+                challenge_default.arm()
+            # Test this
+                
 
 challenge_default.challenge_runtime()

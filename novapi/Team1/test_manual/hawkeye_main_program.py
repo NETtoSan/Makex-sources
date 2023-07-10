@@ -267,23 +267,6 @@ def bl():
     else:
         pass
 
-def aim():
-    encoder_motor_M1 = encoder_motor_class("M1", "INDEX1")
-    encoder_motor_M2 = encoder_motor_class("M2", "INDEX1")
-    encoder_motor_M3 = encoder_motor_class("M3", "INDEX1")
-    encoder_motor_M4 = encoder_motor_class("M4", "INDEX1")
-    if gamepad.is_key_pressed("R1"):
-        encoder_motor_M1.set_speed(40)
-        encoder_motor_M2.set_speed(40)
-        encoder_motor_M3.set_speed(40)
-        encoder_motor_M4.set_speed(40)
-    elif gamepad.is_key_pressed("L1"):
-        encoder_motor_M1.set_speed(-40)
-        encoder_motor_M2.set_speed(-40)
-        encoder_motor_M3.set_speed(-40)
-        encoder_motor_M4.set_speed(-40) 
-    else:
-        pass
 
 smartservo_1 = smartservo_class("M6", "INDEX1")
 def arm():
@@ -300,11 +283,9 @@ def shooting():
     en_1.double_hold(0, [100, -100], "N2", "N3")
     dc_1.toggle([0, 60], "N4")
     bl()
-    aim()
 
 def grip():
     manual()
-    aim()
     arm()
 
 en_1 = en_motor("M5")
