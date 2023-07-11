@@ -15,7 +15,7 @@
  # PS:2 Rapid holonomic code change may occur. View latest holonomic simulation code via
  #      ../simulator/{pid_test or pure_persuit}.py
 
-
+from mbuild import power_expand_board
 from mbuild.encoder_motor import encoder_motor_class
 from mbuild.smart_camera import smart_camera_class
 from mbuild import gamepad
@@ -223,24 +223,14 @@ class challenge_default:
         track_while_scan.lock_target(1)
         updatePosition()
 
-    def rot_styles(style, buttons):
-        # True -> Button preferences; False -> gamepad.get_joystick("Rx")
-        # buttons: 0 = "left side", 1 = "right side"
-        v = 0
-        if style == True:
-            if gamepad.is_key_pressed(buttons[0]):
-                v = -100
-            if gamepad.is_key_pressed(buttons[1]):
-                v = 100
-
-        else:
-            v = gamepad.get_joystick("Rx")
-        return v
     
     def gun():
-        pass
+        power_expand_board.set_power("BL1", 20)
+        power_expand_board.set_power("BL2", 20)
+        
     def arm():
-        pass
+        power_expand_board.set_power("BL1", 0)
+        power_expand_board.set_power("BL2", 0)
 
     def btn_preferences(buttons, variable:str, switching:list): # Test this function
         if gamepad.is_key_pressed(buttons):
@@ -249,23 +239,22 @@ class challenge_default:
             else:
                 variable = switching[1]
             pass
-        else:
-            pass
+
+        return variable
 
     def auto(coords_list:list):
 
         for coordinate in coords_list:
             motors.pure_persuit(coordinate[0], coordinate[1], 0, True)
 
-    def manual(rot_btns:bool):
-        # rot_btns = Use 
+    def manual():
 
         global rot_spd, track
         challenge_default.backgroundProcess()
 
         x = gamepad.get_joystick("Lx")
         y = gamepad.get_joystick("Ly")
-        rot = motors.throttle_curve(challenge_default.rot_styles(rot_btns, ["L1", "R1"]), 0.0001, 3)
+        rot = gamepad.get_joystick("Rx")
 
         if gamepad.is_key_pressed("N1"):
             if track == False:
@@ -282,10 +271,10 @@ class challenge_default:
     
     def challenge_runtime():
         global gun
-        use_buttons_for_rot = True
+        gun = True
         while True:
-            challenge_default.manual(use_buttons_for_rot)
-            challenge_default.btn_preferences("N4", gun, [True, False]) # Test this
+            challenge_default.manual()
+            gun = challenge_default.btn_preferences("N4", gun, [True, False]) # Test this
 
             # Test this
             if gun == True:
