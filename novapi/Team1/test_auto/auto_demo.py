@@ -31,10 +31,10 @@ def constrain(v, mn, mx):
     return v
 
 def drive(x,y,rot): # โค้ด holonomic 
-    heading = math.degrees(math.atan2(y, x))
+    heading = 90 - math.degrees(math.atan2(y, x))
     power = constrain(math.sqrt((x * x) + (y * y)), -100, 100)
 
-    radians = math.radians((heading + 180) % 360 - 180)
+    radians = math.radians(- ((heading + 180) % 360 - 180))
     vx = round(power * math.cos(radians))
     vy = round(power * math.sin(radians))
 
