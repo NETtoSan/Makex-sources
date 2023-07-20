@@ -75,10 +75,10 @@ class motors:
         return s * (v ** e)
     
     # Find relative path
-    def pure_pursuit(x:int, y:int, rot:int):
+    def pure_pursuit(x:int, y:int, rot:int, heading):
         global novapi_rot
 
-        starting_angle = 90 - novapi_rot
+        starting_angle = heading
         dX = (-1 * x * 0.3)
         dY = (y * 0.3)
         rX = rot
@@ -115,15 +115,6 @@ class challenge_default:
     def backgroundProcess():
         updatePosition()
 
-    def gun():
-        pass
-        
-    def arm():
-        pass
-
-    def btn_preferences(buttons, variable:str, switching:list): # Test this function
-        pass
-
     def auto(x, y, rot):
         global novapi_travelled_x,novapi_travelled_y,novapi_rot
         updatePosition()
@@ -132,6 +123,7 @@ class challenge_default:
         x_dest = x
         y_dest = y
         rot_dest = rot
+        heading = 90 - novapi_rot
 
         if (novapi_travelled_x == x_dest) and (novapi_travelled_y == y_dest):
 
@@ -141,15 +133,15 @@ class challenge_default:
                 while novapi_rot > rot_dest:
                     updatePosition()
                     rot_error = keep_upright(rot_dest)
-                    motors.pure_pursuit(0, 0, motors.throttle_curve(rot_error, 0.005, 2) + 20)
-                motors.pure_pursuit(0, 0, 0)
+                    motors.pure_pursuit(0, 0, motors.throttle_curve(rot_error, 0.005, 2) + 20, heading)
+                motors.pure_pursuit(0, 0, 0, heading)
 
             elif novapi_rot < rot_dest:
                 while novapi_rot < rot_dest:
                     updatePosition()
                     rot_error = keep_upright(rot_dest)
-                    motors.pure_pursuit(0, 0, motors.throttle_curve(rot_error, 0.005, 2) - 20)
-                motors.pure_pursuit(0, 0, 0)
+                    motors.pure_pursuit(0, 0, motors.throttle_curve(rot_error, 0.005, 2) - 20, heading)
+                motors.pure_pursuit(0, 0, 0, heading)
             pass
 
         # move bot
@@ -162,16 +154,10 @@ class challenge_default:
                 rot_error = keep_upright(rot_dest)
 
 
-                motors.pure_pursuit(x_error, y_error, rot_error)
+                motors.pure_pursuit(x_error, y_error, rot_error, heading)
                 pass
 
         time.sleep(2)
-
-    def manual():
-        pass
-
-    def challenge_runtime():
-        pass
                 
 
 
