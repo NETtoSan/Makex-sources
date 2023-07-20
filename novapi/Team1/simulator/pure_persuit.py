@@ -1,7 +1,7 @@
 
 
  ################################################
- #         A HOLONOMIC MECANUM SOLUTIONS        # 
+ #         A HOLONOMIC MECANUM SOLUTIONS        #
  # - (C) 2023, NETtoSan                         #
  # - Thai Nichi Institute of Technology         #
  # This is to provide a solutions in which to   #
@@ -16,10 +16,11 @@ import random
 import keyboard
 import os
 from time import sleep
-
+import time
 # Keep bot position
 keep_pos  = False
 wheel_size = 58 # In millimeters!. Will do it later
+rot = 45
 starting_pos = [0,0] # Update this using novapi accelerometer (if present)
 
 def isneg(v:int):
@@ -38,9 +39,9 @@ def get_target(sA:int, dX:int, dY:int):
     target_angle = sA - math.degrees(math.atan2(dY , dX))
     return target_angle
 
-def pure_persuit(target_pos, auto):
-    global starting_pos
-    starting_angle = 90  # novapi.get_rot("Y")
+def pure_persuit(target_pos):
+    global starting_pos, rot
+    starting_angle = 90 - rot # novapi.get_rot("Y")
     sensitivity = 0.005
 
     x = target_pos[0] # Change to gamepad Lx
@@ -53,19 +54,9 @@ def pure_persuit(target_pos, auto):
 
     target_angle =  get_target(starting_angle, dX, dY)
     angle_to_rotate = starting_angle + target_angle # Convert this to for loop using novapi accelerometer as reference
-    print(f"X:{dX} Y:{dY} ; PATH TO TRAVEL:{path} cm ; target_angle: {target_angle} ; bot angle then: {angle_to_rotate}")
+    print(f"X:{dX} Y:{dY} angle:{starting_angle} rot:{rot}; PATH TO TRAVEL:{path} cm ; target_angle: {target_angle} ; bot angle then: {angle_to_rotate}")
 
-    # Holonomic code
-    if(auto == True):
-        while starting_pos[0] != x or starting_pos[1] != y:
-            
-            xX = starting_pos[0]
-            xY = starting_pos[0]
-            print(f"{starting_pos[0]} : {starting_pos[1]}")
-            #holonomic_angles(power, [target_angle, dX, dY], rot_speed)
-            pass
-    else:
-        holonomic_angles(power, [target_angle, dX, dY], rot_speed)
+    holonomic_angles(power, [target_angle, dX, dY], rot_speed)
     #holonomic_xy(power, [target_angle, dX, dY], rot_speed)
 
 # Angle based holonomic
@@ -90,22 +81,23 @@ def holonomic_angles(power:int, packet:list, rot_speed:int): # Use this for auto
     print(f"({vx}) ({vy});   LEFT {EFl} : RIGHT {-EFr} LEFT {ERl} : RIGHT {-ERr}")
     # --- OUTPUT --- #
     
-def run(x:int ,y:int, auto:bool):
+def run(x:int ,y:int):
     global starting_pos, mode
-    pure_persuit([x,y], auto)
+    pure_persuit([x,y])
     print(f"Expected position: {starting_pos}")
     print("-------")
     if(keep_value == True):
         print("KEEP VALUE ON!")
 
-pos = [0, 0]
-keep_value = False
+pos = [0, 100]
+keep_value = True
 
-mode = "2" # 1 = WASD Manual mode ; 2 = Pure persuit Auto code
+mode = "1" # 1 = WASD Manual mode ; 2 = Pure persuit Auto code
 # WASD Manual mode
 while mode == "1":
+    #time.sleep(0.1)
     try:
-        if keyboard.is_pressed('w') or keyboard.is_pressed('a') or keyboard.is_pressed('s') or keyboard.is_pressed('d'):
+        if keyboard.is_pressed('w') or keyboard.is_pressed('a') or keyboard.is_pressed('s') or keyboard.is_pressed('d') or keyboard.is_pressed('q') or keyboard.is_pressed('e'):
             if keyboard.is_pressed('w'):
                 pos[1] = pos[1] + 1
             if keyboard.is_pressed('s'):
@@ -114,19 +106,24 @@ while mode == "1":
                 pos[0] = pos[0] - 1
             if keyboard.is_pressed('d'):
                 pos[0] = pos[0] + 1
+            if keyboard.is_pressed('q'):
+                rot += 1
+            if keyboard.is_pressed('e'):
+                rot -= 1
+
         else:
             if keep_value == True:
                 pass
             else:
                 pos[0] = 0
                 pos[1] = 0
-        if keyboard.is_pressed("q"):
+        if keyboard.is_pressed("k"):
             if keep_value == False:
                 keep_value = True
             else:
                 keep_value = False
 
-        if keyboard.is_pressed("r"):
+        if keyboard.is_pressed("l"):
             os.system('clear')
             print("# ---------- ! Reset ! ---------- #")
             pos = [0, 0]
