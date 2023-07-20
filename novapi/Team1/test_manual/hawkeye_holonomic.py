@@ -33,7 +33,7 @@ smart_cam = smart_camera_class("PORT5", "INDEX1")
 smart_cam.set_mode("color")
 rot_spd = 0
 heading = 0  # Used in all program aspects
-last_time = 0 # For odometry purposes
+last_time = time.time() # For odometry purposes
 track = True
 gun = True # True = gun; False = arm
 
@@ -65,24 +65,27 @@ def updatePosition():
     # Test all of these!
     acel_x += novapi.get_acceleration("x")
     acel_y += novapi.get_acceleration("y")
-    heading = novapi.get_yaw() # =+ if get_yaw doesnt return a current heading. Only d0/dT
+    heading = (novapi.get_yaw() + 180) % 360 - 180 # =+ if get_yaw doesnt return a current heading. Only d0/dT
 
+    rheading = (heading * math.pi) / 180
     delta_time = time.now() - last_time
-    delta_heading = heading * delta_time
-    heading += delta_heading
 
     vx = acel_x * delta_time
     vy = acel_y * delta_time
 
     # Convert to relative frame
-    vx_world = (vx * math.cos(heading)) - (vy * math.sin(heading))
-    vy_world = (vx * math.sin(heading)) + (vy * math.cos(heading))
+    vx_world = (vx * math.cos(rheading)) - (vy * math.sin(rheading))
+    vy_world = (vx * math.sin(rheading)) + (vy * math.cos(rheading))
 
     novapi_travelled_x += vx_world * delta_time
     novapi_travelled_y += vy_world * delta_time
 
     last_time = time_now
 
+def keep_upright(target_rot):
+    bot_rot = novapi.get_yaw() # Change this to match your NovaPi placements
+    diff = ((target_rot - bot_rot) - 180) % 360 - 180
+    return diff
 
 # Class
 class track_while_scan:
@@ -126,9 +129,8 @@ class motors:
         return s * (v ** e)
     
     # Find relative path
-    def pure_persuit(x:int, y:int, rot:int, auto:bool):
-        starting_angle = heading
-        if auto == True: starting_angle = 90 - heading # Always keep upright!
+    def pure_pursuit(x:int, y:int, rot:int):
+        starting_angle = 90
         dX = (-1 * x * 0.3)
         dY = (y * 0.3)
         rX = rot
@@ -137,31 +139,7 @@ class motors:
         power = constrain(motors.throttle_curve(math.sqrt((dX * dX) + (dY * dY)), 0.005, 2) * 10, -100, 100)
         
 
-        # Automatic stage
-        if auto == True:
-            motors.holonomic_auto([dX,dY], target_angle, power)
-            motors.drive(0,0,0,0)
-        else:
-            motors.holonomic(power, [target_angle, dX, dY], rX)
-
-    # Necessary for auto code
-    def holonomic_auto(coords:list, target_angle, power):
-        global novapi_travelled_x, novapi_travelled_y
-        x = coords[0]; y = coords[1]
-        dX = x - novapi_travelled_x
-        dY = y - novapi_travelled_y
-        rX = 0
-
-        is_auto = True
-
-        # Another possible theory is to rotate the bot to target_angle and move only in bot X direction
-        # Relative X Y plane updates itself in updatePosition()
-        while is_auto == True:
-            challenge_default.backgroundProcess()
-            if novapi_travelled_x != x and novapi_travelled_y != y:
-                motors.holonomic(power, [target_angle, dX, dY], rX)
-            else:
-                ein_auto = False
+        motors.holonomic(power, [target_angle, dX, dY], rX)
 
     # Calculate each motor power to travel
     def holonomic(power:float, packet:list, rot_speed:int): # Use this for auto code!
@@ -212,7 +190,22 @@ class challenge_default:
     def auto(coords_list:list):
 
         for coordinate in coords_list:
-            motors.pure_persuit(coordinate[0], coordinate[1], 0, True)
+            updatePosition()
+
+            time.sleep(1)
+            motors.pure_pursuit(coordinate[0], coordinate[1], 0)
+            x_dest = coordinate[0]
+            y_dest = coordinate[1]
+
+            # Loop around until current = dest
+            while (novapi_travelled_x != x_dest) and (novapi_travelled_y != y_dest):
+                updatePosition() # novapi_travelled_x and novapi_travelled_y gets updated
+                x_error = x_dest - novapi_travelled_x
+                y_error = y_dest - novapi_travelled_y
+                rot_error = keep_upright(0)
+
+                pass
+
 
     def manual():
         global rot_spd, track, gun
@@ -233,7 +226,7 @@ class challenge_default:
         if track == True:
             rot = rot_spd
 
-        motors.pure_persuit(x, y, rot, False)
+        motors.pure_pursuit(x, y, rot)
 
 
         # Moved from challenge_runtime
@@ -261,4 +254,8 @@ class challenge_default:
             # Test this
                 
 
-challenge_default.challenge_runtime()
+
+# Force auto mode
+coordinates = [[0,0], [100,0], [100,100]] # For world plane coords, not bot coord
+challenge_default.auto(coordinates)
+#challenge_default.challenge_runtime()
