@@ -18,7 +18,7 @@ y = 0
 
 
 while True:
-    time.sleep(0.1)
+    time.sleep(0.01)
     time_now = time.time()
 
     if keyboard.is_pressed("q"):
@@ -39,4 +39,4 @@ while True:
     y += float(f'{(vy_world * delta_time):.3f}')
 
     last_time = time_now
-    print(f"[{time_elapsed:.1f}] | vx: {vx} vy:{vy} heading:{cur_bot} | xw: {vx_world:.1f} yw: {vy_world:.1f} | total_x: {x:.3f} total_y: {y:.3f}")
+    print(f"[{delta_time}] | vx: {vx} vy:{vy} heading:{cur_bot} | xw: {vx_world:.1f} yw: {vy_world:.1f} | total_x: {x:.3f} total_y: {y:.3f}")

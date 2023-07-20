@@ -4,7 +4,6 @@ from mbuild.smart_camera import smart_camera_class
 from mbuild import gamepad
 import math
 import time
-import utime
 import novapi
 
 encode_fl = encoder_motor_class("M1", "INDEX1")
@@ -17,7 +16,6 @@ smart_cam = smart_camera_class("PORT5", "INDEX1")
 smart_cam.set_mode("color")
 rot_spd = 0
 heading = 0  # Used in all program aspects
-last_time = utime.time() # For odometry purposes
 track = True
 gun = True # True = gun; False = arm
 
@@ -37,15 +35,14 @@ def constrain(v, mn, mx):
 # Background tasks
 def updatePosition():
     global novapi_travelled_x, novapi_travelled_y, novapi_rot, heading, last_time
-    time_now = utime.time()
 
-    # Test all of these!
-    acel_x += novapi.get_acceleration("x")
-    acel_y += novapi.get_acceleration("y")
+    # # Test all of these!
+    acel_x = round(novapi.get_acceleration("x"))
+    acel_y = round(novapi.get_acceleration("y"))
     heading = (novapi.get_yaw() + 180) % 360 - 180 # =+ if get_yaw doesnt return a current heading. Only d0/dT
 
     rheading = (heading * math.pi) / 180
-    delta_time =  time_now - last_time
+    delta_time =  0.02
 
     vx = acel_x * delta_time
     vy = acel_y * delta_time
@@ -58,11 +55,9 @@ def updatePosition():
     novapi_travelled_y += vy_world * delta_time
     novapi_rot = heading
 
-    last_time = time_now
-
 def keep_upright(target_rot):
-    bot_rot = novapi.get_yaw() # Change this to match your NovaPi placements
-    diff = ((target_rot - bot_rot) - 180) % 360 - 180
+    global novapi_rot
+    diff = ((target_rot - novapi_rot) - 180) % 360 - 180
     return diff
 
 # class
@@ -131,7 +126,7 @@ class challenge_default:
         pass
 
     def auto(x, y, rot):
-
+        global novapi_travelled_x,novapi_travelled_y,novapi_rot
         updatePosition()
 
         time.sleep(1)
@@ -139,37 +134,35 @@ class challenge_default:
         y_dest = y
         rot_dest = rot
 
-        if (novapi_travelled_x > x_dest) and (novapi_travelled_y > y_dest):
-            while (novapi_travelled_x > x_dest) and (novapi_travelled_y > y_dest):
-                updatePosition() # novapi_travelled_x and novapi_travelled_y gets updated
-                x_error = x_dest - novapi_travelled_x
-                y_error = y_dest - novapi_travelled_y
-                rot_error = keep_upright(rot_dest)
-                motors.pure_pursuit(x_error, y_error, rot_error)
-                pass
-        elif (novapi_travelled_x > x_dest) and (novapi_travelled_y < y_dest):
-            while (novapi_travelled_x > x_dest) and (novapi_travelled_y < y_dest):
-                updatePosition() # novapi_travelled_x and novapi_travelled_y gets updated
-                x_error = x_dest - novapi_travelled_x
-                y_error = y_dest - novapi_travelled_y
-                rot_error = keep_upright(rot_dest)
-                motors.pure_pursuit(x_error, y_error, rot_error)
-                pass
+        if (novapi_travelled_x == x_dest) and (novapi_travelled_y == y_dest):
 
-        elif (novapi_travelled_x < x_dest) and (novapi_travelled_y > y_dest):
-            while (novapi_travelled_x < x_dest) and (novapi_travelled_y > y_dest):
-                updatePosition() # novapi_travelled_x and novapi_travelled_y gets updated
-                x_error = x_dest - novapi_travelled_x
-                y_error = y_dest - novapi_travelled_y
-                rot_error = keep_upright(rot_dest)
-                motors.pure_pursuit(x_error, y_error, rot_error)
+            if novapi_rot == rot_dest:
                 pass
-        elif (novapi_travelled_x < x_dest) and (novapi_travelled_y < y_dest):
-            while (novapi_travelled_x < x_dest) and (novapi_travelled_y < y_dest):
+            elif novapi_rot > rot_dest:
+                while novapi_rot > rot_dest:
+                    updatePosition()
+                    rot_error = keep_upright(rot_dest)
+                    motors.pure_pursuit(0, 0, motors.throttle_curve(rot_error, 0.005, 2) + 10)
+                motors.pure_pursuit(0, 0, 0)
+
+            elif novapi_rot < rot_dest:
+                while novapi_rot < rot_dest:
+                    updatePosition()
+                    rot_error = keep_upright(rot_dest)
+                    motors.pure_pursuit(0, 0, motors.throttle_curve(rot_error, 0.005, 2) - 10)
+                motors.pure_pursuit(0, 0, 0)
+            pass
+
+        # move bot
+        elif (novapi_travelled_x != x_dest) and (novapi_travelled_y != y_dest):
+            while (novapi_travelled_x != x_dest) and (novapi_travelled_y != y_dest):
+                time.sleep(0.01)
                 updatePosition() # novapi_travelled_x and novapi_travelled_y gets updated
                 x_error = x_dest - novapi_travelled_x
                 y_error = y_dest - novapi_travelled_y
                 rot_error = keep_upright(rot_dest)
+
+
                 motors.pure_pursuit(x_error, y_error, rot_error)
                 pass
 
@@ -184,5 +177,5 @@ class challenge_default:
 
 
 # Auto mode
+challenge_default.auto(0, 0, 90)
 challenge_default.auto(0, 0, 0)
-challenge_default.auto(0, 100, 0)

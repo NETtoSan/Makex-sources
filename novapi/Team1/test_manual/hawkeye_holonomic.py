@@ -63,8 +63,8 @@ def updatePosition():
     time_now = time.time()
 
     # Test all of these!
-    acel_x += novapi.get_acceleration("x")
-    acel_y += novapi.get_acceleration("y")
+    acel_x = novapi.get_acceleration("x")
+    acel_y = novapi.get_acceleration("y")
     heading = (novapi.get_yaw() + 180) % 360 - 180 # =+ if get_yaw doesnt return a current heading. Only d0/dT
 
     rheading = (heading * math.pi) / 180
@@ -129,8 +129,8 @@ class motors:
         return s * (v ** e)
     
     # Find relative path
-    def pure_pursuit(x:int, y:int, rot:int):
-        starting_angle = 90
+    def pure_pursuit(x:int, y:int, rot:int, heading:int):
+        starting_angle = heading
         dX = (-1 * x * 0.3)
         dY = (y * 0.3)
         rX = rot
@@ -192,8 +192,6 @@ class challenge_default:
         for coordinate in coords_list:
             updatePosition()
 
-            time.sleep(1)
-            motors.pure_pursuit(coordinate[0], coordinate[1], 0)
             x_dest = coordinate[0]
             y_dest = coordinate[1]
 
@@ -203,8 +201,10 @@ class challenge_default:
                 x_error = x_dest - novapi_travelled_x
                 y_error = y_dest - novapi_travelled_y
                 rot_error = keep_upright(0)
-
+                heading = 90 - novapi.get_yaw()
+                motors.pure_pursuit(coordinate[0], coordinate[1], rot_error, heading)
                 pass
+            time.sleep(1)
 
 
     def manual():
@@ -214,6 +214,7 @@ class challenge_default:
         x = gamepad.get_joystick("Lx")
         y = gamepad.get_joystick("Ly")
         rot = gamepad.get_joystick("Rx")
+        heading = 90
 
         if gamepad.is_key_pressed("N1"):
             if track == False:
@@ -226,8 +227,6 @@ class challenge_default:
         if track == True:
             rot = rot_spd
 
-        motors.pure_pursuit(x, y, rot)
-
 
         # Moved from challenge_runtime
         gun = challenge_default.btn_preferences("N4", gun, [True, False])
@@ -235,6 +234,8 @@ class challenge_default:
             challenge_default.gun()
         else:
             challenge_default.arm()
+
+        motors.pure_pursuit(x, y, rot, heading)
 
     def challenge_runtime():
         challenge_default.backgroundProcess()
