@@ -4,6 +4,7 @@ from mbuild.smart_camera import smart_camera_class
 from mbuild import gamepad
 import math
 import time
+import utime
 import novapi
 
 encode_fl = encoder_motor_class("M1", "INDEX1")
@@ -16,7 +17,7 @@ smart_cam = smart_camera_class("PORT5", "INDEX1")
 smart_cam.set_mode("color")
 rot_spd = 0
 heading = 0  # Used in all program aspects
-last_time = time.time() # For odometry purposes
+last_time = utime.time() # For odometry purposes
 track = True
 gun = True # True = gun; False = arm
 
@@ -36,7 +37,7 @@ def constrain(v, mn, mx):
 # Background tasks
 def updatePosition():
     global novapi_travelled_x, novapi_travelled_y, novapi_rot, heading, last_time
-    time_now = time.time()
+    time_now = utime.time()
 
     # Test all of these!
     acel_x += novapi.get_acceleration("x")
@@ -44,7 +45,7 @@ def updatePosition():
     heading = (novapi.get_yaw() + 180) % 360 - 180 # =+ if get_yaw doesnt return a current heading. Only d0/dT
 
     rheading = (heading * math.pi) / 180
-    delta_time = time.now() - last_time
+    delta_time =  time_now - last_time
 
     vx = acel_x * delta_time
     vy = acel_y * delta_time

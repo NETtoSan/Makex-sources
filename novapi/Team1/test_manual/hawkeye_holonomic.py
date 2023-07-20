@@ -68,7 +68,7 @@ def updatePosition():
     heading = (novapi.get_yaw() + 180) % 360 - 180 # =+ if get_yaw doesnt return a current heading. Only d0/dT
 
     rheading = (heading * math.pi) / 180
-    delta_time = time.now() - last_time
+    delta_time = time_now - last_time
 
     vx = acel_x * delta_time
     vy = acel_y * delta_time
@@ -253,9 +253,4 @@ class challenge_default:
                     challenge_default.manual()
             # Test this
                 
-
-
-# Force auto mode
-coordinates = [[0,0], [100,0], [100,100]] # For world plane coords, not bot coord
-challenge_default.auto(coordinates)
-#challenge_default.challenge_runtime()
+challenge_default.challenge_runtime()
