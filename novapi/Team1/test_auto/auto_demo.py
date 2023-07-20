@@ -37,8 +37,8 @@ def updatePosition():
     global novapi_travelled_x, novapi_travelled_y, novapi_rot, heading, last_time
 
     # # Test all of these!
-    acel_x = round(novapi.get_acceleration("x"))
-    acel_y = round(novapi.get_acceleration("y"))
+    acel_x = round(novapi.get_acceleration("x")) * 100 # in centimeters dipshit
+    acel_y = round(novapi.get_acceleration("y")) * 100 # also in centimeters
     heading = (novapi.get_yaw() + 180) % 360 - 180 # =+ if get_yaw doesnt return a current heading. Only d0/dT
 
     rheading = (heading * math.pi) / 180
@@ -115,7 +115,6 @@ class challenge_default:
     def backgroundProcess():
         updatePosition()
 
-    
     def gun():
         pass
         
@@ -142,14 +141,14 @@ class challenge_default:
                 while novapi_rot > rot_dest:
                     updatePosition()
                     rot_error = keep_upright(rot_dest)
-                    motors.pure_pursuit(0, 0, motors.throttle_curve(rot_error, 0.005, 2) + 10)
+                    motors.pure_pursuit(0, 0, motors.throttle_curve(rot_error, 0.005, 2) + 20)
                 motors.pure_pursuit(0, 0, 0)
 
             elif novapi_rot < rot_dest:
                 while novapi_rot < rot_dest:
                     updatePosition()
                     rot_error = keep_upright(rot_dest)
-                    motors.pure_pursuit(0, 0, motors.throttle_curve(rot_error, 0.005, 2) - 10)
+                    motors.pure_pursuit(0, 0, motors.throttle_curve(rot_error, 0.005, 2) - 20)
                 motors.pure_pursuit(0, 0, 0)
             pass
 
@@ -158,8 +157,8 @@ class challenge_default:
             while (novapi_travelled_x != x_dest) and (novapi_travelled_y != y_dest):
                 time.sleep(0.01)
                 updatePosition() # novapi_travelled_x and novapi_travelled_y gets updated
-                x_error = x_dest - novapi_travelled_x
-                y_error = y_dest - novapi_travelled_y
+                x_error = constrain(x_dest - novapi_travelled_x, -100, 100)
+                y_error = constrain(y_dest - novapi_travelled_y, -100, 100)
                 rot_error = keep_upright(rot_dest)
 
 
