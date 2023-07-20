@@ -1,20 +1,3 @@
-
-
- ################################################
- #         A HOLONOMIC MECANUM SOLUTIONS        # 
- # - (C) 2023, NETtoSan                         #
- # - Thai Nichi Institute of Technology         #
- # This is to provide a solution in which to    #
- # drive mecanum wheel with holonomic aspects   #
- # This is made suitable for odometry purposes  #
- ################################################
- 
- # PS:1 This code DOES NOT provide full challenge bot capabilities
- #      This only supplements necessary function to drive all 4 mecanum wheels
- #      If you need full functionality, please use ./hawkeye_main_program.py
- # PS:2 Rapid holonomic code change may occur. View latest holonomic simulation code via
- #      ../simulator/{pid_test or pure_persuit}.py
-
 from mbuild import power_expand_board
 from mbuild.encoder_motor import encoder_motor_class
 from mbuild.smart_camera import smart_camera_class
@@ -163,7 +146,7 @@ class challenge_default:
                 rot_error = keep_upright(rot_dest)
                 motors.pure_pursuit(x_error, y_error, rot_error)
                 pass
-        if (novapi_travelled_x > x_dest) and (novapi_travelled_y < y_dest):
+        elif (novapi_travelled_x > x_dest) and (novapi_travelled_y < y_dest):
             while (novapi_travelled_x > x_dest) and (novapi_travelled_y < y_dest):
                 updatePosition() # novapi_travelled_x and novapi_travelled_y gets updated
                 x_error = x_dest - novapi_travelled_x
@@ -172,7 +155,7 @@ class challenge_default:
                 motors.pure_pursuit(x_error, y_error, rot_error)
                 pass
 
-        if (novapi_travelled_x < x_dest) and (novapi_travelled_y > y_dest):
+        elif (novapi_travelled_x < x_dest) and (novapi_travelled_y > y_dest):
             while (novapi_travelled_x < x_dest) and (novapi_travelled_y > y_dest):
                 updatePosition() # novapi_travelled_x and novapi_travelled_y gets updated
                 x_error = x_dest - novapi_travelled_x
@@ -180,7 +163,7 @@ class challenge_default:
                 rot_error = keep_upright(rot_dest)
                 motors.pure_pursuit(x_error, y_error, rot_error)
                 pass
-        if (novapi_travelled_x < x_dest) and (novapi_travelled_y < y_dest):
+        elif (novapi_travelled_x < x_dest) and (novapi_travelled_y < y_dest):
             while (novapi_travelled_x < x_dest) and (novapi_travelled_y < y_dest):
                 updatePosition() # novapi_travelled_x and novapi_travelled_y gets updated
                 x_error = x_dest - novapi_travelled_x
@@ -189,6 +172,7 @@ class challenge_default:
                 motors.pure_pursuit(x_error, y_error, rot_error)
                 pass
 
+        time.sleep(2)
 
     def manual():
         pass
@@ -200,5 +184,4 @@ class challenge_default:
 
 # Auto mode
 challenge_default.auto(0, 0, 0)
-challenge_default.auto(0, 0, 90)
-challenge_default.auto(0, 0, 0)
+challenge_default.auto(0, 100, 0)
