@@ -28,12 +28,13 @@ encode_fr = encoder_motor_class("M2", "INDEX1")
 encode_rl = encoder_motor_class("M3", "INDEX1")
 encode_rr = encoder_motor_class("M4", "INDEX1")
 
+encode_arm = encoder_motor_class("M6", "INDEX1")
+encode_aim = encoder_motor_class("M5", "INDEX1")
 # Test functions #
 smart_cam = smart_camera_class("PORT5", "INDEX1")
 smart_cam.set_mode("color")
 rot_spd = 0
 heading = 0  # Used in all program aspects
-last_time = time.time() # For odometry purposes
 track = True
 gun = True # True = gun; False = arm
 
@@ -46,6 +47,7 @@ ks = 0
 
 novapi_travelled_x = 0 # Needs to be updated every time. Missing equation!
 novapi_travelled_y = 0 # Needs to be updated every time. Missing equation!
+novapi_rot = 0
 # Test functions #
 
 # Built functions to conpensate missing python functions
@@ -59,16 +61,15 @@ def constrain(v, mn, mx):
 
 # Background tasks
 def updatePosition():
-    global novapi_travelled_x, novapi_travelled_y, heading, last_time
-    time_now = time.time()
+    global novapi_travelled_x, novapi_travelled_y, novapi_rot, heading, last_time
 
-    # Test all of these!
-    acel_x = novapi.get_acceleration("x")
-    acel_y = novapi.get_acceleration("y")
+    # # Test all of these!
+    acel_x = round(novapi.get_acceleration("x")) * 100 # in centimeters dipshit # inverted because y is in side
+    acel_y = round(novapi.get_acceleration("y")) * 100 # also in centimeters    # inverted because x is in front
     heading = (novapi.get_yaw() + 180) % 360 - 180 # =+ if get_yaw doesnt return a current heading. Only d0/dT
 
-    rheading = (heading * math.pi) / 180
-    delta_time = time_now - last_time
+    rheading = ((90 - heading) * math.pi) / 180
+    delta_time =  0.2
 
     vx = acel_x * delta_time
     vy = acel_y * delta_time
@@ -79,8 +80,7 @@ def updatePosition():
 
     novapi_travelled_x += vx_world * delta_time
     novapi_travelled_y += vy_world * delta_time
-
-    last_time = time_now
+    novapi_rot = heading
 
 def keep_upright(target_rot):
     bot_rot = novapi.get_yaw() # Change this to match your NovaPi placements
@@ -100,7 +100,7 @@ class track_while_scan:
     
     # Camera degree thing. Could be useful to lock target with servo
     def get_object_deg(pixel:int):
-        v = pixel / track_while_scan.get_cam_ppd(pixel, 65)
+        v = pixel / track_while_scan.get_cam_ppd(320, 65)
         return v 
     def get_cam_ppd(pixel:int, fov_deg:int):
         #ppd = pixel-per-degree
@@ -170,42 +170,100 @@ class challenge_default:
 
     
     def gun():
-        power_expand_board.set_power("BL1", 20)
-        power_expand_board.set_power("BL2", 20)
-        
+        global track
+        power_expand_board.set_power("BL1", 50)
+        power_expand_board.set_power("BL2", 50)
+        power_expand_board.set_power("DC1", 100)
+        if gamepad.is_key_pressed("L1"):
+            power_expand_board.set_power("DC3", 100)
+        elif gamepad.is_key_pressed("L2"):
+            power_expand_board.set_power("DC3", -100)
+        else:
+            power_expand_board.set_power("DC3", 0)
+
+        if track == True:
+            degs = 0
+            if smart_cam.get_sign_x(1):
+                degs = - (track_while_scan.get_object_deg(smart_cam.get_sign_x(1) - 160))
+            else:
+                degs = 0
+            encode_aim.move_to(- (smart_cam.get_sign_x(1) - 160) /2, 100)
+            #rot = rot_spd
     def arm():
         power_expand_board.set_power("BL1", 0)
         power_expand_board.set_power("BL2", 0)
+        power_expand_board.set_power("DC1", 0)
+        if gamepad.is_key_pressed("L1"):
+            encode_arm.set_power(100)
+        elif gamepad.is_key_pressed("L2"):
+            encode_arm.set_power(-100)
+        else:
+            encode_arm.set_power(0)
+        
 
-    def btn_preferences(buttons, variable:str, switching:list): # Test this function
+    def btn_preferences(buttons, variable:str): # Test this function
         if gamepad.is_key_pressed(buttons):
-            if variable == switching[1]:
-                variable = switching[2]
+            if variable == True:
+                variable = False
             else:
-                variable = switching[1]
+                variable = True
             pass
-
+            while gamepad.is_key_pressed(buttons):
+                pass
+        
         return variable
 
-    def auto(coords_list:list):
+    def auto(x, y, rot):
+        global novapi_travelled_x,novapi_travelled_y,novapi_rot
+        updatePosition()
+        time.sleep(1)
+        x_dest = x
+        y_dest = y
+        rot_dest = rot
+        avg = math.sqrt((x * x) + (y * y))
+        steps = (avg * 0.01) * 100
+        if rot_dest != 0 or novapi_rot != 0:
+            steps = steps * 1.1
+        heading = 90 - novapi_rot
 
-        for coordinate in coords_list:
+        counts = 0 # Count if bot stay stationary
+        if (x_dest == 0) and (y_dest == 0):
             updatePosition()
-
-            x_dest = coordinate[0]
-            y_dest = coordinate[1]
-
-            # Loop around until current = dest
-            while (novapi_travelled_x != x_dest) and (novapi_travelled_y != y_dest):
-                updatePosition() # novapi_travelled_x and novapi_travelled_y gets updated
-                x_error = x_dest - novapi_travelled_x
-                y_error = y_dest - novapi_travelled_y
-                rot_error = keep_upright(0)
-                heading = 90 - novapi.get_yaw()
-                motors.pure_pursuit(coordinate[0], coordinate[1], rot_error, heading)
+            if novapi_rot == rot_dest:
                 pass
-            time.sleep(1)
+            elif novapi_rot != rot_dest:
+                while novapi_rot != rot_dest:
+                    updatePosition()
+                    rot_error = keep_upright(rot_dest)
+                    heading = 90 - novapi_rot
+                    motors.pure_pursuit(0, 0, rot_error, 90) # motors.throttle_curve(rot_error, 0.007, 2)
 
+                    # If the robot stays stationary after course correction
+                    if rot_error != 0 or novapi.get_gyroscope("z") == 0:
+                        counts += 1
+                    if counts == 500:   
+                        novapi_rot = rot_dest
+                        novapi_travelled_x = x_dest
+                        novapi_travelled_y = y_dest
+            motors.pure_pursuit(0, 0, 0, heading)
+
+        # course correction
+        if (counts < steps):
+
+            while (counts < steps):
+                time.sleep(0.01)
+                counts += 1
+                updatePosition() # novapi_travelled_x and novapi_travelled_y gets updated
+                x_error = constrain(x_dest - novapi_travelled_x, -100, 100)
+                y_error = constrain(y_dest - novapi_travelled_y, -100, 100)
+                rot_error = keep_upright(rot_dest)
+                heading = 90 + novapi_rot
+                motors.pure_pursuit(-x_error, y_error, rot_error, heading) #motors.throttle_curve(rot_error, 0.007, 2)
+                pass
+            motors.pure_pursuit(0,0,0, heading) 
+            counts = 0
+            novapi_travelled_x = x_dest
+            novapi_travelled_y = y_dest
 
     def manual():
         global rot_spd, track, gun
@@ -216,6 +274,8 @@ class challenge_default:
         rot = gamepad.get_joystick("Rx")
         heading = 90
 
+        motors.pure_pursuit(x, y, rot, heading)
+
         if gamepad.is_key_pressed("N1"):
             if track == False:
                 track = True
@@ -224,18 +284,14 @@ class challenge_default:
             while gamepad.is_key_pressed("N1"):
                 pass
 
-        if track == True:
-            rot = rot_spd
-
 
         # Moved from challenge_runtime
-        gun = challenge_default.btn_preferences("N4", gun, [True, False])
+        
+        gun = challenge_default.btn_preferences("N4", gun)
         if gun == True:
             challenge_default.gun()
         else:
             challenge_default.arm()
-
-        motors.pure_pursuit(x, y, rot, heading)
 
     def challenge_runtime():
         challenge_default.backgroundProcess()
@@ -243,11 +299,31 @@ class challenge_default:
 
         while mode == "select":
             if gamepad.is_key_pressed("N1"):
-                mode = "program"
+                smart_cam_rear = smart_camera_class("PORT5", "INDEX2")
+                smart_cam_rear.set_mode("color")
 
+                while True:
+                    x_error = 0
+                    y_error = 0
+                    if(smart_cam_rear.detect_sign(1)):
+                        pos_x = smart_cam_rear.get_sign_x(1) - 160
+                        pos_y = smart_cam_rear.get_sign_y(1) - 120
+
+                        x_error = motors.throttle_curve(0 - pos_x, 0.005, 2)
+                        y_error = motors.throttle_curve(0 - pos_y, 0.005, 2)
+                    else:
+                        x_error = 0
+                        y_error = 0
+                    
+                    motors.pure_pursuit(0, -y_error, x_error, 90)
+                    
             if gamepad.is_key_pressed("N4"):
                 mode = "program"
-
+                challenge_default.auto(30, 200, 90)
+                challenge_default.auto(-50, 40, 90)
+                challenge_default.auto(0, 0, 0)
+                while True:
+                    challenge_default.manual()
             if gamepad.is_key_pressed("N3"):
                 mode = "program"
                 while True:
@@ -255,3 +331,5 @@ class challenge_default:
             # Test this
                 
 challenge_default.challenge_runtime()
+#while True:
+#    challenge_default.manual()

@@ -1,12 +1,12 @@
 import time, keyboard, math
 
 # acel
-ax = 100
+ax = 0
 ay = 100
 
 # heading; 
 default_heading = 90
-cur_bot = 45 # Current bot heading from 0
+cur_bot = 90 # Current bot heading from 0
 heading = ((default_heading - cur_bot) * math.pi) / 180
 
 start_time = time.time()
