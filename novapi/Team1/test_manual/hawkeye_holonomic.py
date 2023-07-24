@@ -177,30 +177,7 @@ class challenge_default:
     def rotarydebug():
         global degs
         encode_aim.move_to(degs, 100)
-
-        power_expand_board.set_power("BL1", 0)
-        power_expand_board.set_power("BL2", 0)
-        power_expand_board.set_power("DC1", 0)
-        if gamepad.is_key_pressed("L1"):
-            encode_arm.set_power(100)
-        elif gamepad.is_key_pressed("L2"):
-            encode_arm.set_power(-100)
-        else:
-            encode_arm.set_power(0)
         
-
-    def btn_preferences(buttons, variable:str): # Test this function
-        if gamepad.is_key_pressed(buttons):
-            if variable == True:
-                variable = False
-            else:
-                variable = True
-            pass
-            while gamepad.is_key_pressed(buttons):
-                pass
-        
-        return variable
-
     def auto(x, y, rot):
         global novapi_travelled_x,novapi_travelled_y,novapi_rot
         updatePosition()
