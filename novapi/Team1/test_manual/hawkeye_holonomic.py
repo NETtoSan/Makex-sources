@@ -115,7 +115,6 @@ class track_while_scan:
 
     def find_target_x(signature:int):
         global degs
-        degs = 0
         if smart_cam.get_sign_x(signature):
             degs = - (smart_cam.get_sign_x(signature) - 160)
         else:
@@ -171,8 +170,8 @@ class challenge_default:
     
     # Background task init
     def backgroundProcess():
-        challenge_default.rotarydebug()
-        track_while_scan.find_target_x(1)
+        challenge_default.rotarydebug() # use degs as value. need find_target_x()
+        track_while_scan.find_target_x(1) # Feed signature pos x to degs. 
         track_while_scan.lock_target(1)
         updatePosition()
 
@@ -298,6 +297,10 @@ class challenge_default:
             challenge_default.gun()
         else:
             challenge_default.arm()
+    def force_manual():
+        # Force manual code for automatic stage
+        while True:
+            challenge_default.manual()
 
     def challenge_runtime():
         challenge_default.backgroundProcess()
@@ -322,13 +325,15 @@ class challenge_default:
                         y_error = 0
                     
                     motors.pure_pursuit(0, -y_error, x_error, 90)
+
             if gamepad.is_key_pressed("N4"):
                 mode = "program"
                 challenge_default.auto(30, 200, 90)
                 challenge_default.auto(-50, 40, 90)
                 challenge_default.auto(0, 0, 0)
-                while True:
-                    challenge_default.manual()
+
+                challenge_default.force_manual()
+
             if gamepad.is_key_pressed("N3"):
                 mode = "program"
                 while True:
