@@ -36,8 +36,7 @@ smart_cam.set_mode("color")
 rot_spd = 0
 degs = 0     # For rotary motor, debug purposes
 heading = 0  # Used in all program aspects
-track = True
-gun = True # True = gun; False = arm
+
 
 # --- PID --- #
 kp = 0
@@ -179,22 +178,6 @@ class challenge_default:
         global degs
         encode_aim.move_to(degs, 100)
 
-    def gun():
-        global track
-        power_expand_board.set_power("BL1", 50)
-        power_expand_board.set_power("BL2", 50)
-        power_expand_board.set_power("DC1", 100)
-        if gamepad.is_key_pressed("L1"):
-            power_expand_board.set_power("DC3", 100)
-        elif gamepad.is_key_pressed("L2"):
-            power_expand_board.set_power("DC3", -100)
-        else:
-            power_expand_board.set_power("DC3", 0)
-
-        if track == True:
-            pass
-            #rot = rot_spd
-    def arm():
         power_expand_board.set_power("BL1", 0)
         power_expand_board.set_power("BL2", 0)
         power_expand_board.set_power("DC1", 0)
@@ -280,23 +263,6 @@ class challenge_default:
         heading = 90
 
         motors.pure_pursuit(x, y, rot, heading)
-
-        if gamepad.is_key_pressed("N1"):
-            if track == False:
-                track = True
-            else:
-                track = False
-            while gamepad.is_key_pressed("N1"):
-                pass
-
-
-        # Moved from challenge_runtime
-        
-        gun = challenge_default.btn_preferences("N4", gun)
-        if gun == True:
-            challenge_default.gun()
-        else:
-            challenge_default.arm()
     def force_manual():
         # Force manual code for automatic stage
         while True:
@@ -307,7 +273,7 @@ class challenge_default:
         mode = "select" # select = selectmenu; program = run; anything else = ?
 
         while mode == "select":
-            if gamepad.is_key_pressed("N1"):
+            if gamepad.is_key_pressed("N1"): # Follow signature program
                 smart_cam_rear = smart_camera_class("PORT5", "INDEX2")
                 smart_cam_rear.set_mode("color")
 
@@ -326,7 +292,7 @@ class challenge_default:
                     
                     motors.pure_pursuit(0, -y_error, x_error, 90)
 
-            if gamepad.is_key_pressed("N4"):
+            if gamepad.is_key_pressed("N4"):  # Demo program
                 mode = "program"
                 challenge_default.auto(30, 200, 90)
                 challenge_default.auto(-50, 40, 90)
@@ -334,7 +300,7 @@ class challenge_default:
 
                 challenge_default.force_manual()
 
-            if gamepad.is_key_pressed("N3"):
+            if gamepad.is_key_pressed("N3"): # Manual program
                 mode = "program"
                 while True:
                     challenge_default.manual()
