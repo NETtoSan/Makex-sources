@@ -34,6 +34,7 @@ encode_aim = encoder_motor_class("M5", "INDEX1")
 smart_cam = smart_camera_class("PORT5", "INDEX1")
 smart_cam.set_mode("color")
 rot_spd = 0
+degs = 0     # For rotary motor, debug purposes
 heading = 0  # Used in all program aspects
 track = True
 gun = True # True = gun; False = arm
@@ -113,7 +114,12 @@ class track_while_scan:
         pass
 
     def find_target_x(signature:int):
-        pass
+        global degs
+        degs = 0
+        if smart_cam.get_sign_x(signature):
+            degs = - (smart_cam.get_sign_x(signature) - 160)
+        else:
+            degs = 0
 
 class motors:
     # Drive all the motors in one go
@@ -165,10 +171,15 @@ class challenge_default:
     
     # Background task init
     def backgroundProcess():
+        challenge_default.rotarydebug()
+        track_while_scan.find_target_x(1)
         track_while_scan.lock_target(1)
         updatePosition()
 
-    
+    def rotarydebug():
+        global degs
+        encode_aim.move_to(degs, 100)
+
     def gun():
         global track
         power_expand_board.set_power("BL1", 50)
@@ -182,12 +193,7 @@ class challenge_default:
             power_expand_board.set_power("DC3", 0)
 
         if track == True:
-            degs = 0
-            if smart_cam.get_sign_x(1):
-                degs = - (track_while_scan.get_object_deg(smart_cam.get_sign_x(1) - 160))
-            else:
-                degs = 0
-            encode_aim.move_to(- (smart_cam.get_sign_x(1) - 160) /2, 100)
+            pass
             #rot = rot_spd
     def arm():
         power_expand_board.set_power("BL1", 0)
@@ -316,7 +322,6 @@ class challenge_default:
                         y_error = 0
                     
                     motors.pure_pursuit(0, -y_error, x_error, 90)
-                    
             if gamepad.is_key_pressed("N4"):
                 mode = "program"
                 challenge_default.auto(30, 200, 90)
