@@ -16,7 +16,7 @@ Makex-sources solely runs on Makeblock's CyberPi or NovaPi programming CPU. A li
 **These source codes are decent until Makeblock decided to make change to its competition strategy**
 - **Makex Explorer**\
 Please head to `./cyberpi`. It has a line following automatic program and a complete manual code. Using a catapult system to propel projectiles to opponent's side
-- Makex Challenge**\
+- **Makex Challenge**\
 Please head to `./novapi`. `Team1` or `Team2` off choice. The codes there are based off our concepts for this competition
 ## Requirements
 - **Cyberpi**\
