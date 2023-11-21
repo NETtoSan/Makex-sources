@@ -225,8 +225,10 @@ class challenge_default:
         x_dest = x
         y_dest = y
         rot_dest = rot
-        avg = math.sqrt((x * x) + (y * y))
-        steps = (avg * 0.01) * 100
+        
+        avg = math.sqrt((x * x) + (y * y))       # idfk what this does
+        steps = (avg * 0.01) * 100               # wacky implementation that works
+
         if rot_dest != 0 or novapi_rot != 0:
             steps = steps * 1.1
         heading = 90 - novapi_rot

@@ -64,7 +64,7 @@ def updatePosition():
     global novapi_travelled_x, novapi_travelled_y, novapi_rot, heading, last_time
 
     # # Test all of these!
-    acel_x = round(novapi.get_acceleration("x")) * 100 # in centimeters         # inverted because y is in side
+    acel_x = round(novapi.get_acceleration("x")) * 100 # in centimeters dipshit # inverted because y is in side
     acel_y = round(novapi.get_acceleration("y")) * 100 # also in centimeters    # inverted because x is in front
     heading = (novapi.get_yaw() + 180) % 360 - 180 # =+ if get_yaw doesnt return a current heading. Only d0/dT
 
@@ -88,37 +88,6 @@ def keep_upright(target_rot):
     return diff
 
 # Class
-class track_while_scan:
-    def lock_target(signature:int):
-        global rot_spd
-        if smart_cam.detect_sign(signature):
-            rot_spd = ( smart_cam.get_sign_x(signature) - 160 ) * -0.5
-        else:
-            rot_spd = 0
-        
-        return rot_spd
-    
-    # Camera degree thing. Could be useful to lock target with servo
-    def get_object_deg(pixel:int):
-        v = pixel / track_while_scan.get_cam_ppd(320, 65)
-        return v 
-    def get_cam_ppd(pixel:int, fov_deg:int):
-        #ppd = pixel-per-degree
-        return pixel / fov_deg
-    # Camera degree thing
-
-    # An extra target lock using servos. While using camera to scan for objects
-    # Similar to Radar's ACM Mode, (Yes i've played too much War Thunder)
-    def find_target(signature:int):
-        pass
-
-    def find_target_x(signature:int):
-        global degs
-        if smart_cam.get_sign_x(signature):
-            degs = - (smart_cam.get_sign_x(signature) - 160)
-        else:
-            degs = 0
-
 class motors:
     # Drive all the motors in one go
     def drive(v1:int, v2:int, v3:int, v4:int):
@@ -170,8 +139,6 @@ class challenge_default:
     # Background task init
     def backgroundProcess():
         challenge_default.rotarydebug() # use degs as value. need find_target_x()
-        track_while_scan.find_target_x(1) # Feed signature pos x to degs. 
-        track_while_scan.lock_target(1)
         updatePosition()
 
     def rotarydebug():
@@ -253,21 +220,7 @@ class challenge_default:
             if gamepad.is_key_pressed("N1"): # Follow signature program
                 smart_cam_rear = smart_camera_class("PORT5", "INDEX2")
                 smart_cam_rear.set_mode("color")
-
-                while True:
-                    x_error = 0
-                    y_error = 0
-                    if(smart_cam_rear.detect_sign(1)):
-                        pos_x = smart_cam_rear.get_sign_x(1) - 160
-                        pos_y = smart_cam_rear.get_sign_y(1) - 120
-
-                        x_error = motors.throttle_curve(0 - pos_x, 0.005, 2)
-                        y_error = motors.throttle_curve(0 - pos_y, 0.005, 2)
-                    else:
-                        x_error = 0
-                        y_error = 0
-                    
-                    motors.pure_pursuit(0, -y_error, x_error, 90)
+                continue
 
             if gamepad.is_key_pressed("N4"):  # Demo program
                 mode = "program"
