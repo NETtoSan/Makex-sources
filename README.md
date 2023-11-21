@@ -1,5 +1,5 @@
 # Makex-sources
-
+![MakeX Logo image](https://cdn.discordapp.com/attachments/1114589276294873208/1176391454906662912/bImzZFR6mYgAAAABJRU5ErkJggg.png?ex=656eb2eb&is=655c3deb&hm=bcbbc22154da190c92c7078e8f6dd18f772e26e2f9c47f2d3bc97cfbcf05c19e&)
 ## _The ultimate MakeX competition code. From a contestant!_
 
 This source code is for testing components from Makeblock for makex competition.
@@ -29,6 +29,8 @@ ____
 The source codes for Novapi aren't available in official Makeblock's website. All i did is convert each novapi's function from block coding into a python code. Because i have problems organizing Block code. And i also just dont like writing in block code. So.......... yeah there's python code if you need it!
 * **Cyberpi**\
 By the time we had cyberpi on hand we didnt convert from a block code like other teams. We write our own python from their documentation and pypi libraries.
+* **Competition in general**\
+This source codes are based on 2022-2023 MakeX competition, we're not guarantee that this repository will have any uses if the company decided to change some competition details.
 
 ## Bot behaviors
 You can see how our bot behaves by looking at Imagineering MakeX's video. Our MakeX Challenge team called **Hawkeye** and **Doombot**.
