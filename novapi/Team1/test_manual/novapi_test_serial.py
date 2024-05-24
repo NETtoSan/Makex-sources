@@ -4,9 +4,10 @@
 ########################
 # Thai Nichi Institute of Technology
 #
-# Since python file is uploaded directly to the EEPROM
+# Since the python file is uploaded directly to the EEPROM, when you're using a mBlock 5 software.
+# The code blocks you've edited is compiled back to python, then that file is uploaded to NovaPi.
 # Which means that Novapi itself is running its own runtime to handle the python files. ideally Linux minimal install.
-# And the NovaPi's EEPROM can be flashed with other files, not just a .py file
+# And the NovaPi's EEPROM can be flashed with other files, not just a .py file.
 # This means that the python file is not running on the host machine, but on the Novapi itself.
 #
 # Runtime file. NovaPi:/main.py
