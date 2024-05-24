@@ -1,5 +1,5 @@
 # Makex-sources
-![MakeX Logo image](https://cdn.discordapp.com/attachments/1114589276294873208/1176391454906662912/bImzZFR6mYgAAAABJRU5ErkJggg.png?ex=656eb2eb&is=655c3deb&hm=bcbbc22154da190c92c7078e8f6dd18f772e26e2f9c47f2d3bc97cfbcf05c19e&)
+![MakeX Logo image](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLXJG1BV_YLNqH6oHkVZKdVyMxMgaSg72CHKc84kxyUw&s)
 ## _The ultimate MakeX competition code. From a contestant!_
 
 This source code is for testing components from Makeblock for makex competition.
@@ -22,7 +22,7 @@ Please head to `./novapi`. `Team1` or `Team2` off choice. The codes there are ba
 - **Cyberpi**\
 Working with cyberpi will require you to have [mblock program](https://mblock.makeblock.com/en-us/) and [python](https://www.python.org) installed on your computer (If you are willing to use its python editor). Otherwise it wont work, really.
 - **Novapi**\
-Working with Makeblock's parts will require you to have [mblock program](https://mblock.makeblock.com/en-us/). And with a pinch of luck because the documentation for Novapi is not enough **if you are willing to not program in block code**
+Working with NovaPi parts will require you to have [mblock program](https://mblock.makeblock.com/en-us/). And with a pinch of luck because the documentation for Novapi is not enough **if you are willing to not program in block code**
 ____
 ## Problems
 * **Novapi**\
